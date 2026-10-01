@@ -14,6 +14,13 @@ config-version: 13
 settings:
   load-permissions-yml-before-plugins: true
   bungee-online-mode: true
+  sleep-between-chunk-saves: false
+  region-file-cache-size: 256
+  save-empty-scoreboard-teams: false
+  incoming-packet-spam-threshold: 300
+  remove-invalid-statistics: false
+  save-player-data: true
+  use-alternative-luck-formula: false
   min-chunk-load-threads: 2
   suggest-player-names-when-null-tab-completions: true
   watchdog:
@@ -25,13 +32,6 @@ settings:
   book-size:
     page-max: 2560
     total-multiplier: 0.98
-  sleep-between-chunk-saves: false
-  region-file-cache-size: 256
-  save-empty-scoreboard-teams: false
-  incoming-packet-spam-threshold: 300
-  remove-invalid-statistics: false
-  save-player-data: true
-  use-alternative-luck-formula: false
   enable-player-collisions: true
   player-auto-save-rate: -1
   max-player-auto-save-per-tick: -1
@@ -40,9 +40,9 @@ settings:
   limit-player-interactions: true
 messages:
   kick:
+    authentication-servers-down: ''
     flying-player: Flying is not enabled on this server
     flying-vehicle: Flying is not enabled on this server
-    authentication-servers-down: ''
 timings:
   enabled: true
   verbose: true
@@ -68,9 +68,8 @@ world-settings:
       disable-extreme-hills-emeralds: false
       disable-extreme-hills-monster-eggs: false
       disable-mesa-additional-gold: false
-    portal-search-radius: 128
-    use-vanilla-world-scoreboard-name-coloring: false
     queue-light-updates: false
+    use-vanilla-world-scoreboard-name-coloring: false
     optimize-explosions: false
     use-chunk-inhabited-timer: true
     delay-chunk-unloads-by: 10s
@@ -125,6 +124,7 @@ world-settings:
       push-based: false
     duplicate-uuid-resolver: saferegen
     duplicate-uuid-saferegen-delete-range: 32
+    portal-search-radius: 128
     keep-spawn-loaded-range: 4
     auto-save-interval: -1
     nether-ceiling-void-damage: false
