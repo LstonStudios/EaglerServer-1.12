@@ -1,0 +1,30 @@
+{
+  "frame1": {
+    "text0": "&6&nWelcome to The &e&l&nLstonServer!",
+    "text1": "&8[&e>&8>>>] &7EaglerCraft 1.12.2",
+    "online": "default",
+    "max": "default",
+    "players": "default"
+  },
+  "frame2": {
+    "text0": "&e&l&nWelcome&r &6&n to The &1&l&nLstonServer!",
+    "text1": "&8[&8>&e>&8>>] &7EaglerCraft 1.12.2",
+    "online": "default",
+    "max": "default",
+    "players": "default"
+  },
+  "frame3": {
+    "text0": "&6&nWelcome to &e&l&nThe&r &1&l&nLstonServer!",
+    "text1": "&8[&8>>&e>&8>] &7EaglerCraft 1.12.2",
+    "online": "default",
+    "max": "default",
+    "players": "default"
+  },
+  "frame4": {
+    "text0": "&6&nWelcome &e&l&nto&r &6&nThe &1&l&nLstonServer!",
+    "text1": "&8[&8>>>&e>] &7EaglerCraft 1.12.2",
+    "online": "default",
+    "max": "default",
+    "players": "default"
+  }
+}

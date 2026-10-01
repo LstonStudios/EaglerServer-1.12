@@ -1,0 +1,11 @@
+{
+	"name": "Eaglercraft Server",
+	"forwardPorts": [8081],
+	"portsAttributes": {
+		"8081": {
+			"label": "Eaglercraft Gateway",
+			"onAutoForward": "notify",
+			"visibility": "public"
+		}
+	}
+}

@@ -1,0 +1,18 @@
+{
+  "id": "eaglermotd",
+  "name": "EaglerMOTD",
+  "version": "1.0.4-velocity.1",
+  "description": "Animated Eaglercraft MOTDs for Velocity and EaglercraftXServer",
+  "authors": ["LstonStudios"],
+  "dependencies": [
+    {
+      "id": "eaglerxserver",
+      "optional": false
+    },
+    {
+      "id": "eaglerxvelocity",
+      "optional": false
+    }
+  ],
+  "main": "net.lstonstudios.eaglermotdvelocity.EaglerMOTDVelocity"
+}

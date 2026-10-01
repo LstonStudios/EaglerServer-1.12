@@ -1,0 +1,244 @@
+Loading libraries, please wait...
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::arrayBaseOffset has been called by com.lmax.disruptor.RingBufferFields (file:/workspaces/EaglerServer-1.12/server/cache/patched_1.12.2.jar)
+WARNING: Please consider reporting this to the maintainers of class com.lmax.disruptor.RingBufferFields
+WARNING: sun.misc.Unsafe::arrayBaseOffset will be removed in a future release
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::loadLibrary has been called by com.sun.jna.Native in an unnamed module (file:/workspaces/EaglerServer-1.12/server/cache/patched_1.12.2.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-09-30 21:12:21,532 main WARN Disabling terminal, you're running in an unsupported environment.
+[21:12:23 INFO]: Starting minecraft server version 1.12.2
+[21:12:23 ERROR]: [TerminalConsole] Failed to read console input
+java.io.IOException: Bad file descriptor
+	at java.io.FileInputStream.readBytes(Native Method) ~[?:?]
+	at java.io.FileInputStream.read(FileInputStream.java:281) ~[?:?]
+	at java.lang.System$In.read(System.java:1872) ~[?:?]
+	at java.io.BufferedInputStream.read1(BufferedInputStream.java:328) ~[?:?]
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:388) ~[?:?]
+	at sun.nio.cs.StreamDecoder.readBytes(StreamDecoder.java:279) ~[?:?]
+	at sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:322) ~[?:?]
+	at sun.nio.cs.StreamDecoder.read(StreamDecoder.java:186) ~[?:?]
+	at java.io.InputStreamReader.read(InputStreamReader.java:183) ~[?:?]
+	at java.io.BufferedReader.fill(BufferedReader.java:166) ~[?:?]
+	at java.io.BufferedReader.readLine(BufferedReader.java:333) ~[?:?]
+	at java.io.BufferedReader.readLine(BufferedReader.java:400) ~[?:?]
+	at net.minecrell.terminalconsole.SimpleTerminalConsole.readCommands(SimpleTerminalConsole.java:179) ~[patched_1.12.2.jar:git-Paper-1620]
+	at net.minecrell.terminalconsole.SimpleTerminalConsole.start(SimpleTerminalConsole.java:142) ~[patched_1.12.2.jar:git-Paper-1620]
+	at net.minecraft.server.v1_12_R1.DedicatedServer$2.run(DedicatedServer.java:77) ~[patched_1.12.2.jar:git-Paper-1620]
+[21:12:23 INFO]: Loading properties
+[21:12:23 INFO]: Default game type: SURVIVAL
+[21:12:23 INFO]: This server is running Paper version git-Paper-1620 (MC: 1.12.2) (Implementing API version 1.12.2-R0.1-SNAPSHOT)
+[21:12:23 INFO]: Debug logging is disabled
+[21:12:23 INFO]: Server Ping Player Sample Count: 12
+[21:12:23 INFO]: Using 4 threads for Netty based IO
+[21:12:23 INFO]: Generating keypair
+[21:12:24 INFO]: Starting Minecraft server on localhost:25566
+[21:12:24 INFO]: Using default channel type
+[21:12:24 INFO]: Set PluginClassLoader as parallel capable
+[21:12:24 INFO]: [PlayerSkulls] Loading PlayerSkulls v1.0
+[21:12:24 INFO]: [WorldEdit] Loading WorldEdit v6.1.9;caf0ad9
+[21:12:24 INFO]: [WorldGuard] Loading WorldGuard v6.2.2-SNAPSHOT;8eeab68
+[21:12:24 INFO]: Server permissions file permissions.yml is empty, ignoring it
+[21:12:24 WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[21:12:24 WARN]: The server will make no attempt to authenticate usernames. Beware.
+[21:12:24 WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[21:12:24 WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[21:12:24 INFO]: **** Beginning UUID conversion, this may take A LONG time ****
+[21:12:24 INFO]: Preparing level "The Lston EaglerCraft Server"
+[21:12:24 INFO]: -------- World Settings For [The Lston EaglerCraft Server] --------
+[21:12:24 INFO]: Cactus Growth Modifier: 100%
+[21:12:24 INFO]: Cane Growth Modifier: 100%
+[21:12:24 INFO]: Melon Growth Modifier: 100%
+[21:12:24 INFO]: Mushroom Growth Modifier: 100%
+[21:12:24 INFO]: Pumpkin Growth Modifier: 100%
+[21:12:24 INFO]: Sapling Growth Modifier: 100%
+[21:12:24 INFO]: Wheat Growth Modifier: 100%
+[21:12:24 INFO]: NetherWart Growth Modifier: 100%
+[21:12:24 INFO]: Vine Growth Modifier: 100%
+[21:12:24 INFO]: Cocoa Growth Modifier: 100%
+[21:12:24 INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[21:12:24 INFO]: Mob Spawn Range: 4
+[21:12:24 INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[21:12:24 INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[21:12:24 INFO]: Random Lighting Updates: false
+[21:12:24 INFO]: Structure Info Saving: true
+[21:12:24 INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[21:12:24 INFO]: Max TNT Explosions: 100
+[21:12:24 INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[21:12:24 INFO]: View Distance: 4
+[21:12:24 INFO]: Item Despawn Rate: 6000
+[21:12:24 INFO]: Item Merge Radius: 2.5
+[21:12:24 INFO]: Arrow Despawn Rate: 1200
+[21:12:24 INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[21:12:24 INFO]: Experience Merge Radius: 3.0
+[21:12:24 INFO]: Zombie Aggressive Towards Villager: true
+[21:12:24 INFO]: Nerfing mobs spawned from spawners: false
+[21:12:24 INFO]: -------- World Settings For [The Lston EaglerCraft Server_nether] --------
+[21:12:24 INFO]: Cactus Growth Modifier: 100%
+[21:12:24 INFO]: Cane Growth Modifier: 100%
+[21:12:24 INFO]: Melon Growth Modifier: 100%
+[21:12:24 INFO]: Mushroom Growth Modifier: 100%
+[21:12:24 INFO]: Pumpkin Growth Modifier: 100%
+[21:12:24 INFO]: Sapling Growth Modifier: 100%
+[21:12:24 INFO]: Wheat Growth Modifier: 100%
+[21:12:24 INFO]: NetherWart Growth Modifier: 100%
+[21:12:24 INFO]: Vine Growth Modifier: 100%
+[21:12:24 INFO]: Cocoa Growth Modifier: 100%
+[21:12:24 INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[21:12:24 INFO]: Mob Spawn Range: 4
+[21:12:24 INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[21:12:24 INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[21:12:24 INFO]: Random Lighting Updates: false
+[21:12:24 INFO]: Structure Info Saving: true
+[21:12:24 INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[21:12:24 INFO]: Max TNT Explosions: 100
+[21:12:24 INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[21:12:24 INFO]: View Distance: 4
+[21:12:24 INFO]: Item Despawn Rate: 6000
+[21:12:24 INFO]: Item Merge Radius: 2.5
+[21:12:24 INFO]: Arrow Despawn Rate: 1200
+[21:12:24 INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[21:12:24 INFO]: Experience Merge Radius: 3.0
+[21:12:24 INFO]: Zombie Aggressive Towards Villager: true
+[21:12:24 INFO]: Nerfing mobs spawned from spawners: false
+[21:12:24 INFO]: -------- World Settings For [The Lston EaglerCraft Server_the_end] --------
+[21:12:24 INFO]: Cactus Growth Modifier: 100%
+[21:12:24 INFO]: Cane Growth Modifier: 100%
+[21:12:24 INFO]: Melon Growth Modifier: 100%
+[21:12:24 INFO]: Mushroom Growth Modifier: 100%
+[21:12:24 INFO]: Pumpkin Growth Modifier: 100%
+[21:12:24 INFO]: Sapling Growth Modifier: 100%
+[21:12:24 INFO]: Wheat Growth Modifier: 100%
+[21:12:24 INFO]: NetherWart Growth Modifier: 100%
+[21:12:24 INFO]: Vine Growth Modifier: 100%
+[21:12:24 INFO]: Cocoa Growth Modifier: 100%
+[21:12:24 INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[21:12:24 INFO]: Mob Spawn Range: 4
+[21:12:24 INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[21:12:24 INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[21:12:24 INFO]: Random Lighting Updates: false
+[21:12:24 INFO]: Structure Info Saving: true
+[21:12:24 INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[21:12:24 INFO]: Max TNT Explosions: 100
+[21:12:24 INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[21:12:24 INFO]: View Distance: 4
+[21:12:24 INFO]: Item Despawn Rate: 6000
+[21:12:24 INFO]: Item Merge Radius: 2.5
+[21:12:24 INFO]: Arrow Despawn Rate: 1200
+[21:12:24 INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[21:12:24 INFO]: Experience Merge Radius: 3.0
+[21:12:24 INFO]: Zombie Aggressive Towards Villager: true
+[21:12:24 INFO]: Nerfing mobs spawned from spawners: false
+[21:12:24 INFO]: Preparing start region for level 0 (Seed: -5782907558954678269)
+[21:12:25 INFO]: Preparing start region for level 1 (Seed: -5782907558954678269)
+[21:12:26 INFO]: Preparing start region for level 2 (Seed: -5782907558954678269)
+[21:12:26 INFO]: [PlayerSkulls] Enabling PlayerSkulls v1.0
+[21:12:26 INFO]: [WorldEdit] Enabling WorldEdit v6.1.9;caf0ad9
+[21:12:26 INFO]: WEPIF: Using the Bukkit Permissions API.
+[21:12:26 INFO]: [WorldEdit] Using com.sk89q.worldedit.bukkit.adapter.impl.Spigot_v1_12_R2 as the Bukkit adapter
+[21:12:26 INFO]: [WorldGuard] Enabling WorldGuard v6.2.2-SNAPSHOT;8eeab68
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server) TNT ignition is PERMITTED.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lighters are PERMITTED.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lava fire is blocked.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server) Fire spread is UNRESTRICTED.
+[21:12:26 INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server'
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) TNT ignition is PERMITTED.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lighters are PERMITTED.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lava fire is blocked.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Fire spread is UNRESTRICTED.
+[21:12:26 INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_nether'
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) TNT ignition is PERMITTED.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lighters are PERMITTED.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lava fire is blocked.
+[21:12:26 INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Fire spread is UNRESTRICTED.
+[21:12:26 INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_the_end'
+[21:12:26 INFO]: [WorldGuard] Loading region data...
+[21:12:26 INFO]: Done (2.749s)! For help, type "help" or "?"
+[21:12:26 INFO]: Timings Reset
+[21:14:58 INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
+[21:14:58 INFO]: LstonStudios[/127.0.0.1:56090] logged in with entity id 58 at ([The Lston EaglerCraft Server]-228.58402464564372, 134.0, 190.15699732398963)
+[21:15:21 INFO]: LstonStudios issued server command: /summon Zombie
+[21:15:21 INFO]: [LstonStudios: Object successfully summoned]
+[21:16:53 INFO]: LstonStudios issued server command: //set grass
+[21:18:08 INFO]: LstonStudios issued server command: //set grass
+[21:23:26 INFO]: LstonStudios issued server command: //copy
+[21:23:49 INFO]: LstonStudios issued server command: //past
+[21:23:55 INFO]: LstonStudios issued server command: //paste
+[21:24:03 INFO]: LstonStudios issued server command: //undo
+[21:24:12 INFO]: LstonStudios issued server command: //paste
+[21:24:27 INFO]: LstonStudios issued server command: //undo
+[21:24:30 INFO]: LstonStudios issued server command: //paste
+[21:24:40 INFO]: LstonStudios issued server command: //undo
+[21:24:44 INFO]: LstonStudios issued server command: //paste
+[21:25:07 INFO]: LstonStudios issued server command: //undo
+[21:25:20 INFO]: LstonStudios issued server command: //set air
+[21:26:55 INFO]: LstonStudios issued server command: //copy
+[21:27:04 INFO]: LstonStudios issued server command: //paste
+[21:27:17 INFO]: LstonStudios issued server command: //undo
+[21:27:20 INFO]: LstonStudios issued server command: //paste
+[21:27:35 INFO]: LstonStudios issued server command: //undo
+[21:27:58 INFO]: LstonStudios issued server command: //paste
+[21:28:07 INFO]: LstonStudios issued server command: //paste
+[21:28:15 INFO]: LstonStudios issued server command: //paste
+[21:28:28 INFO]: LstonStudios issued server command: //undo
+[21:28:31 INFO]: LstonStudios issued server command: //undo
+[21:28:33 INFO]: LstonStudios issued server command: //undo
+[21:28:37 INFO]: LstonStudios issued server command: //paste
+[21:28:57 INFO]: LstonStudios issued server command: //paste
+[21:29:32 INFO]: LstonStudios issued server command: //paste
+[21:29:39 INFO]: LstonStudios issued server command: //undo
+[21:29:43 INFO]: LstonStudios issued server command: //paste
+[21:29:49 INFO]: LstonStudios issued server command: //undo
+[21:29:52 INFO]: LstonStudios issued server command: //paste
+[21:31:34 INFO]: LstonStudios issued server command: //paste
+[21:31:41 INFO]: LstonStudios issued server command: //undo
+[21:31:56 INFO]: LstonStudios issued server command: //paste
+[21:32:00 INFO]: LstonStudios issued server command: //undo
+[21:32:06 INFO]: LstonStudios issued server command: //paste
+[21:32:21 INFO]: LstonStudios issued server command: //undo
+[21:32:37 INFO]: LstonStudios issued server command: //copy
+[21:32:44 INFO]: LstonStudios issued server command: //paste
+[21:32:54 INFO]: LstonStudios issued server command: //undo
+[21:33:00 INFO]: LstonStudios issued server command: //paste
+[21:33:07 INFO]: LstonStudios issued server command: //undo
+[21:33:09 INFO]: LstonStudios issued server command: //paste
+[21:33:17 INFO]: LstonStudios issued server command: //undo
+[21:33:22 INFO]: LstonStudios issued server command: //paste
+[21:33:33 INFO]: LstonStudios issued server command: //paste
+[21:33:37 INFO]: LstonStudios issued server command: //undo
+[21:33:47 INFO]: LstonStudios issued server command: //paste
+[21:33:58 INFO]: LstonStudios issued server command: //undo
+[21:34:10 INFO]: LstonStudios issued server command: //paste
+[21:34:20 INFO]: LstonStudios issued server command: //undo
+[21:34:30 INFO]: LstonStudios issued server command: //paste
+[21:34:43 INFO]: LstonStudios issued server command: //undo
+[21:34:45 INFO]: LstonStudios issued server command: //paste
+[21:34:52 INFO]: LstonStudios issued server command: //undo
+[21:34:55 INFO]: LstonStudios issued server command: //paste
+[21:35:01 INFO]: LstonStudios issued server command: //undo
+[21:35:14 INFO]: LstonStudios issued server command: //paste
+[21:35:23 INFO]: LstonStudios issued server command: //undo
+[21:35:55 INFO]: LstonStudios issued server command: //paste
+[21:36:05 INFO]: LstonStudios issued server command: //paste
+[21:36:16 INFO]: LstonStudios issued server command: //paste
+[21:36:35 INFO]: LstonStudios issued server command: //paste
+[21:36:41 INFO]: LstonStudios issued server command: //undo
+[21:36:43 INFO]: LstonStudios issued server command: //undo
+[21:36:46 INFO]: LstonStudios issued server command: //undo
+[21:36:48 INFO]: LstonStudios issued server command: //undo
+[21:38:41 INFO]: LstonStudios issued server command: //copy
+[21:38:49 INFO]: LstonStudios issued server command: //paste
+[21:38:53 INFO]: LstonStudios issued server command: //paste
+[21:38:59 INFO]: LstonStudios issued server command: //undo
+[21:39:02 INFO]: LstonStudios issued server command: //undo
+[21:39:05 INFO]: LstonStudios issued server command: //paste
+[21:39:35 INFO]: LstonStudios issued server command: //copy
+[21:39:41 INFO]: LstonStudios issued server command: //paste
+[21:39:51 INFO]: LstonStudios issued server command: //undo
+[21:40:00 INFO]: LstonStudios issued server command: //paste
+[21:40:06 INFO]: LstonStudios issued server command: //undo
+[21:40:13 INFO]: LstonStudios issued server command: //paste
+[21:40:17 INFO]: LstonStudios issued server command: //undo
+[21:40:39 INFO]: LstonStudios issued server command: //paste

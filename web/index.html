@@ -29,7 +29,7 @@
 						assetsURI: "assets.epw",
 						worldsDB: "worlds",
 						servers: [
-							/* example: { addr: "ws://localhost:8081/", name: "Local test server" } */
+							{ addr: (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + "/", name: "The Lston EaglerCraft Server" }
 						],
 						relays: [
 							{ addr: "wss://relay.deev.is/", comment: "lax1dude relay #1", primary: relayId == 0 },

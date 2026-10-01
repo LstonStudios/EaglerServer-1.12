@@ -1,0 +1,26 @@
+{
+  "close_socket_after": 1200,
+  "messages": {
+    "all": [
+      {
+        "name": "default",
+        "frames": [
+          "frames.frame1", "frames.frame2", "frames.frame3", "frames.frame4",
+          "frames.frame5", "frames.frame6", "frames.frame7", "frames.frame8",
+          "frames.frame9", "frames.frame10", "frames.frame11", "frames.frame12",
+          "frames.frame13", "frames.frame14", "frames.frame15", "frames.frame16",
+          "frames.frame17", "frames.frame18", "frames.frame19", "frames.frame20",
+          "frames.frame21", "frames.frame22", "frames.frame23", "frames.frame24",
+          "frames.frame25", "frames.frame26", "frames.frame27", "frames.frame28",
+          "frames.frame29", "frames.frame30", "frames.frame31", "frames.frame32"
+        ],
+        "interval": 4,
+        "timeout": 128,
+        "random": false,
+        "shuffle": false,
+        "weight": 1.0,
+        "next": null
+      }
+    ]
+  }
+}

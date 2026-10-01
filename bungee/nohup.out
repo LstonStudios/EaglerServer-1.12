@@ -1,0 +1,86 @@
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.fusesource.jansi.internal.JansiLoader in an unnamed module (file:/workspaces/EaglerServer-1.12/bungee/bungee.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2026-09-30T21:12:28.460893815Z main WARN Advanced terminal features are not available in this environment
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::allocateMemory has been called by io.netty.util.internal.PlatformDependent0$2 (file:/workspaces/EaglerServer-1.12/bungee/bungee.jar)
+WARNING: Please consider reporting this to the maintainers of class io.netty.util.internal.PlatformDependent0$2
+WARNING: sun.misc.Unsafe::allocateMemory will be removed in a future release
+[21:12:29 INFO]: Booting up Velocity 3.4.0-SNAPSHOT (git-965db127-b454)...
+[21:12:29 INFO]: Loading localizations...
+[21:12:29 INFO]: Connections will use epoll channels, libdeflate (Linux x86_64) compression, OpenSSL 3.x.x (Linux x86_64) ciphers
+[21:12:29 WARN]: The proxy is running in offline mode! This is a security risk and you will NOT receive any support!
+[21:12:29 WARN]: Player info forwarding is disabled! All players will appear to be connecting from the proxy and will have offline-mode UUIDs.
+[21:12:29 INFO]: Unable to load your server-icon.png, continuing without it.
+java.lang.IllegalArgumentException: Image is not 64x64 (found 160x160)
+	at com.google.common.base.Preconditions.checkArgument(Preconditions.java:299) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at com.velocitypowered.api.util.Favicon.create(Favicon.java:82) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at com.velocitypowered.api.util.Favicon.create(Favicon.java:107) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at com.velocitypowered.proxy.config.VelocityConfiguration.loadFavicon(VelocityConfiguration.java:242) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at com.velocitypowered.proxy.config.VelocityConfiguration.validate(VelocityConfiguration.java:233) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at com.velocitypowered.proxy.VelocityServer.doStartupConfigLoad(VelocityServer.java:388) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at com.velocitypowered.proxy.VelocityServer.start(VelocityServer.java:276) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at com.velocitypowered.proxy.Velocity.main(Velocity.java:71) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+[21:12:29 INFO]: Loading plugins...
+[21:12:30 ERROR]: :>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>
+[21:12:30 ERROR]: :>  
+[21:12:30 ERROR]: :>      EAGLERCRAFTXVELOCITY WARNING:
+[21:12:30 ERROR]: :>  
+[21:12:30 ERROR]: :>  This plugin wasn't tested to be 'working'
+[21:12:30 ERROR]: :>  with ANY version of Velocity (and forks)
+[21:12:30 ERROR]: :>  apart from the versions listed below:
+[21:12:30 ERROR]: :>  
+[21:12:30 ERROR]: :>  - Velocity: 3.4.0-SNAPSHOT:a33f2d1a:b452
+[21:12:30 ERROR]: :>  
+[21:12:30 ERROR]: :>  This is not a Bukkit/Spigot plugin!
+[21:12:30 ERROR]: :>  
+[21:12:30 ERROR]: :>  Use "-Deaglerxvelocity.stfu=true" to hide
+[21:12:30 ERROR]: :>  
+[21:12:30 ERROR]: :>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>:>
+[21:12:30 INFO]: Loaded plugin eaglerxvelocity 1.1.5 by lax1dude, ayunami2000
+[21:12:30 INFO] [eaglerxserver]: Loading EaglercraftXServer 1.1.1...
+[21:12:30 INFO] [eaglerxserver]: (Platform: Velocity)
+[21:12:30 INFO] [eaglerxserver]: Server Name: "EaglercraftXServer"
+[21:12:30 INFO]: Loaded plugin eaglerxserver 1.1.1 by lax1dude
+[21:12:30 INFO]: Loaded plugin eaglermotd 1.0.4-velocity.1 by LstonStudios
+[21:12:30 INFO]: Loaded 4 plugins
+[21:12:30 WARN] [eaglerxvelocity]: This plugin is still in development, certain features may not be functional!
+[21:12:30 WARN] [eaglerxvelocity]: Not recommended for public servers yet, please check for updates
+[21:12:30 INFO] [eaglerxvelocity]: Loading vanilla profile: lax1dude
+[21:12:31 INFO] [eaglerxvelocity]: Loaded vanilla profile: lax1dude
+[21:12:31 ERROR] [eaglerxvelocity]: Online mode is set to false! Authentication system has been disabled
+[21:12:31 INFO] [eaglerxvelocity]: Eaglercraft is listening on: /0.0.0.0:8081
+[21:12:31 INFO] [eaglerxvelocity]: Connected to database: jdbc:sqlite:eaglercraft_skins_cache.db
+[21:12:31 INFO] [eaglerxvelocity]: Voice chat disabled, add "allow_voice: true" to your listeners to enable
+[21:12:31 WARN]: The server channel initializer has been replaced by java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+[21:12:31 INFO] [eaglerxserver]: Enabling EaglercraftXServer 1.1.1...
+[21:12:31 INFO] [eaglerxserver]: Connecting to skin cache database "jdbc:sqlite:eagler_skins_cache.db"...
+[21:12:31 INFO] [eaglerxserver]: Connected to skin cache database successfully!
+[21:12:31 INFO] [eaglermotd]: Loaded 1 EaglerMOTD message groups and 0 custom queries
+[21:12:31 INFO]: Done (3.4s)!
+[21:12:31 INFO] [eaglerxserver]: Listener "listener0" injected into channel [id: 0x57e017aa, L:/[0:0:0:0:0:0:0:0]:25565] successfully (Velocity method)
+[21:12:31 INFO]: Listening on /[0:0:0:0:0:0:0:0]:25565
+[21:12:31 ERROR] [TerminalConsole]: Failed to read console input
+java.io.IOException: Bad file descriptor
+	at java.base/java.io.FileInputStream.readBytes(Native Method) ~[?:?]
+	at java.base/java.io.FileInputStream.read(FileInputStream.java:281) ~[?:?]
+	at java.base/java.lang.System$In.read(System.java:1872) ~[?:?]
+	at java.base/java.io.BufferedInputStream.read1(BufferedInputStream.java:328) ~[?:?]
+	at java.base/java.io.BufferedInputStream.read(BufferedInputStream.java:388) ~[?:?]
+	at java.base/sun.nio.cs.StreamDecoder.readBytes(StreamDecoder.java:279) ~[?:?]
+	at java.base/sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:322) ~[?:?]
+	at java.base/sun.nio.cs.StreamDecoder.read(StreamDecoder.java:186) ~[?:?]
+	at java.base/java.io.InputStreamReader.read(InputStreamReader.java:183) ~[?:?]
+	at java.base/java.io.BufferedReader.fill(BufferedReader.java:166) ~[?:?]
+	at java.base/java.io.BufferedReader.readLine(BufferedReader.java:333) ~[?:?]
+	at java.base/java.io.BufferedReader.readLine(BufferedReader.java:400) ~[?:?]
+	at net.minecrell.terminalconsole.SimpleTerminalConsole.readCommands(SimpleTerminalConsole.java:180) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at net.minecrell.terminalconsole.SimpleTerminalConsole.start(SimpleTerminalConsole.java:143) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+	at com.velocitypowered.proxy.Velocity.main(Velocity.java:77) ~[bungee.jar:3.4.0-SNAPSHOT (git-965db127-b454)]
+[21:12:32 INFO] [eaglerxserver]: You are running the latest version of EaglerXServer
+[21:14:57 INFO] [eaglerxvelocity]: [/[0:0:0:0:0:0:0:1]:56864]: Connected via websocket
+[21:14:57 INFO] [eaglerxvelocity]: [/[0:0:0:0:0:0:0:1]:56864]: Origin header is https://novadev.vip
+[21:14:57 INFO] [eaglerxvelocity]: [connected player] LstonStudios (/[0:0:0:0:0:0:0:1]:56864) has connected
+[21:14:57 INFO]: [server connection] LstonStudios -> lobby has connected

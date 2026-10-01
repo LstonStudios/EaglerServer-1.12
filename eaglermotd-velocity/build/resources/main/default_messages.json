@@ -1,0 +1,17 @@
+{
+  "close_socket_after": 1200,
+  "messages": {
+    "all": [
+      {
+        "name": "default",
+        "frames": ["frames.frame1", "frames.frame2", "frames.frame3", "frames.frame4"],
+        "interval": 10,
+        "timeout": 1200,
+        "random": false,
+        "shuffle": false,
+        "weight": 1.0,
+        "next": "any"
+      }
+    ]
+  }
+}

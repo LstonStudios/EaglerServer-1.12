@@ -21,7 +21,7 @@ now you have your own free server instance to host eaglercraft. Next you need to
 <br>
 Create a terminal tab and paste the following:<br>
 <br>
-enter the following: `cd bungee && sudo java -jar bungee.jar`
+enter the following: `cd bungee && sudo java -Deaglerxvelocity.stfu=true -jar bungee.jar`
 <br>
 then, make a new tab and enter the following: cd server && sudo java -jar server.jar
 <br>

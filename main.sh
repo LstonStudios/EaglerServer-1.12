@@ -130,7 +130,7 @@ cd ..
 
 # run it!!
 cd bungee
-tmux new -d -s server "java -Xmx128M -jar bungee.jar; tmux kill-session -t server"
+tmux new -d -s server "java -Deaglerxvelocity.stfu=true -Xmx128M -jar bungee.jar; tmux kill-session -t server"
 cd ../server
 if [ ! -f "server.jar" ] && [ -d "../cuberite" ]; then
   cd ../cuberite

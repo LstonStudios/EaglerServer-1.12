@@ -1,7 +1,7 @@
 enforce_secure_profile: false
 listeners:
 - query_port: 25577
-  motd: '&1Yet Another Bungee server'
+  motd: '&1The Lston EaglerCraft Server'
   tab_list: GLOBAL_PING
   query_enabled: false
   proxy_protocol: false
@@ -49,6 +49,6 @@ servers:
     address: 95.217.198.48:20923
     restricted: false
   Civilisations:
-    motd: '&1Just another Waterfall - Forced Host'
+    motd: '&1The Lston EaglerCraft Server'
     address: 95.217.198.48:20923 
     restricted: false
