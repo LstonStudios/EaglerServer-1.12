@@ -38,7 +38,6 @@ settings:
   moved-too-quickly-threshold: 100.0
 commands:
   tab-complete: 0
-  log: true
   spam-exclusions:
   - /skill
   silent-commandblock-console: false
@@ -47,6 +46,7 @@ commands:
   - summon
   - testforblock
   - tellraw
+  log: true
 messages:
   whitelist: You are not whitelisted on this server!
   unknown-command: Unknown command. Type "/help" for help.
@@ -64,17 +64,6 @@ stats:
 world-settings:
   default:
     verbose: true
-    growth:
-      cactus-modifier: 100
-      cane-modifier: 100
-      melon-modifier: 100
-      mushroom-modifier: 100
-      pumpkin-modifier: 100
-      sapling-modifier: 100
-      wheat-modifier: 100
-      netherwart-modifier: 100
-      vine-modifier: 100
-      cocoa-modifier: 100
     entity-activation-range:
       animals: 32
       monsters: 32
@@ -92,6 +81,17 @@ world-settings:
       hopper-check: 1
     hopper-amount: 1
     random-light-updates: false
+    growth:
+      cactus-modifier: 100
+      cane-modifier: 100
+      melon-modifier: 100
+      mushroom-modifier: 100
+      pumpkin-modifier: 100
+      sapling-modifier: 100
+      wheat-modifier: 100
+      netherwart-modifier: 100
+      vine-modifier: 100
+      cocoa-modifier: 100
     save-structure-info: true
     dragon-death-sound-radius: 0
     seed-village: 10387312
