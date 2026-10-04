@@ -232,6 +232,8 @@
   },
   "minecraft:husbandry/balanced_diet": {
     "criteria": {
+      "baked_potato": "2026-10-04 21:26:32 +0000",
+      "rotten_flesh": "2026-10-04 21:26:21 +0000",
       "carrot": "2026-09-26 17:45:36 +0000"
     },
     "done": false
@@ -239,6 +241,12 @@
   "minecraft:recipes/tools/wooden_hoe": {
     "criteria": {
       "has_stick": "2026-09-25 22:12:39 +0000"
+    },
+    "done": true
+  },
+  "minecraft:recipes/brewing/golden_carrot": {
+    "criteria": {
+      "has_gold_nugget": "2026-10-04 21:27:01 +0000"
     },
     "done": true
   },
@@ -353,6 +361,12 @@
   "minecraft:recipes/food/beetroot_soup": {
     "criteria": {
       "has_beetroot": "2026-09-26 21:28:26 +0000"
+    },
+    "done": true
+  },
+  "minecraft:recipes/brewing/cauldron": {
+    "criteria": {
+      "has_water_bucket": "2026-10-04 20:52:23 +0000"
     },
     "done": true
   },
@@ -532,6 +546,7 @@
   },
   "minecraft:adventure/kill_all_mobs": {
     "criteria": {
+      "zombie_pigman": "2026-10-04 21:25:56 +0000",
       "spider": "2026-09-26 13:31:19 +0000"
     },
     "done": false
@@ -905,6 +920,12 @@
   "minecraft:recipes/redstone/stone_button": {
     "criteria": {
       "has_stone": "2026-09-26 00:49:37 +0000"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/slime_ball": {
+    "criteria": {
+      "has_slime": "2026-10-04 20:58:47 +0000"
     },
     "done": true
   },
