@@ -10306,3 +10306,83 @@
 [21:30:31] [Server thread/INFO]: LstonStudios left the game
 [21:30:41] [Server thread/INFO]: Avatar59 lost connection: Disconnected
 [21:30:41] [Server thread/INFO]: Avatar59 left the game
+[21:34:46] [User Authenticator #11/INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
+[21:34:46] [Server thread/INFO]: LstonStudios[/127.0.0.1:51630] logged in with entity id 15952 at ([The Lston EaglerCraft Server_nether]-27.453520111654306, 68.0, 10.514323408958667)
+[21:35:05] [Server thread/INFO]: Unknown command. Type "/help" for help.
+[21:38:15] [Async Chat Thread - #2/INFO]: <LstonStudios> lp user LstonStudios permission set eaglernotifications.send true
+[21:38:19] [Server thread/INFO]: LstonStudios issued server command: /lp user LstonStudios permission set eaglernotifications.send true
+[21:38:23] [User Authenticator #12/INFO]: UUID of player Avatar59 is 3d7730a7-1bf4-3e62-89ef-b0e2be4b840c
+[21:38:23] [Server thread/INFO]: Avatar59[/127.0.0.1:52116] logged in with entity id 15963 at ([The Lston EaglerCraft Server_nether]-26.618999805574912, 42.0, 8.495934394304934)
+[21:38:39] [Server thread/INFO]: Unknown command. Type "/help" for help.
+[21:38:49] [Server thread/INFO]: Unknown command. Type "/help" for help.
+[21:39:57] [Server thread/INFO]: LstonStudios issued server command: /tp @a @s
+[21:39:57] [Server thread/INFO]: [LstonStudios: Teleported LstonStudios to LstonStudios]
+[21:39:57] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to LstonStudios]
+[21:40:12] [Server thread/INFO]: LstonStudios issued server command: /gamemode s @a
+[21:40:12] [Server thread/INFO]: [LstonStudios: Set own game mode to Survival Mode]
+[21:40:12] [Server thread/INFO]: [LstonStudios: Set Avatar59's game mode to Survival Mode]
+[21:41:09] [Server thread/INFO]: LstonStudios issued server command: /gaemode c
+[21:41:17] [Server thread/INFO]: LstonStudios issued server command: /gamemode c
+[21:41:17] [Server thread/INFO]: [LstonStudios: Set own game mode to Creative Mode]
+[21:41:58] [Server thread/INFO]: LstonStudios lost connection: Disconnected
+[21:41:58] [Server thread/INFO]: LstonStudios left the game
+[21:41:58] [Server thread/INFO]: Avatar59 lost connection: Disconnected
+[21:41:58] [Server thread/INFO]: Avatar59 left the game
+[21:42:37] [User Authenticator #13/INFO]: UUID of player Avatar59 is 3d7730a7-1bf4-3e62-89ef-b0e2be4b840c
+[21:42:37] [Server thread/INFO]: Avatar59[/127.0.0.1:47220] logged in with entity id 15992 at ([The Lston EaglerCraft Server_nether]-18.101428197216713, 42.0, 0.07009280227628177)
+[21:44:26] [User Authenticator #14/INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
+[21:44:26] [Server thread/INFO]: LstonStudios[/127.0.0.1:53120] logged in with entity id 16009 at ([The Lston EaglerCraft Server_nether]-23.80837446408487, 42.56904711312371, -0.39825474339414335)
+[21:44:36] [Server thread/INFO]: Avatar59 burned to death
+[21:46:10] [Server thread/INFO]: LstonStudios issued server command: /gamemode c @a
+[21:46:10] [Server thread/INFO]: [LstonStudios: Set own game mode to Creative Mode]
+[21:46:10] [Server thread/INFO]: [LstonStudios: Set Avatar59's game mode to Creative Mode]
+[21:46:31] [Async Chat Thread - #3/INFO]: <LstonStudios> lets sleep
+[21:46:41] [Server thread/INFO]: LstonStudios issued server command: /give @a bed
+[21:46:41] [Server thread/INFO]: [LstonStudios: Given [White Bed] * 1 to LstonStudios]
+[21:46:41] [Server thread/INFO]: [LstonStudios: Given [White Bed] * 1 to Avatar59]
+[21:47:34] [Server thread/INFO]: LstonStudios issued server command: //wand
+[21:47:50] [Server thread/INFO]: LstonStudios issued server command: //set netherrack
+[21:48:03] [Server thread/INFO]: LstonStudios issued server command: //undo
+[21:48:38] [Server thread/INFO]: LstonStudios issued server command: //set netherrack
+[21:49:46] [Server thread/INFO]: LstonStudios issued server command: /kill Avatar59
+[21:49:46] [Server thread/INFO]: Avatar59 fell out of the world
+[21:49:46] [Server thread/INFO]: [LstonStudios: Killed Avatar59]
+[21:50:27] [Server thread/INFO]: LstonStudios issued server command: /kill Avatar59
+[21:50:27] [Server thread/INFO]: Avatar59 fell out of the world
+[21:50:27] [Server thread/INFO]: [LstonStudios: Killed Avatar59]
+[21:52:23] [Server thread/INFO]: LstonStudios issued server command: /kill Avatar59
+[21:52:23] [Server thread/INFO]: Avatar59 fell out of the world
+[21:52:23] [Server thread/INFO]: [LstonStudios: Killed Avatar59]
+[21:52:27] [Async Chat Thread - #4/INFO]: <LstonStudios> stopp
+[21:52:37] [Async Chat Thread - #4/INFO]: <LstonStudios> STOP BREAKING STUFF
+[21:53:12] [Server thread/INFO]: LstonStudios issued server command: /kill Avatar59
+[21:53:12] [Server thread/INFO]: Avatar59 fell out of the world
+[21:53:12] [Server thread/INFO]: [LstonStudios: Killed Avatar59]
+[21:53:42] [Server thread/INFO]: LstonStudios issued server command: /tp Avatar59 0 0 0
+[21:53:42] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to 0.5, 0.0, 0.5]
+[21:53:47] [Server thread/INFO]: Avatar59 fell out of the world
+[21:54:05] [Server thread/INFO]: LstonStudios issued server command: /tp Avatar59 0 0 0
+[21:54:05] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to 0.5, 0.0, 0.5]
+[21:54:10] [Server thread/INFO]: Avatar59 fell out of the world
+[21:54:19] [Server thread/INFO]: Avatar59 lost connection: Disconnected
+[21:54:19] [Server thread/INFO]: Avatar59 left the game
+[21:54:36] [User Authenticator #15/INFO]: UUID of player Avatar59 is 3d7730a7-1bf4-3e62-89ef-b0e2be4b840c
+[21:54:37] [Server thread/INFO]: Avatar59[/127.0.0.1:46448] logged in with entity id 16708 at ([The Lston EaglerCraft Server]-224.5, 64.0, 185.5)
+[21:55:12] [Server thread/INFO]: LstonStudios issued server command: /tp Avatar59 0 0 0
+[21:55:12] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to 0.5, 0.0, 0.5]
+[21:55:17] [Server thread/INFO]: Avatar59 fell out of the world
+[21:56:03] [Server thread/INFO]: LstonStudios issued server command: /gamemode s Avatar59
+[21:56:03] [Server thread/INFO]: [LstonStudios: Set Avatar59's game mode to Survival Mode]
+[21:56:13] [Server thread/INFO]: LstonStudios issued server command: /tp Avatar59 0 0 0
+[21:56:13] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to 0.5, 0.0, 0.5]
+[21:56:18] [Server thread/INFO]: Avatar59 fell out of the world
+[21:56:23] [Server thread/INFO]: Avatar59 lost connection: Disconnected
+[21:56:23] [Server thread/INFO]: Avatar59 left the game
+[21:57:13] [Server thread/INFO]: LstonStudios issued server command: /tp Avatar59 @s
+[21:57:13] [Server thread/INFO]: [LstonStudios: Entity 'Avatar59' cannot be found]
+[22:00:07] [User Authenticator #16/INFO]: UUID of player Avatar59 is 3d7730a7-1bf4-3e62-89ef-b0e2be4b840c
+[22:00:07] [Server thread/INFO]: Avatar59[/127.0.0.1:52032] logged in with entity id 16798 at ([The Lston EaglerCraft Server]-224.5, 64.0, 185.5)
+[22:00:09] [Server thread/INFO]: LstonStudios issued server command: //set netherack
+[22:01:00] [Server thread/WARN]: Avatar59 moved wrongly!
+[22:01:10] [Server thread/INFO]: Avatar59 tried to swim in lava
+[22:01:39] [Server thread/INFO]: Avatar59 fell out of the world
