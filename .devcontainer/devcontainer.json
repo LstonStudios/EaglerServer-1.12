@@ -6,6 +6,9 @@
 			"label": "Eaglercraft Gateway",
 			"onAutoForward": "notify",
 			"visibility": "public"
+		},
+		"25565": {
+			"label": "Listening"
 		}
 	}
 }

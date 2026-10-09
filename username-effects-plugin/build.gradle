@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group = 'net.lstonstudios'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    compileOnly('org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT') {
+        transitive = false
+    }
+}
+
+tasks.jar {
+    archiveFileName = 'UsernameEffects-1.0.0.jar'
+}

@@ -1,0 +1,15 @@
+name: UsernameEffects
+version: 1.0.0
+main: net.lstonstudios.usernameeffects.UsernameEffectsPlugin
+author: LstonStudios
+description: Formats player names in chat, the player list, and overhead nametags.
+commands:
+  nameeffect:
+    description: Set or clear a player's name effect.
+    usage: /nameeffect <set|clear|reload>
+    permission: usernameeffects.admin
+    aliases: [ueffect]
+permissions:
+  usernameeffects.admin:
+    description: Allows managing username effects.
+    default: op
