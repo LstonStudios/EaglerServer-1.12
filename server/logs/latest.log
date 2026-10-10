@@ -1,135 +1,135 @@
-[22:41:39] [Server thread/INFO]: Starting minecraft server version 1.12.2
-[22:41:39] [Server thread/INFO]: Loading properties
-[22:41:39] [Server thread/INFO]: Default game type: SURVIVAL
-[22:41:39] [Server thread/INFO]: This server is running Paper version git-Paper-1620 (MC: 1.12.2) (Implementing API version 1.12.2-R0.1-SNAPSHOT)
-[22:41:39] [Server thread/INFO]: Debug logging is disabled
-[22:41:39] [Server thread/INFO]: Server Ping Player Sample Count: 12
-[22:41:39] [Server thread/INFO]: Using 4 threads for Netty based IO
-[22:41:39] [Server thread/INFO]: Generating keypair
-[22:41:40] [Server thread/INFO]: Starting Minecraft server on localhost:25566
-[22:41:40] [Server thread/INFO]: Using default channel type
-[22:41:40] [Server thread/INFO]: Set PluginClassLoader as parallel capable
-[22:41:40] [Server thread/INFO]: [PlayerSkulls] Loading PlayerSkulls v1.0
-[22:41:40] [Server thread/INFO]: [WorldEdit] Loading WorldEdit v6.1.9;caf0ad9
-[22:41:40] [Server thread/INFO]: [UsernameEffects] Loading UsernameEffects v1.0.0
-[22:41:40] [Server thread/INFO]: [WorldGuard] Loading WorldGuard v6.2.2-SNAPSHOT;8eeab68
-[22:41:40] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
-[22:41:40] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[22:41:40] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[22:41:40] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[22:41:40] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[22:41:40] [Server thread/INFO]: **** Beginning UUID conversion, this may take A LONG time ****
-[22:41:40] [Server thread/INFO]: Preparing level "The Lston EaglerCraft Server"
-[22:41:40] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server] --------
-[22:41:40] [Server thread/INFO]: Mob Spawn Range: 4
-[22:41:40] [Server thread/INFO]: Cactus Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Cane Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Melon Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Mushroom Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Sapling Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Wheat Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: NetherWart Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Vine Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Cocoa Growth Modifier: 100%
-[22:41:40] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
-[22:41:40] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
-[22:41:40] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
-[22:41:40] [Server thread/INFO]: Random Lighting Updates: false
-[22:41:40] [Server thread/INFO]: Structure Info Saving: true
-[22:41:40] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
-[22:41:40] [Server thread/INFO]: Max TNT Explosions: 100
-[22:41:40] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
-[22:41:40] [Server thread/INFO]: View Distance: 4
-[22:41:40] [Server thread/INFO]: Item Despawn Rate: 6000
-[22:41:40] [Server thread/INFO]: Item Merge Radius: 2.5
-[22:41:40] [Server thread/INFO]: Arrow Despawn Rate: 1200
-[22:41:40] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
-[22:41:40] [Server thread/INFO]: Experience Merge Radius: 3.0
-[22:41:40] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
-[22:41:40] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
-[22:41:41] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server_nether] --------
-[22:41:41] [Server thread/INFO]: Mob Spawn Range: 4
-[22:41:41] [Server thread/INFO]: Cactus Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Cane Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Melon Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Mushroom Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Sapling Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Wheat Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: NetherWart Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Vine Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Cocoa Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
-[22:41:41] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
-[22:41:41] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
-[22:41:41] [Server thread/INFO]: Random Lighting Updates: false
-[22:41:41] [Server thread/INFO]: Structure Info Saving: true
-[22:41:41] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
-[22:41:41] [Server thread/INFO]: Max TNT Explosions: 100
-[22:41:41] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
-[22:41:41] [Server thread/INFO]: View Distance: 4
-[22:41:41] [Server thread/INFO]: Item Despawn Rate: 6000
-[22:41:41] [Server thread/INFO]: Item Merge Radius: 2.5
-[22:41:41] [Server thread/INFO]: Arrow Despawn Rate: 1200
-[22:41:41] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
-[22:41:41] [Server thread/INFO]: Experience Merge Radius: 3.0
-[22:41:41] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
-[22:41:41] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
-[22:41:41] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server_the_end] --------
-[22:41:41] [Server thread/INFO]: Mob Spawn Range: 4
-[22:41:41] [Server thread/INFO]: Cactus Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Cane Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Melon Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Mushroom Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Sapling Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Wheat Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: NetherWart Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Vine Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Cocoa Growth Modifier: 100%
-[22:41:41] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
-[22:41:41] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
-[22:41:41] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
-[22:41:41] [Server thread/INFO]: Random Lighting Updates: false
-[22:41:41] [Server thread/INFO]: Structure Info Saving: true
-[22:41:41] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
-[22:41:41] [Server thread/INFO]: Max TNT Explosions: 100
-[22:41:41] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
-[22:41:41] [Server thread/INFO]: View Distance: 4
-[22:41:41] [Server thread/INFO]: Item Despawn Rate: 6000
-[22:41:41] [Server thread/INFO]: Item Merge Radius: 2.5
-[22:41:41] [Server thread/INFO]: Arrow Despawn Rate: 1200
-[22:41:41] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
-[22:41:41] [Server thread/INFO]: Experience Merge Radius: 3.0
-[22:41:41] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
-[22:41:41] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
-[22:41:41] [Server thread/INFO]: Preparing start region for level 0 (Seed: -5782907558954678269)
-[22:41:42] [Server thread/INFO]: Preparing spawn area: 3%
-[22:41:42] [Server thread/INFO]: Preparing start region for level 1 (Seed: -5782907558954678269)
-[22:41:42] [Server thread/INFO]: Preparing start region for level 2 (Seed: -5782907558954678269)
-[22:41:42] [Server thread/INFO]: [PlayerSkulls] Enabling PlayerSkulls v1.0
-[22:41:42] [Server thread/INFO]: [WorldEdit] Enabling WorldEdit v6.1.9;caf0ad9
-[22:41:43] [Server thread/INFO]: WEPIF: Using the Bukkit Permissions API.
-[22:41:43] [Server thread/INFO]: [WorldEdit] Using com.sk89q.worldedit.bukkit.adapter.impl.Spigot_v1_12_R2 as the Bukkit adapter
-[22:41:43] [Server thread/INFO]: [UsernameEffects] Enabling UsernameEffects v1.0.0
-[22:41:43] [Server thread/INFO]: [WorldGuard] Enabling WorldGuard v6.2.2-SNAPSHOT;8eeab68
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) TNT ignition is PERMITTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lighters are PERMITTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lava fire is blocked.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Fire spread is UNRESTRICTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server'
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) TNT ignition is PERMITTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lighters are PERMITTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lava fire is blocked.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Fire spread is UNRESTRICTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_nether'
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) TNT ignition is PERMITTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lighters are PERMITTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lava fire is blocked.
-[22:41:43] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Fire spread is UNRESTRICTED.
-[22:41:43] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_the_end'
-[22:41:43] [Server thread/INFO]: [WorldGuard] Loading region data...
-[22:41:43] [Server thread/INFO]: Done (3.254s)! For help, type "help" or "?"
-[22:41:43] [Server thread/INFO]: Timings Reset
-[22:44:24] [Thread-1/INFO]: Stopping server
+[01:19:03] [Server thread/INFO]: Starting minecraft server version 1.12.2
+[01:19:03] [Server thread/INFO]: Loading properties
+[01:19:03] [Server thread/INFO]: Default game type: SURVIVAL
+[01:19:03] [Server thread/INFO]: This server is running Paper version git-Paper-1620 (MC: 1.12.2) (Implementing API version 1.12.2-R0.1-SNAPSHOT)
+[01:19:03] [Server thread/INFO]: Debug logging is disabled
+[01:19:03] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[01:19:03] [Server thread/INFO]: Using 4 threads for Netty based IO
+[01:19:04] [Server thread/INFO]: Generating keypair
+[01:19:04] [Server thread/INFO]: Starting Minecraft server on localhost:25566
+[01:19:04] [Server thread/INFO]: Using default channel type
+[01:19:04] [Server thread/INFO]: Set PluginClassLoader as parallel capable
+[01:19:04] [Server thread/INFO]: [PlayerSkulls] Loading PlayerSkulls v1.0
+[01:19:04] [Server thread/INFO]: [WorldEdit] Loading WorldEdit v6.1.9;caf0ad9
+[01:19:04] [Server thread/INFO]: [UsernameEffects] Loading UsernameEffects v1.0.0
+[01:19:04] [Server thread/INFO]: [WorldGuard] Loading WorldGuard v6.2.2-SNAPSHOT;8eeab68
+[01:19:04] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[01:19:04] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[01:19:04] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[01:19:04] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[01:19:04] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[01:19:04] [Server thread/INFO]: **** Beginning UUID conversion, this may take A LONG time ****
+[01:19:04] [Server thread/INFO]: Preparing level "The Lston EaglerCraft Server"
+[01:19:04] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server] --------
+[01:19:04] [Server thread/INFO]: Cactus Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Cane Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Melon Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Mushroom Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Sapling Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Wheat Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: NetherWart Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Vine Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Cocoa Growth Modifier: 100%
+[01:19:04] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[01:19:04] [Server thread/INFO]: Mob Spawn Range: 4
+[01:19:04] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[01:19:04] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[01:19:04] [Server thread/INFO]: Random Lighting Updates: false
+[01:19:04] [Server thread/INFO]: Structure Info Saving: true
+[01:19:04] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[01:19:05] [Server thread/INFO]: Max TNT Explosions: 100
+[01:19:05] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[01:19:05] [Server thread/INFO]: View Distance: 4
+[01:19:05] [Server thread/INFO]: Item Despawn Rate: 6000
+[01:19:05] [Server thread/INFO]: Item Merge Radius: 2.5
+[01:19:05] [Server thread/INFO]: Arrow Despawn Rate: 1200
+[01:19:05] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[01:19:05] [Server thread/INFO]: Experience Merge Radius: 3.0
+[01:19:05] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
+[01:19:05] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
+[01:19:06] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server_nether] --------
+[01:19:06] [Server thread/INFO]: Cactus Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Cane Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Melon Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Mushroom Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Sapling Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Wheat Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: NetherWart Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Vine Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Cocoa Growth Modifier: 100%
+[01:19:06] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[01:19:06] [Server thread/INFO]: Mob Spawn Range: 4
+[01:19:06] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[01:19:06] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[01:19:06] [Server thread/INFO]: Random Lighting Updates: false
+[01:19:06] [Server thread/INFO]: Structure Info Saving: true
+[01:19:06] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[01:19:06] [Server thread/INFO]: Max TNT Explosions: 100
+[01:19:06] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[01:19:06] [Server thread/INFO]: View Distance: 4
+[01:19:06] [Server thread/INFO]: Item Despawn Rate: 6000
+[01:19:06] [Server thread/INFO]: Item Merge Radius: 2.5
+[01:19:06] [Server thread/INFO]: Arrow Despawn Rate: 1200
+[01:19:06] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[01:19:06] [Server thread/INFO]: Experience Merge Radius: 3.0
+[01:19:06] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
+[01:19:06] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
+[01:19:07] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server_the_end] --------
+[01:19:07] [Server thread/INFO]: Cactus Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Cane Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Melon Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Mushroom Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Sapling Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Wheat Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: NetherWart Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Vine Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Cocoa Growth Modifier: 100%
+[01:19:07] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[01:19:07] [Server thread/INFO]: Mob Spawn Range: 4
+[01:19:07] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[01:19:07] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[01:19:07] [Server thread/INFO]: Random Lighting Updates: false
+[01:19:07] [Server thread/INFO]: Structure Info Saving: true
+[01:19:07] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[01:19:07] [Server thread/INFO]: Max TNT Explosions: 100
+[01:19:07] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[01:19:07] [Server thread/INFO]: View Distance: 4
+[01:19:07] [Server thread/INFO]: Item Despawn Rate: 6000
+[01:19:07] [Server thread/INFO]: Item Merge Radius: 2.5
+[01:19:07] [Server thread/INFO]: Arrow Despawn Rate: 1200
+[01:19:07] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[01:19:07] [Server thread/INFO]: Experience Merge Radius: 3.0
+[01:19:07] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
+[01:19:07] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
+[01:19:07] [Server thread/INFO]: Preparing start region for level 0 (Seed: -5782907558954678269)
+[01:19:08] [Server thread/INFO]: Preparing spawn area: 0%
+[01:19:09] [Server thread/INFO]: Preparing spawn area: 10%
+[01:19:10] [Server thread/INFO]: Preparing start region for level 1 (Seed: -5782907558954678269)
+[01:19:10] [Server thread/INFO]: Preparing start region for level 2 (Seed: -5782907558954678269)
+[01:19:10] [Server thread/INFO]: [PlayerSkulls] Enabling PlayerSkulls v1.0
+[01:19:10] [Server thread/INFO]: [WorldEdit] Enabling WorldEdit v6.1.9;caf0ad9
+[01:19:11] [Server thread/INFO]: WEPIF: Using the Bukkit Permissions API.
+[01:19:12] [Server thread/INFO]: [WorldEdit] Using com.sk89q.worldedit.bukkit.adapter.impl.Spigot_v1_12_R2 as the Bukkit adapter
+[01:19:12] [Server thread/INFO]: [UsernameEffects] Enabling UsernameEffects v1.0.0
+[01:19:12] [Server thread/INFO]: [WorldGuard] Enabling WorldGuard v6.2.2-SNAPSHOT;8eeab68
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) TNT ignition is PERMITTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lighters are PERMITTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lava fire is blocked.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Fire spread is UNRESTRICTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server'
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) TNT ignition is PERMITTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lighters are PERMITTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lava fire is blocked.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Fire spread is UNRESTRICTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_nether'
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) TNT ignition is PERMITTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lighters are PERMITTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lava fire is blocked.
+[01:19:12] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Fire spread is UNRESTRICTED.
+[01:19:12] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_the_end'
+[01:19:12] [Server thread/INFO]: [WorldGuard] Loading region data...
+[01:19:13] [Server thread/INFO]: Done (8.513s)! For help, type "help" or "?"
+[01:19:13] [Server thread/INFO]: Timings Reset

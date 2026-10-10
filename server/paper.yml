@@ -68,6 +68,7 @@ world-settings:
       disable-extreme-hills-emeralds: false
       disable-extreme-hills-monster-eggs: false
       disable-mesa-additional-gold: false
+    portal-search-radius: 128
     use-vanilla-world-scoreboard-name-coloring: false
     queue-light-updates: false
     optimize-explosions: false
@@ -124,7 +125,6 @@ world-settings:
       push-based: false
     duplicate-uuid-resolver: saferegen
     duplicate-uuid-saferegen-delete-range: 32
-    portal-search-radius: 128
     keep-spawn-loaded-range: 4
     auto-save-interval: -1
     nether-ceiling-void-damage: false
