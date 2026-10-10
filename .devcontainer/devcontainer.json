@@ -3,10 +3,15 @@
 	"remoteEnv": {
 		"PATH": "${containerWorkspaceFolder}/bin:${containerWorkspaceFolder}:${containerEnv:PATH}"
 	},
-	"forwardPorts": [8081],
+	"forwardPorts": [8081, 8082],
 	"portsAttributes": {
 		"8081": {
 			"label": "Eaglercraft Gateway",
+			"onAutoForward": "notify",
+			"visibility": "public"
+		},
+		"8082": {
+			"label": "Custom TNT Resource Pack",
 			"onAutoForward": "notify",
 			"visibility": "public"
 		},

@@ -15,7 +15,11 @@ explosions:
     power: 0.0
     size: 8
     fire: false
+  x-ray:
+    power: 0.0
+    size: 10
+    fire: false
   black-hole:
-    power: 3.75
-    size: 15
+    power: 15.0
+    size: 60
     fire: false
