@@ -785,12 +785,6 @@
     },
     "done": true
   },
-  "minecraft:recipes/building_blocks/clay": {
-    "criteria": {
-      "has_clay_ball": "2026-10-10 21:23:27 +0000"
-    },
-    "done": true
-  },
   "minecraft:recipes/building_blocks/green_stained_glass": {
     "criteria": {
       "has_glass": "2026-09-26 02:41:08 +0000"

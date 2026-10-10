@@ -2,6 +2,7 @@
 """Build the 1.8-compatible custom TNT resource pack and web download."""
 
 from pathlib import Path
+import shutil
 import struct
 import zlib
 import zipfile
@@ -233,87 +234,31 @@ THEMES = {
     "rdm": ((226, 70, 200), (255, 240, 120), (40, 20, 60), (90, 255, 220)),
     "mob": ((64, 140, 60), (214, 226, 190), (24, 44, 24), (255, 80, 60)),
     "poop": ((101, 67, 33), (160, 110, 60), (30, 18, 8), (190, 140, 80)),
-    "glitch": ((120, 40, 200), (60, 255, 230), (10, 10, 30), (255, 60, 220)),
+    "verity": ((255, 214, 40), (24, 22, 20), (255, 214, 40), (255, 255, 255)),
     "sun": ((255, 196, 20), (255, 250, 200), (130, 80, 10), (255, 255, 255)),
     "black_hole": ((56, 36, 84), (210, 200, 230), (12, 8, 20), (190, 120, 255)),
 }
 
-ITEM_THEME = {
-    "tnt": "nuke", "mining_tnt": "mining", "fire_tnt": "fire", "slime_tnt": "slime",
-    "xray_tnt": "xray", "rdm_tnt": "rdm", "mob_tnt": "mob", "poop_tnt": "poop", "glitch_tnt": "glitch", "ender_eye": "glitch", "clay_ball": "poop", "bone": "mob", "prismarine_shard": "rdm", "sun_tnt": "sun", "black_hole_tnt": "black_hole",
-    "gold_ingot": "mining", "fireball": "fire", "slimeball": "slime",
-    "diamond": "xray", "diamond_ore": "xray", "glowstone_dust": "sun",
-    "ender_pearl": "black_hole",
-}
-
-
 def build_detailed():
-    for index, (item, theme) in enumerate(ITEM_THEME.items()):
+    # Spawn eggs are tinted per mob, so the shared icon is neutral gray/white.
+    body, band, ink, spark = (255, 255, 255), (235, 235, 235), (120, 120, 120), (255, 255, 255)
+    png_rgba(ASSETS / "items" / "spawn_egg.png", cube_icon(body, band, ink, spark, 3))
+    blank = [[(0, 0, 0, 0)] * 32 for _ in range(32)]
+    png_rgba(ASSETS / "items" / "spawn_egg_overlay.png", blank)
+
+    # Items players cannot obtain in survival, one per TNT.
+    flat = {"barrier": "black_hole", "minecart_command_block": "x_ray"}
+    for index, (item, theme) in enumerate(flat.items()):
+        body, band, ink, spark = THEMES[theme.replace("x_ray", "xray")]
+        png_rgba(ASSETS / "items" / f"{item}.png", cube_icon(body, band, ink, spark, 20 + index))
+    blocks = {"bedrock": "nuke", "farmland_dry": "mining", "mob_spawner": "fire"}
+    for index, (texture, theme) in enumerate(blocks.items()):
         body, band, ink, spark = THEMES[theme]
-        png_rgba(ASSETS / "items" / f"{item}.png", cube_icon(body, band, ink, spark, index + 1))
-    body, band, ink, spark = THEMES["nuke"]
-    block_face_png(ASSETS / "blocks" / "tnt_side.png", face_texture("side", body, band, ink, spark, 5))
-    block_face_png(ASSETS / "blocks" / "tnt_top.png", face_texture("top", body, band, ink, spark, 6))
-    bottom = face_texture("top", body, body, ink, spark, 9)
-    block_face_png(ASSETS / "blocks" / "tnt_bottom.png", bottom)
+        block_face_png(ASSETS / "blocks" / f"{texture}.png", face_texture("side", body, band, ink, spark, 30 + index))
 
 
 def build():
-    side_rows = [["r" for _ in range(16)] for _ in range(16)]
-    for y in range(4, 11):
-        side_rows[y] = ["w" for _ in range(16)]
-    glyphs = {"T": ("111", "010", "010"), "N": ("101", "111", "101")}
-    for index, letter in enumerate("TNT"):
-        for y, line in enumerate(glyphs[letter]):
-            for x, pixel in enumerate(line):
-                if pixel == "1":
-                    side_rows[6 + y][2 + index * 4 + x] = "k"
-    block_palette = {
-        "r": (191, 38, 32, 255),
-        "d": (92, 25, 24, 255),
-        "w": (224, 218, 195, 255),
-        "b": (45, 39, 34, 255),
-        "y": (217, 170, 74, 255),
-        "k": (35, 31, 29, 255),
-    }
-    png(ASSETS / "blocks" / "tnt_side.png", ["".join(row) for row in side_rows], block_palette)
-
-    top = [["r" for _ in range(16)] for _ in range(16)]
-    top_palette = dict(block_palette)
-    for y in range(4, 12):
-        for x in range(4, 12):
-            top[y][x] = "w"
-    for x, y, color in (
-        (7, 4, "b"), (8, 4, "b"), (7, 5, "b"), (8, 5, "b"),
-        (7, 6, "y"), (8, 6, "y"), (6, 7, "y"), (9, 7, "y"),
-        (7, 8, "y"), (8, 8, "y"), (7, 9, "b"), (8, 9, "b"),
-        (7, 10, "b"), (8, 10, "b"),
-    ):
-        top[y][x] = color
-    png(ASSETS / "blocks" / "tnt_top.png", ["".join(row) for row in top], top_palette)
-    bottom_rows = ["".join("d" if (x + y) % 4 == 0 else "r" for x in range(16))
-                   for y in range(16)]
-    png(ASSETS / "blocks" / "tnt_bottom.png", bottom_rows, block_palette)
-
-    tnt_themes = {
-        "items/tnt.png": ((191, 38, 32, 255), (92, 25, 24, 255), (235, 88, 65, 255), (92, 25, 24, 255)),
-        "items/mining_tnt.png": ((169, 169, 169, 255), (89, 89, 89, 255), (230, 230, 230, 255), (89, 89, 89, 255)),
-        "items/fire_tnt.png": ((238, 102, 24, 255), (133, 45, 15, 255), (255, 188, 47, 255), (133, 45, 15, 255)),
-        "items/slime_tnt.png": ((74, 188, 43, 255), (39, 114, 34, 255), (177, 247, 103, 255), (39, 114, 34, 255)),
-        "items/xray_tnt.png": ((40, 112, 255, 255), (18, 55, 138, 255), (155, 203, 255, 255), (18, 55, 138, 255)),
-        "items/sun_tnt.png": ((255, 192, 0, 255), (138, 94, 15, 255), (255, 242, 156, 255), (138, 94, 15, 255)),
-        "items/black_hole_tnt.png": ((59, 30, 74, 255), (18, 12, 22, 255), (191, 129, 255, 255), (18, 12, 22, 255)),
-        "items/gold_ingot.png": ((218, 153, 42, 255), (122, 79, 23, 255), (255, 222, 105, 255), (122, 79, 23, 255)),
-        "items/fireball.png": ((238, 102, 24, 255), (133, 45, 15, 255), (255, 188, 47, 255), (133, 45, 15, 255)),
-        "items/slimeball.png": ((74, 188, 43, 255), (39, 114, 34, 255), (177, 247, 103, 255), (39, 114, 34, 255)),
-        "items/diamond_ore.png": ((40, 112, 255, 255), (18, 55, 138, 255), (155, 203, 255, 255), (18, 55, 138, 255)),
-        "items/glowstone_dust.png": ((255, 206, 82, 255), (138, 94, 15, 255), (255, 242, 156, 255), (138, 94, 15, 255)),
-        "items/ender_pearl.png": ((39, 39, 46, 255), (12, 12, 18, 255), (232, 232, 238, 255), (12, 12, 18, 255)),
-    }
-    for name, colors in tnt_themes.items():
-        rows, palette = tnt_block_icon(*colors)
-        png(ASSETS / name, rows, palette)
-
+    shutil.rmtree(ROOT / "assets", ignore_errors=True)
     build_detailed()
 
     with zipfile.ZipFile(WEB_PACK, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:

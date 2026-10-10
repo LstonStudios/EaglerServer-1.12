@@ -64,12 +64,6 @@ stats:
 world-settings:
   default:
     verbose: true
-    ticks-per:
-      hopper-transfer: 8
-      hopper-check: 1
-    hopper-amount: 1
-    random-light-updates: false
-    save-structure-info: true
     dragon-death-sound-radius: 0
     seed-village: 10387312
     seed-feature: 14357617
@@ -113,6 +107,12 @@ world-settings:
       monsters: 48
       misc: 32
       other: 64
+    ticks-per:
+      hopper-transfer: 8
+      hopper-check: 1
+    hopper-amount: 1
+    random-light-updates: false
+    save-structure-info: true
     view-distance: 4
     item-despawn-rate: 6000
     merge-radius:

@@ -31,7 +31,7 @@ explosions:
     power: 0.0
     size: 10
     fire: false
-  glitch:
+  verity:
     power: 0.0
     size: 10
     fire: false
@@ -43,3 +43,9 @@ explosions:
     power: 15.0
     size: 60
     fire: false
+ai:
+  enabled: true
+  endpoint: https://api.openai.com/v1/chat/completions
+  model: gpt-4o-mini
+  cooldown-seconds: 3
+  api-key: ''

@@ -124,9 +124,13 @@ TNT item a block-shaped TNT icon with the regular TNT band and lettering,
 recolored by type: red/white for nuke, gray/white for mining, orange/white for
 fire, green/white for slime, cyan/white for x-ray, gold/white for sun, and
 black/white for black hole. The types keep their distinct explosion effects.
-Because this pack is compatible with 1.8 clients, it recolors the corresponding
-vanilla item textures too (gold ingots, fire charges, slimeballs, diamond ore,
-glowstone dust, and ender pearls).
+Because 1.8 clients cannot register new items, each custom TNT reuses an item
+survival players cannot obtain: bedrock (nuke), farmland (mining), mob spawner
+(fire), command-block minecart (x-ray) and barrier (black hole). The rest are
+spawn eggs (slime, ocelot, cow, creeper, pig, blaze) tinted by mob color. The pack
+retextures only those items, so placed bedrock, farmland and spawners also show
+the TNT texture. After rebuilding the pack, update `resource-pack-sha1` and the
+`?v=` value in `server/server.properties`.
 The plugin adds matching colored block-fragment particles around each primed
 TNT and its blast. The vanilla 1.12.2 client still renders the primed TNT
 entity itself with the standard TNT texture. In Bukkit 1.12, the creative
@@ -139,7 +143,7 @@ CORS-enabled pack endpoint running with
 `python3 custom-tnt-resource-pack/serve_pack.py`; port 8082 must be publicly
 forwarded so clients can download the pack.
 Operators can issue types with
-`/customtnt give <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|poop|glitch|sun|black-hole> [amount]`
+`/customtnt give <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|poop|verity|sun|black-hole> [amount]`
 (`/ctnt` is an alias). `@a` gives TNT to all online players, `@s` to the
 commanding player, and `@p` to the nearest player in the commander's world.
 Place TNT-icon variants normally; right-click a block while holding mining,
@@ -151,8 +155,18 @@ rdmTNT (`rdm`, a prismarine shard icon) replaces every solid block within a
 Mob TNT (`mob`, a bone icon) spawns 40 random mobs within a 10-block radius.
 Poop TNT (`poop`, a clay ball icon) builds random brown wool and brown
 concrete piles plus scattered brown blocks on the surface within 10 blocks.
-Glitch TNT (`glitch`, an eye of ender icon) fills about a quarter of the air
-within 10 blocks with nether portal blocks.
+Verity TNT (`verity`, a yellow/black gold nugget icon) spawns Verity: a cheerful
+floating yellow companion that follows the nearest player and claims to know
+everything. After 30 seconds it turns creepy and obsessive, and after about 70
+seconds it transforms into a tall, hostile monster (an Enderman named Verity)
+that hunts the nearest player. While Verity exists, players within 40 blocks
+can chat with it: it replies by keyword (hello, friend, help, leave, etc.),
+with different personalities in each phase. If an AI key is set, Verity answers
+anything via an OpenAI-compatible API (default `gpt-4o-mini`, configured under
+`ai:` in the plugin config). Set the key with the `VERITY_AI_KEY` environment
+variable before starting the backend (or `ai.api-key`, which must not be
+committed). Nearby players' chat messages are sent to that service. Without a
+key, Verity uses built-in keyword replies.
 Fire TNT makes a fiery, fire-setting explosion. Nuke TNT has an approximately
 8-block-wide blast and an expanding particle shockwave. Mining TNT drills a
 cardinal 3x3 tunnel. X-Ray TNT clears a 10x10 area while leaving ores intact.
