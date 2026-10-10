@@ -1,5 +1,8 @@
 {
 	"name": "Eaglercraft Server",
+	"remoteEnv": {
+		"PATH": "${containerWorkspaceFolder}/bin:${containerWorkspaceFolder}:${containerEnv:PATH}"
+	},
 	"forwardPorts": [8081],
 	"portsAttributes": {
 		"8081": {

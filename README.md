@@ -21,9 +21,9 @@ now you have your own free server instance to host eaglercraft. Next you need to
 <br>
 Create a terminal tab and paste the following:<br>
 <br>
-enter the following: `cd bungee && sudo java -Deaglerxvelocity.stfu=true -jar bungee.jar`
+enter the following: `startserver 1`
 <br>
-then, make a new tab and enter the following: `cd server && sudo java -jar server.jar`
+then, make a new tab and enter the following: `startserver 2`
 <br>
 Now go to the ports area and forward (and make public) port `8081`
 <br>
@@ -32,37 +32,56 @@ Your eaglercraft server is setup!
 
 PS: You can use this as a normal server too (like properly hosted) just clone this repo and run it in much the same way.
 
+## Eaglercraft voice chat
+
+Eaglercraft voice chat is enabled on the WebSocket listener and EaglerXServer
+voice service. Players need a compatible Eaglercraft client with microphone
+permission. Voice uses browser WebRTC and the configured public STUN/TURN
+servers; network/firewall policies may prevent some players from connecting.
+The EaglerXServer configuration warns that its voice protocol is easy to stress
+and abuse, so consider the risks before enabling it on a large public server.
+
 ## Saving and loading world backups
 
-Run these commands from the repository's top-level directory. Stop the
-Minecraft server before saving or restoring so its world files are not being
-changed while copied.
+Stop the Minecraft server before saving or restoring so its world files are
+not being changed while copied.
 
 ### Save a backup
 
 1. Stop the Minecraft server.
-2. Create a backup archive containing the Overworld, Nether, and End. The
-   command below is for this repository's configured world name:
+2. From the repository's top-level directory, create a backup. You can give
+   it a name:
 
    ```sh
-   mkdir -p backups
-   tar -czf "backups/world-$(date +%Y-%m-%d-%H%M%S).tar.gz" -C server \
-     "The Lston EaglerCraft Server" \
-     "The Lston EaglerCraft Server_nether" \
-     "The Lston EaglerCraft Server_the_end"
+   backup before-update
    ```
 
-   If you changed `level-name` in `server/server.properties`, replace those
-   three folder names with `<level-name>`, `<level-name>_nether`, and
-   `<level-name>_the_end`. If the server uses a different world name, check
-   the folder names under `server/`.
+   This creates `backups/before-update.tar.gz`. Or omit the name to generate
+   one automatically:
+
+   ```sh
+   backup
+   ```
+
+   Automatic names use the `world-YYYY-MM-DD-HHMMSS.tar.gz` format. Backups
+   contain the configured Overworld, Nether, and End. Explicit names can
+   contain letters, numbers, dots, underscores, and hyphens. Existing names
+   are not overwritten. The `backup`, `backups`, `delbackup`, and
+   `loadbackup` commands are added to the workspace terminal PATH. Rebuild
+   or reopen the dev container after changing its configuration, then open a
+   new terminal. The backup command validates the Overworld `region/` folder
+   and the Nether/End folders' `DIM-1/region/` and `DIM1/region/` paths.
 3. Check that the archive was created:
 
    ```sh
-   ls -lh backups/
+   backups
    ```
 
-4. Start the server again as usual. Keep a copy of the archive somewhere
+4. To remove backup archives, run `delbackup`. Choose one or more menu codes
+   (`1`-`9`, then `A`-`M`) separated by commas, then type `Y` to confirm or
+   `N` to cancel. Enter `Q` at the selection prompt to quit. This command
+   only deletes archive files; it does not delete `pre-restore-*` folders.
+5. Start the server again as usual. Keep a copy of the archive somewhere
    outside this repository too, so it remains safe if the server files are
    lost.
 
@@ -77,13 +96,13 @@ changed while copied.
    listed backup:
 
    ```sh
-   python3 loadbackup.py
+   loadbackup
    ```
 
    Or provide the archive path directly:
 
    ```sh
-   python3 loadbackup.py backups/world-2026-10-08-120000.tar.gz
+   loadbackup backups/world-YYYY-MM-DD-HHMMSS.tar.gz
    ```
 
 4. Confirm the success message. The loader moves the current world folders
@@ -95,3 +114,29 @@ The loader prefers the world matching `level-name` in
 `server/server.properties`. If an archive contains multiple worlds and none
 matches, it stops instead of guessing. Do not extract an archive over the
 live server folders manually.
+
+## Custom TNT
+
+The server includes a Bukkit plugin that adds nuke, mining, fire, slime, and
+black hole TNT. The server prompts clients to download the 1.8-compatible
+resource pack at `web/custom-tnt-pack.zip`, which textures the TNT block and
+the different custom-TNT item icons. Accept the pack prompt to see the custom
+textures. The pack also changes the appearance of ordinary TNT, gold ingots,
+fire charges, slimeballs, and ender pearls.
+Operators can issue types with
+`/customtnt give <player|@a|@s|@p> <nuke|mining|fire|slime|black-hole> [amount]`
+(`/ctnt` is an alias). `@a` gives TNT to all online players, `@s` to the
+commanding player, and `@p` to the nearest player in the commander's world.
+Fire TNT makes a fiery, fire-setting explosion. Nuke TNT has an approximately
+8-block-wide blast and an expanding particle shockwave. Slime TNT converts an
+8-by-8 patch of exposed surface blocks to slime. Black hole TNT has an
+approximately 15-block-wide blast, portal/smoke effects, and pulls nearby
+surviving entities inward while applying brief blindness, slowness, and wither
+effects. Native Minecraft explosions vary with terrain resistance, so their
+damaged area is approximate.
+Explosion power and effect size are configurable in
+`server/plugins/CustomTNT/config.yml`; `/customtnt reload` applies changes.
+
+To build the plugin after changing its source, run
+`gradle -p custom-tnt-plugin build` from the repository root. Copy `custom-tnt-plugin/build/libs/CustomTNT-1.0.0.jar`
+to `server/plugins/` and restart the server.

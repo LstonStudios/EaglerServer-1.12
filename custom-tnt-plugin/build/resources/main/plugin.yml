@@ -1,0 +1,15 @@
+name: CustomTNT
+version: 1.0.0
+main: net.lstonstudios.customtnt.CustomTNTPlugin
+author: LstonStudios
+description: Adds themed nuke, mining, fire, slime, and black hole TNT.
+commands:
+  customtnt:
+    description: Give custom TNT or reload its configuration.
+    usage: /customtnt <give|reload> ...
+    aliases: [ctnt]
+    permission: customtnt.admin
+permissions:
+  customtnt.admin:
+    description: Allows managing custom TNT.
+    default: op

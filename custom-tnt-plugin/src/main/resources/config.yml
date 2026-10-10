@@ -1,0 +1,21 @@
+explosions:
+  nuke:
+    power: 2.0
+    size: 8
+    fire: true
+  mining:
+    power: 2.0
+    size: 4
+    fire: false
+  fire:
+    power: 4.0
+    fire: true
+    size: 8
+  slime:
+    power: 0.0
+    size: 8
+    fire: false
+  black-hole:
+    power: 3.75
+    size: 15
+    fire: false

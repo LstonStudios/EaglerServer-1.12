@@ -1,0 +1,138 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+SERVER="$ROOT/server"
+BACKUPS="$ROOT/backups"
+
+usage() {
+  echo "Usage: backup [backupname]" >&2
+  echo "Creates a named or timestamped backup in backups/ from the configured world and dimensions." >&2
+}
+
+if [[ $# -gt 1 ]]; then
+  usage
+  exit 2
+fi
+
+if [[ $# -eq 0 ]]; then
+  name="world-$(date '+%Y-%m-%d-%H%M%S')"
+else
+  name="$1"
+  if [[ "$name" == *.tar.gz ]]; then
+    name="${name%.tar.gz}"
+  fi
+  if [[ ! "$name" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+    echo "Backup name must start with a letter or number and contain only letters, numbers, dots, underscores, or hyphens." >&2
+    exit 2
+  fi
+fi
+
+properties="$SERVER/server.properties"
+if [[ ! -f "$properties" ]]; then
+  echo "Could not find server properties: $properties" >&2
+  exit 1
+fi
+
+world_name="$(sed -n 's/^level-name=//p' "$properties" | tail -n 1)"
+if [[ -z "$world_name" || "$world_name" == */* || "$world_name" == *\\* ]]; then
+  echo "server.properties must contain a valid level-name." >&2
+  exit 1
+fi
+
+server_port="$(sed -n 's/^server-port=//p' "$properties" | tail -n 1)"
+if [[ ! "$server_port" =~ ^[0-9]{1,5}$ ]] || (( 10#$server_port < 1 || 10#$server_port > 65535 )); then
+  echo "server.properties must contain a valid server-port." >&2
+  exit 1
+fi
+
+server_running=false
+if command -v ss >/dev/null 2>&1; then
+  if ! listening_sockets="$(ss -H -ltn "sport = :$server_port")"; then
+    echo "Could not check whether the Minecraft server is listening on port $server_port." >&2
+    exit 1
+  fi
+  if [[ -n "$listening_sockets" ]]; then
+    server_running=true
+  fi
+elif [[ ! -d /proc ]]; then
+  echo "Cannot verify that the Minecraft server is stopped (ss or /proc is required)." >&2
+  exit 1
+fi
+
+if [[ -d /proc ]]; then
+  server_directory="$(readlink -f "$SERVER" 2>/dev/null || true)"
+  for process in /proc/[0-9]*; do
+    [[ -r "$process/cmdline" ]] || continue
+    command_line="$(tr '\0' ' ' < "$process/cmdline" 2>/dev/null || true)"
+    [[ "$command_line" == *server.jar* ]] || continue
+    process_directory="$(readlink -f "$process/cwd" 2>/dev/null || true)"
+    if [[ -z "$process_directory" || "$process_directory" == "$server_directory" ]]; then
+      server_running=true
+    fi
+  done
+fi
+
+if [[ "$server_running" == true ]]; then
+  echo "Stop the Minecraft server before creating a consistent backup." >&2
+  exit 1
+fi
+
+worlds=(
+  "$world_name"
+  "${world_name}_nether"
+  "${world_name}_the_end"
+)
+region_paths=(
+  "$world_name/region"
+  "${world_name}_nether/DIM-1/region"
+  "${world_name}_the_end/DIM1/region"
+)
+for index in "${!worlds[@]}"; do
+  world="${worlds[$index]}"
+  region_path="${region_paths[$index]}"
+  if [[ ! -f "$SERVER/$world/level.dat" || ! -d "$SERVER/$region_path" ]]; then
+    echo "World folder is missing level.dat or its region directory ($region_path): $SERVER/$world" >&2
+    exit 1
+  fi
+done
+
+mkdir -p "$BACKUPS"
+archive="$BACKUPS/$name.tar.gz"
+if [[ $# -eq 0 ]]; then
+  while [[ -e "$archive" ]]; do
+    sleep 1
+    name="world-$(date '+%Y-%m-%d-%H%M%S')"
+    archive="$BACKUPS/$name.tar.gz"
+  done
+fi
+if [[ -e "$archive" ]]; then
+  echo "Backup already exists; choose another name: $archive" >&2
+  exit 1
+fi
+
+temporary="$(mktemp "$BACKUPS/.${name}.XXXXXX.tar.gz")"
+listing="${temporary}.list"
+trap 'rm -f -- "$temporary" "$listing"' EXIT
+tar -czf "$temporary" -C "$SERVER" -- "${worlds[@]}"
+tar -tzf "$temporary" > "$listing"
+for index in "${!worlds[@]}"; do
+  world="${worlds[$index]}"
+  region_path="${region_paths[$index]}"
+  if ! grep -Fqx -- "$world/level.dat" "$listing"; then
+    echo "Backup archive is missing level.dat for: $world" >&2
+    exit 1
+  fi
+  if ! grep -F -- "$region_path/" "$listing" >/dev/null; then
+    echo "Backup archive is missing region data for: $world" >&2
+    exit 1
+  fi
+done
+
+if ! ln -- "$temporary" "$archive"; then
+  echo "Could not create backup (the name may already exist): $archive" >&2
+  exit 1
+fi
+
+echo "Created backup: $archive"
+ls -lh "$archive"

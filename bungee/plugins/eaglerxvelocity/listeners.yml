@@ -11,6 +11,7 @@ listener_01:
   server_icon: server-icon.png
   server_motd:
   - '&6&nWelcome to The &1&l&nLstonServer!'
+  allow_voice: true
   allow_motd: true
   allow_query: true
   request_motd_cache:

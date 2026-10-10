@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: startserver 1|2" >&2
+  exit 1
+fi
+
+case "$1" in
+  1)
+    cd /workspaces/EaglerServer-1.12/bungee || exit 1
+    exec sudo java -Deaglerxvelocity.stfu=true -jar bungee.jar
+    ;;
+  2)
+    cd /workspaces/EaglerServer-1.12/server || exit 1
+    exec sudo java -jar server.jar
+    ;;
+  *)
+    echo "Unknown server target: $1" >&2
+    echo "Usage: startserver 1|2" >&2
+    exit 1
+    ;;
+esac
