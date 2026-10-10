@@ -19,6 +19,26 @@ explosions:
     power: 0.0
     size: 10
     fire: false
+  rdm:
+    power: 0.0
+    size: 10
+    fire: false
+  mob:
+    power: 0.0
+    size: 10
+    fire: false
+  poop:
+    power: 0.0
+    size: 10
+    fire: false
+  glitch:
+    power: 0.0
+    size: 10
+    fire: false
+  sun:
+    power: 0.0
+    size: 10
+    fire: false
   black-hole:
     power: 15.0
     size: 60

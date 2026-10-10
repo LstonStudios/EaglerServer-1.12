@@ -93,14 +93,14 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onTNTPlace(BlockPlaceEvent event) {
         TNTType type = getTNTType(event.getItemInHand());
-        if (type == null || type.icon != Material.TNT) {
+        if (type == null) {
             return;
         }
 
         event.setCancelled(true);
         Block placedBlock = event.getBlockPlaced();
         placedBlock.setType(Material.AIR);
-        if (primeCustomTNT(placedBlock.getLocation().add(0.5, 0.0, 0.5), type)
+        if (primeCustomTNT(placedBlock.getLocation().add(0.5, 0.0, 0.5), type, event.getPlayer())
                 && event.getPlayer().getGameMode() != GameMode.CREATIVE) {
             consumeItem(event.getPlayer(), event.getHand());
         }
@@ -117,7 +117,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         }
 
         TNTType type = getTNTType(event.getItem());
-        if (type == null || type.icon == Material.TNT) {
+        if (type == null) {
             return;
         }
         event.setCancelled(true);
@@ -132,12 +132,16 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         Location spawnLocation;
         spawnLocation = event.getClickedBlock().getRelative(event.getBlockFace())
                 .getLocation().add(0.5, 0.0, 0.5);
-        if (primeCustomTNT(spawnLocation, type) && event.getPlayer().getGameMode() != GameMode.CREATIVE) {
+        if (primeCustomTNT(spawnLocation, type, event.getPlayer()) && event.getPlayer().getGameMode() != GameMode.CREATIVE) {
             consumeItem(event.getPlayer(), event.getHand());
         }
     }
 
-    private boolean primeCustomTNT(Location location, TNTType type) {
+    private boolean primeCustomTNT(Location location, TNTType type, Player player) {
+        if (type == TNTType.MINING) {
+            startMiningTunnel(location, player);
+            return true;
+        }
         Entity spawned = location.getWorld().spawnEntity(location, EntityType.PRIMED_TNT);
         if (!(spawned instanceof TNTPrimed)) {
             getLogger().severe("Could not spawn custom TNT entity for " + type.key + ".");
@@ -170,6 +174,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         Location center = event.getLocation();
         spawnBlockBurst(center, type.effectBlock, 100, 2.5, 1.5, 2.5);
         if (type == TNTType.SLIME) {
+            convertSurfaceToSlime(center, settings.size);
             center.getWorld().playSound(center, Sound.BLOCK_SLIME_PLACE, 2.0F, 0.7F);
             animateShockwave(center, settings.size, Particle.SLIME, Particle.VILLAGER_HAPPY);
             spawnBurst(center, Particle.SLIME, 80, 2.2, 1.2, 2.2);
@@ -210,7 +215,251 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             world.playSound(center, Sound.BLOCK_STONE_BREAK, 1.8F, 0.7F);
             spawnBurst(center, Particle.CRIT, 70, 2.6, 1.2, 2.6);
             animateShockwave(center, settings.size, Particle.CRIT, Particle.SPELL_INSTANT);
+        } else if (type == TNTType.GLITCH) {
+            spawnPortalBlocks(center, Math.min(10, settings.size));
+            world.playSound(center, Sound.BLOCK_PORTAL_TRIGGER, 2.5F, 1.6F);
+            spawnBurst(center, Particle.PORTAL, 200, 4.0, 2.0, 4.0);
+            animateShockwave(center, settings.size, Particle.PORTAL, Particle.SPELL_MOB);
+        } else if (type == TNTType.POOP) {
+            spawnPoop(center, Math.min(10, settings.size));
+            world.playSound(center, Sound.BLOCK_SLIME_PLACE, 2.5F, 0.5F);
+            spawnBlockBurst(center, Material.DIRT, 150, 3.0, 1.5, 3.0);
+            animateShockwave(center, settings.size, Particle.SMOKE_NORMAL, Particle.VILLAGER_ANGRY);
+        } else if (type == TNTType.MOB) {
+            spawnMobs(center, Math.min(10, settings.size));
+            world.playSound(center, Sound.ENTITY_EVOCATION_ILLAGER_CAST_SPELL, 2.5F, 0.9F);
+            spawnBurst(center, Particle.SPELL_WITCH, 120, 3.0, 1.5, 3.0);
+            spawnBurst(center, Particle.CLOUD, 60, 2.5, 1.0, 2.5);
+            animateShockwave(center, settings.size, Particle.SPELL_WITCH, Particle.CLOUD);
+        } else if (type == TNTType.RDM) {
+            randomizeArea(center, Math.min(10, settings.size));
+            world.playSound(center, Sound.ENTITY_ENDERMEN_TELEPORT, 2.0F, 1.5F);
+            spawnBurst(center, Particle.SPELL_MOB, 120, 3.0, 1.5, 3.0);
+            spawnBurst(center, Particle.NOTE, 40, 2.5, 1.5, 2.5);
+            animateShockwave(center, settings.size, Particle.SPELL_MOB, Particle.FIREWORKS_SPARK);
+        } else if (type == TNTType.SUN) {
+            lightSunArea(center, 10, 60);
+            world.playSound(center, Sound.BLOCK_PORTAL_TRAVEL, 2.0F, 1.2F);
+            spawnBurst(center, Particle.END_ROD, 90, 2.8, 1.4, 2.8);
+            animateShockwave(center, settings.size, Particle.END_ROD, Particle.FIREWORKS_SPARK);
         }
+    }
+
+    private static final EntityType[] MOB_TYPES = {
+        EntityType.ZOMBIE, EntityType.SKELETON, EntityType.CREEPER, EntityType.SPIDER,
+        EntityType.ENDERMAN, EntityType.WITCH, EntityType.SLIME, EntityType.PIG, EntityType.COW,
+        EntityType.SHEEP, EntityType.CHICKEN, EntityType.RABBIT, EntityType.HORSE,
+        EntityType.WOLF, EntityType.VILLAGER, EntityType.CAVE_SPIDER
+    };
+    private static final int MOB_COUNT = 40;
+
+    private void spawnPortalBlocks(Location center, int radius) {
+        World world = center.getWorld();
+        java.util.Random random = new java.util.Random();
+        int cx = center.getBlockX();
+        int cy = center.getBlockY();
+        int cz = center.getBlockZ();
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (x * x + y * y + z * z > radius * radius || cy + y < 1 || cy + y > 255
+                            || random.nextInt(4) != 0) {
+                        continue;
+                    }
+                    Block block = world.getBlockAt(cx + x, cy + y, cz + z);
+                    if (block.getType() == Material.AIR) {
+                        block.setTypeIdAndData(Material.PORTAL.getId(), (byte) (1 + random.nextInt(2)), false);
+                    }
+                }
+            }
+        }
+    }
+
+    private void spawnPoop(Location center, int radius) {
+        World world = center.getWorld();
+        java.util.Random random = new java.util.Random();
+        int cy = center.getBlockY();
+        int piles = 6 + random.nextInt(5);
+        for (int i = 0; i < piles; i++) {
+            double angle = random.nextDouble() * Math.PI * 2.0;
+            double distance = Math.sqrt(random.nextDouble()) * (radius - 2);
+            int x = center.getBlockX() + (int) Math.round(Math.cos(angle) * distance);
+            int z = center.getBlockZ() + (int) Math.round(Math.sin(angle) * distance);
+            int ground = -1;
+            for (int y = cy + 6; y >= Math.max(1, cy - 6); y--) {
+                if (world.getBlockAt(x, y, z).getType().isSolid()
+                        && !world.getBlockAt(x, y + 1, z).getType().isSolid()) {
+                    ground = y;
+                    break;
+                }
+            }
+            if (ground < 0) {
+                continue;
+            }
+            int baseRadius = 1 + random.nextInt(2);
+            for (int layer = 0; layer <= baseRadius; layer++) {
+                int layerRadius = baseRadius - layer;
+                for (int dx = -layerRadius; dx <= layerRadius; dx++) {
+                    for (int dz = -layerRadius; dz <= layerRadius; dz++) {
+                        if (dx * dx + dz * dz > layerRadius * layerRadius + 1) {
+                            continue;
+                        }
+                        Block block = world.getBlockAt(x + dx, ground + 1 + layer, z + dz);
+                        if (block.getType().isSolid() || block.getState() instanceof InventoryHolder) {
+                            continue;
+                        }
+                        block.setTypeIdAndData(random.nextBoolean() ? Material.WOOL.getId()
+                                : Material.CONCRETE.getId(), (byte) 12, false);
+                    }
+                }
+            }
+            world.spawnParticle(Particle.SMOKE_LARGE, new Location(world, x + 0.5, ground + 2.0, z + 0.5),
+                    10, 0.4, 0.4, 0.4, 0.02);
+        }
+        for (int i = 0; i < radius * 6; i++) {
+            int x = center.getBlockX() + random.nextInt(radius * 2 + 1) - radius;
+            int z = center.getBlockZ() + random.nextInt(radius * 2 + 1) - radius;
+            if ((x - center.getBlockX()) * (x - center.getBlockX())
+                    + (z - center.getBlockZ()) * (z - center.getBlockZ()) > radius * radius) {
+                continue;
+            }
+            for (int y = cy + 6; y >= Math.max(1, cy - 6); y--) {
+                Block ground = world.getBlockAt(x, y, z);
+                Block above = world.getBlockAt(x, y + 1, z);
+                if (ground.getType().isSolid() && !above.getType().isSolid()
+                        && !(ground.getState() instanceof InventoryHolder)) {
+                    above.setTypeIdAndData(random.nextBoolean() ? Material.WOOL.getId()
+                            : Material.CONCRETE.getId(), (byte) 12, false);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void spawnMobs(Location center, int radius) {
+        World world = center.getWorld();
+        java.util.Random random = new java.util.Random();
+        int cy = center.getBlockY();
+        for (int i = 0; i < MOB_COUNT; i++) {
+            double angle = random.nextDouble() * Math.PI * 2.0;
+            double distance = Math.sqrt(random.nextDouble()) * radius;
+            int x = center.getBlockX() + (int) Math.round(Math.cos(angle) * distance);
+            int z = center.getBlockZ() + (int) Math.round(Math.sin(angle) * distance);
+            Location spot = null;
+            for (int y = cy + 6; y >= Math.max(1, cy - 6); y--) {
+                if (world.getBlockAt(x, y, z).getType().isSolid()
+                        && !world.getBlockAt(x, y + 1, z).getType().isSolid()
+                        && !world.getBlockAt(x, y + 2, z).getType().isSolid()) {
+                    spot = new Location(world, x + 0.5, y + 1.0, z + 0.5);
+                    break;
+                }
+            }
+            if (spot == null) {
+                spot = center.clone().add(0.0, 0.5, 0.0);
+            }
+            world.spawnEntity(spot, MOB_TYPES[random.nextInt(MOB_TYPES.length)]);
+            world.spawnParticle(Particle.SPELL_WITCH, spot, 8, 0.3, 0.5, 0.3, 0.0);
+        }
+    }
+
+    private static final Material[] RANDOM_BLOCKS = {
+        Material.STONE, Material.DIRT, Material.GRASS, Material.COBBLESTONE, Material.WOOD,
+        Material.SAND, Material.GRAVEL, Material.GOLD_BLOCK, Material.IRON_BLOCK, Material.DIAMOND_BLOCK,
+        Material.EMERALD_BLOCK, Material.LAPIS_BLOCK, Material.REDSTONE_BLOCK, Material.COAL_BLOCK,
+        Material.GLASS, Material.BRICK, Material.BOOKSHELF, Material.MOSSY_COBBLESTONE,
+        Material.OBSIDIAN, Material.NETHERRACK, Material.SOUL_SAND, Material.GLOWSTONE,
+        Material.SEA_LANTERN, Material.PRISMARINE, Material.QUARTZ_BLOCK, Material.PURPUR_BLOCK,
+        Material.SLIME_BLOCK, Material.HAY_BLOCK, Material.MELON_BLOCK, Material.PUMPKIN,
+        Material.CLAY, Material.ICE, Material.PACKED_ICE, Material.SNOW_BLOCK, Material.NETHER_BRICK,
+        Material.END_BRICKS, Material.WOOL, Material.STAINED_CLAY, Material.STAINED_GLASS,
+        Material.LOG, Material.SANDSTONE, Material.RED_SANDSTONE, Material.MAGMA, Material.BONE_BLOCK
+    };
+
+    private void randomizeArea(Location center, int radius) {
+        World world = center.getWorld();
+        java.util.Random random = new java.util.Random();
+        int cx = center.getBlockX();
+        int cy = center.getBlockY();
+        int cz = center.getBlockZ();
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (x * x + y * y + z * z > radius * radius || cy + y < 1 || cy + y > 255) {
+                        continue;
+                    }
+                    Block block = world.getBlockAt(cx + x, cy + y, cz + z);
+                    Material material = block.getType();
+                    if (!material.isSolid() || material == Material.BEDROCK || material == Material.BARRIER
+                            || block.getState() instanceof InventoryHolder) {
+                        continue;
+                    }
+                    Material picked = RANDOM_BLOCKS[random.nextInt(RANDOM_BLOCKS.length)];
+                    byte data = 0;
+                    if (picked == Material.WOOL || picked == Material.STAINED_CLAY
+                            || picked == Material.STAINED_GLASS) {
+                        data = (byte) random.nextInt(16);
+                    } else if (picked == Material.LOG) {
+                        data = (byte) random.nextInt(4);
+                    }
+                    block.setTypeIdAndData(picked.getId(), data, false);
+                }
+            }
+        }
+    }
+
+    private static final int MINING_STEPS = 50;
+    private static final long MINING_STEP_TICKS = 4L;
+
+    private void startMiningTunnel(Location origin, Player player) {
+        float yaw = player.getLocation().getYaw();
+        int direction = Math.floorMod(Math.round(yaw / 90.0F), 4);
+        final int dx = direction == 1 ? -1 : direction == 3 ? 1 : 0;
+        final int dz = direction == 0 ? 1 : direction == 2 ? -1 : 0;
+        final World world = origin.getWorld();
+        final int startX = origin.getBlockX();
+        final int startY = origin.getBlockY() + 1;
+        final int startZ = origin.getBlockZ();
+        world.playSound(origin, Sound.ENTITY_TNT_PRIMED, 1.5F, 0.8F);
+        new BukkitRunnable() {
+            private int step;
+
+            @Override
+            public void run() {
+                if (step >= MINING_STEPS) {
+                    cancel();
+                    return;
+                }
+                int cx = startX + dx * step;
+                int cz = startZ + dz * step;
+                for (int side = -1; side <= 1; side++) {
+                    for (int up = -1; up <= 1; up++) {
+                        int y = startY + up;
+                        if (y < 1 || y > 255) {
+                            continue;
+                        }
+                        Block block = world.getBlockAt(cx + dz * side, y, cz + dx * side);
+                        Material material = block.getType();
+                        if (material == Material.AIR || material == Material.BEDROCK
+                                || material == Material.BARRIER || material == Material.WATER
+                                || material == Material.STATIONARY_WATER || material == Material.LAVA
+                                || material == Material.STATIONARY_LAVA
+                                || block.getState() instanceof InventoryHolder) {
+                            continue;
+                        }
+                        block.breakNaturally();
+                    }
+                }
+                Location head = new Location(world, cx + 0.5, startY + 0.5, cz + 0.5);
+                world.spawnParticle(Particle.EXPLOSION_LARGE, head, 1);
+                world.spawnParticle(Particle.CRIT, head, 12, 1.0, 1.0, 1.0, 0.1);
+                world.spawnParticle(Particle.BLOCK_CRACK, head, 20, 1.0, 1.0, 1.0,
+                        new MaterialData(Material.GOLD_BLOCK));
+                if (step % 2 == 0) {
+                    world.playSound(head, Sound.ENTITY_GENERIC_EXPLODE, 0.8F, 1.4F);
+                }
+                step++;
+            }
+        }.runTaskTimer(this, 20L, MINING_STEP_TICKS);
     }
 
     private void startFuseEffects(final TNTPrimed tnt, final TNTType type) {
@@ -348,6 +597,87 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         }.runTaskTimer(this, 0L, 1L);
     }
 
+    private void lightSunArea(final Location center, final int radius, final int seconds) {
+        final World world = center.getWorld();
+        final int cx = center.getBlockX();
+        final int cy = center.getBlockY();
+        final int cz = center.getBlockZ();
+        final int half = radius / 2;
+        final Map<Block, Material> replacedBlocks = new HashMap<>();
+
+        for (int x = cx - half; x <= cx + half; x++) {
+            for (int z = cz - half; z <= cz + half; z++) {
+                for (int y = cy - 2; y <= cy + 2; y++) {
+                    Block block = world.getBlockAt(x, y, z);
+                    Material material = block.getType();
+                    if (material == Material.AIR || material == Material.BEDROCK
+                            || material == Material.BARRIER || material == Material.WATER
+                            || material == Material.LAVA || block.getState() instanceof InventoryHolder) {
+                        continue;
+                    }
+                    replacedBlocks.put(block, material);
+                }
+            }
+        }
+
+        if (replacedBlocks.isEmpty()) {
+            return;
+        }
+
+        for (Block block : replacedBlocks.keySet()) {
+            block.setType(Material.SEA_LANTERN);
+        }
+
+        new BukkitRunnable() {
+            private int ticks = 0;
+
+            @Override
+            public void run() {
+                ticks += 10;
+                if (ticks >= seconds * 20) {
+                    for (Map.Entry<Block, Material> entry : replacedBlocks.entrySet()) {
+                        if (entry.getKey().getType() == Material.SEA_LANTERN) {
+                            entry.getKey().setType(entry.getValue());
+                        }
+                    }
+                    cancel();
+                    return;
+                }
+                world.spawnParticle(Particle.FIREWORKS_SPARK, center, 25, radius / 2.0, 2.0, radius / 2.0, 0.05);
+            }
+        }.runTaskTimer(this, 0L, 10L);
+    }
+
+    private void convertSurfaceToSlime(Location center, int size) {
+        World world = center.getWorld();
+        int startX = center.getBlockX() - size / 2;
+        int startZ = center.getBlockZ() - size / 2;
+        for (int x = startX; x < startX + size; x++) {
+            for (int z = startZ; z < startZ + size; z++) {
+                int y = world.getHighestBlockYAt(x, z);
+                for (int dy = -1; dy <= 1; dy++) {
+                    Block block = world.getBlockAt(x, y + dy, z);
+                    Material material = block.getType();
+                    if (!material.isSolid() || material == Material.BEDROCK || material == Material.BARRIER
+                            || material == Material.SLIME_BLOCK || material == Material.WATER
+                            || material == Material.LAVA || block.getState() instanceof InventoryHolder) {
+                        continue;
+                    }
+                    if (isOre(material)) {
+                        continue;
+                    }
+                    BlockState newState = block.getState();
+                    newState.setType(Material.SLIME_BLOCK);
+                    BlockFormEvent formEvent = new BlockFormEvent(block, newState);
+                    Bukkit.getPluginManager().callEvent(formEvent);
+                    if (!formEvent.isCancelled()) {
+                        formEvent.getNewState().update(true, false);
+                    }
+                }
+            }
+        }
+    }
+
     private boolean isOre(Material material) {
         switch (material) {
             case COAL_ORE:
@@ -481,7 +811,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
 
         TNTType type = TNTType.fromKey(args[2]);
         if (type == null) {
-            sender.sendMessage(ChatColor.RED + "Unknown TNT type. Choose nuke, mining, fire, slime, x-ray, or black-hole.");
+            sender.sendMessage(ChatColor.RED + "Unknown TNT type. Choose nuke, mining, fire, slime, x-ray, rdm, mob, poop, glitch, sun, or black-hole.");
             return true;
         }
         List<Player> targets;
@@ -567,7 +897,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
 
     private void sendUsage(CommandSender sender, String label) {
         sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label
-                + " give <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|black-hole> [amount]");
+                + " give <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|poop|glitch|sun|black-hole> [amount]");
         sender.sendMessage(ChatColor.YELLOW + "       /" + label + " reload");
     }
 
@@ -576,7 +906,12 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         MINING("mining", ChatColor.GRAY + "Mining TNT", Material.GOLD_INGOT, Material.GOLD_BLOCK),
         FIRE("fire", ChatColor.RED + "Fire TNT", Material.FIREBALL, Material.NETHERRACK),
         SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.SLIME_BALL, Material.SLIME_BLOCK),
-        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.DIAMOND_ORE, Material.DIAMOND_BLOCK),
+        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.DIAMOND, Material.DIAMOND_BLOCK),
+        GLITCH("glitch", ChatColor.DARK_AQUA + "Glitch TNT", Material.EYE_OF_ENDER, Material.OBSIDIAN),
+        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.CLAY_BALL, Material.SOUL_SAND),
+        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.BONE, Material.MOSSY_COBBLESTONE),
+        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.PRISMARINE_SHARD, Material.PURPUR_BLOCK),
+        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.GLOWSTONE_DUST, Material.SEA_LANTERN),
         BLACK_HOLE("black-hole", ChatColor.DARK_PURPLE + "Black Hole TNT",
                 Material.ENDER_PEARL, Material.OBSIDIAN);
 
@@ -593,9 +928,10 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         }
 
         private static TNTType fromKey(String key) {
+            String normalizedInput = key == null ? "" : key.replaceAll("[^a-z0-9]", "").toLowerCase();
             for (TNTType type : values()) {
-                if (type.key.equalsIgnoreCase(key)
-                        || type.key.replace("-", "").equalsIgnoreCase(key.replace("-", ""))) {
+                String normalizedType = type.key.replaceAll("[^a-z0-9]", "").toLowerCase();
+                if (normalizedType.equals(normalizedInput)) {
                     return type;
                 }
             }

@@ -68,6 +68,7 @@ world-settings:
       disable-extreme-hills-emeralds: false
       disable-extreme-hills-monster-eggs: false
       disable-mesa-additional-gold: false
+    portal-search-radius: 128
     use-vanilla-world-scoreboard-name-coloring: false
     queue-light-updates: false
     optimize-explosions: false
@@ -108,7 +109,6 @@ world-settings:
     lava-flow-speed:
       normal: 30
       nether: 10
-    portal-search-radius: 128
     lootables:
       auto-replenish: false
       restrict-player-reloot: true
@@ -127,9 +127,9 @@ world-settings:
     duplicate-uuid-saferegen-delete-range: 32
     keep-spawn-loaded-range: 4
     auto-save-interval: -1
-    container-update-tick-rate: 1
     nether-ceiling-void-damage: false
     allow-non-player-entities-on-scoreboards: false
+    container-update-tick-rate: 1
     frosted-ice:
       enabled: true
       delay:

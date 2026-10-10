@@ -118,40 +118,53 @@ live server folders manually.
 ## Custom TNT
 
 The server includes a Bukkit plugin that adds nuke, mining, fire, slime,
-x-ray, and black hole TNT. The server prompts clients to download the 1.8-compatible
+x-ray, sun, and black hole TNT. The server prompts clients to download the 1.8-compatible
 resource pack served from `web/custom-tnt-pack.zip`, which gives each custom
 TNT item a block-shaped TNT icon with the regular TNT band and lettering,
-recolored by type: red/white for nuke, gold/white for mining, orange/white for
-fire, green/white for slime, cyan/white for x-ray, and black/white for black
-hole. The types keep their distinct explosion effects. Because this pack is
-compatible with 1.8 clients, it recolors the corresponding vanilla item textures
-too (gold ingots, fire charges, slimeballs, diamond ore, and ender pearls).
+recolored by type: red/white for nuke, gray/white for mining, orange/white for
+fire, green/white for slime, cyan/white for x-ray, gold/white for sun, and
+black/white for black hole. The types keep their distinct explosion effects.
+Because this pack is compatible with 1.8 clients, it recolors the corresponding
+vanilla item textures too (gold ingots, fire charges, slimeballs, diamond ore,
+glowstone dust, and ender pearls).
 The plugin adds matching colored block-fragment particles around each primed
 TNT and its blast. The vanilla 1.12.2 client still renders the primed TNT
-entity itself with the standard TNT texture.
+entity itself with the standard TNT texture. In Bukkit 1.12, the creative
+inventory still exposes the base TNT item type rather than separate item IDs,
+so the supported access path remains `/customtnt give ...` and the custom
+resource pack. This is a vanilla creative-menu limitation, not a missing
+plugin registration.
 For browser clients served from a different website origin, keep the
 CORS-enabled pack endpoint running with
 `python3 custom-tnt-resource-pack/serve_pack.py`; port 8082 must be publicly
 forwarded so clients can download the pack.
 Operators can issue types with
-`/customtnt give <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|black-hole> [amount]`
+`/customtnt give <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|poop|glitch|sun|black-hole> [amount]`
 (`/ctnt` is an alias). `@a` gives TNT to all online players, `@s` to the
 commanding player, and `@p` to the nearest player in the commander's world.
 Place TNT-icon variants normally; right-click a block while holding mining,
-fire, slime, x-ray, or black-hole TNT to place and prime it. Right-clicking air
-will not throw pearls or otherwise use the item. Custom TNT is consumed on
+fire, slime, x-ray, sun, or black-hole TNT to place and prime it. Right-clicking
+air will not throw pearls or otherwise use the item. Custom TNT is consumed on
 placement, except in Creative mode.
+rdmTNT (`rdm`, a prismarine shard icon) replaces every solid block within a
+10-block radius with random blocks; containers and bedrock are left alone.
+Mob TNT (`mob`, a bone icon) spawns 40 random mobs within a 10-block radius.
+Poop TNT (`poop`, a clay ball icon) builds random brown wool and brown
+concrete piles plus scattered brown blocks on the surface within 10 blocks.
+Glitch TNT (`glitch`, an eye of ender icon) fills about a quarter of the air
+within 10 blocks with nether portal blocks.
 Fire TNT makes a fiery, fire-setting explosion. Nuke TNT has an approximately
 8-block-wide blast and an expanding particle shockwave. Mining TNT drills a
 cardinal 3x3 tunnel. X-Ray TNT clears a 10x10 area while leaving ores intact.
-Slime TNT no longer turns nearby blocks into slime; it now emits a slime burst
-without converting terrain. Black hole TNT uses a high explosion power to
-target an approximately 30-block physical blast radius, with portal/smoke
-effects, and pulls nearby surviving entities inward while applying brief
-blindness, slowness, and wither effects. Native Minecraft explosions vary with
-terrain resistance, so their damaged area is approximate. Explosion power and
-effect size are configurable in `server/plugins/CustomTNT/config.yml`;
-`/customtnt reload` applies changes.
+Sun TNT lights a 10x10 area to full brightness for 60 seconds. Slime TNT no
+longer turns nearby blocks into slime; it now emits a slime burst without
+converting terrain. Black hole TNT uses a high explosion power to target an
+approximately 30-block physical blast radius, with portal/smoke effects, and
+pulls nearby surviving entities inward while applying brief blindness,
+slowness, and wither effects. Native Minecraft explosions vary with terrain
+resistance, so their damaged area is approximate. Explosion power and effect
+size are configurable in `server/plugins/CustomTNT/config.yml`; `/customtnt reload`
+applies changes.
 
 To build the plugin after changing its source, run
 `gradle -p custom-tnt-plugin build` from the repository root. Copy `custom-tnt-plugin/build/libs/CustomTNT-1.0.0.jar`
