@@ -5,9 +5,13 @@ author: LstonStudios
 description: Adds themed nuke, mining, fire, slime, rdm, and black hole TNT.
 commands:
   customtnt:
-    description: Give custom TNT or reload its configuration.
-    usage: /customtnt <give|reload> ...
+    description: Give custom TNT to players.
+    usage: /customtnt <player|@a|@s|@p> <type> [amount]
     aliases: [ctnt]
+    permission: customtnt.admin
+  rldcustomtnt:
+    description: Reload the custom TNT configuration.
+    usage: /rldcustomtnt
     permission: customtnt.admin
 permissions:
   customtnt.admin:

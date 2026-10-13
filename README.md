@@ -115,71 +115,30 @@ The loader prefers the world matching `level-name` in
 matches, it stops instead of guessing. Do not extract an archive over the
 live server folders manually.
 
-## Custom TNT
+## Plugins
 
-The server includes a Bukkit plugin that adds nuke, mining, fire, slime,
-x-ray, sun, and black hole TNT. The server prompts clients to download the 1.8-compatible
-resource pack served from `web/custom-tnt-pack.zip`, which gives each custom
-TNT item a block-shaped TNT icon with the regular TNT band and lettering,
-recolored by type: red/white for nuke, gray/white for mining, orange/white for
-fire, green/white for slime, cyan/white for x-ray, gold/white for sun, and
-black/white for black hole. The types keep their distinct explosion effects.
-Because 1.8 clients cannot register new items, each custom TNT reuses an item
-survival players cannot obtain: bedrock (nuke), farmland (mining), mob spawner
-(fire), command-block minecart (x-ray) and barrier (black hole). The rest are
-spawn eggs (slime, ocelot, cow, creeper, pig, blaze) tinted by mob color. The pack
-retextures only those items, so placed bedrock, farmland and spawners also show
-the TNT texture. After rebuilding the pack, update `resource-pack-sha1` and the
-`?v=` value in `server/server.properties`.
-The plugin adds matching colored block-fragment particles around each primed
-TNT and its blast. The vanilla 1.12.2 client still renders the primed TNT
-entity itself with the standard TNT texture. In Bukkit 1.12, the creative
-inventory still exposes the base TNT item type rather than separate item IDs,
-so the supported access path remains `/customtnt give ...` and the custom
-resource pack. This is a vanilla creative-menu limitation, not a missing
-plugin registration.
-For browser clients served from a different website origin, keep the
-CORS-enabled pack endpoint running with
-`python3 custom-tnt-resource-pack/serve_pack.py`; port 8082 must be publicly
-forwarded so clients can download the pack.
-Operators can issue types with
-`/customtnt give <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|poop|verity|sun|black-hole> [amount]`
-(`/ctnt` is an alias). `@a` gives TNT to all online players, `@s` to the
-commanding player, and `@p` to the nearest player in the commander's world.
-Place TNT-icon variants normally; right-click a block while holding mining,
-fire, slime, x-ray, sun, or black-hole TNT to place and prime it. Right-clicking
-air will not throw pearls or otherwise use the item. Custom TNT is consumed on
-placement, except in Creative mode.
-rdmTNT (`rdm`, a prismarine shard icon) replaces every solid block within a
-10-block radius with random blocks; containers and bedrock are left alone.
-Mob TNT (`mob`, a bone icon) spawns 40 random mobs within a 10-block radius.
-Poop TNT (`poop`, a clay ball icon) builds random brown wool and brown
-concrete piles plus scattered brown blocks on the surface within 10 blocks.
-Verity TNT (`verity`, a yellow/black gold nugget icon) spawns Verity: a cheerful
-floating yellow companion that follows the nearest player and claims to know
-everything. After 30 seconds it turns creepy and obsessive, and after about 70
-seconds it transforms into a tall, hostile monster (an Enderman named Verity)
-that hunts the nearest player. While Verity exists, players within 40 blocks
-can chat with it: it replies by keyword (hello, friend, help, leave, etc.),
-with different personalities in each phase. If an AI key is set, Verity answers
-anything via an OpenAI-compatible API (default `gpt-4o-mini`, configured under
-`ai:` in the plugin config). Set the key with the `VERITY_AI_KEY` environment
-variable before starting the backend (or `ai.api-key`, which must not be
-committed). Nearby players' chat messages are sent to that service. Without a
-key, Verity uses built-in keyword replies.
-Fire TNT makes a fiery, fire-setting explosion. Nuke TNT has an approximately
-8-block-wide blast and an expanding particle shockwave. Mining TNT drills a
-cardinal 3x3 tunnel. X-Ray TNT clears a 10x10 area while leaving ores intact.
-Sun TNT lights a 10x10 area to full brightness for 60 seconds. Slime TNT no
-longer turns nearby blocks into slime; it now emits a slime burst without
-converting terrain. Black hole TNT uses a high explosion power to target an
-approximately 30-block physical blast radius, with portal/smoke effects, and
-pulls nearby surviving entities inward while applying brief blindness,
-slowness, and wither effects. Native Minecraft explosions vary with terrain
-resistance, so their damaged area is approximate. Explosion power and effect
-size are configurable in `server/plugins/CustomTNT/config.yml`; `/customtnt reload`
-applies changes.
+### Custom TNT
 
-To build the plugin after changing its source, run
-`gradle -p custom-tnt-plugin build` from the repository root. Copy `custom-tnt-plugin/build/libs/CustomTNT-1.0.0.jar`
-to `server/plugins/` and restart the server.
+Adds nuke, mining, fire, slime, x-ray, sun, black-hole, rdm, mob, poop, and
+firework TNT. Give variants with `/customtnt <player|@a|@s|@p> <type>
+[amount]` (`/ctnt` alias); custom variants are not separate items in the
+creative menu. Place most variants normally; right-click a block with mining,
+fire, slime, x-ray, sun, or black-hole TNT to prime it. Items are consumed
+except in Creative.
+
+Firework TNT (`firework`, a firework star icon) launches about 30 random
+fireworks in all directions when it explodes; the count is
+`explosions.firework.size` (max 60).
+
+The 1.8-compatible resource pack is `web/custom-tnt-pack.zip`. It retextures
+reused vanilla items, which may also change their normal appearance. For browser
+clients hosted on another origin, run
+`python3 custom-tnt-resource-pack/serve_pack.py` and publicly forward port 8082.
+After rebuilding the pack, update `resource-pack-sha1` and `?v=` in
+`server/server.properties`.
+Explosion settings are in `server/plugins/CustomTNT/config.yml`; apply changes
+with `/rldcustomtnt`.
+
+Build with `gradle -p custom-tnt-plugin build`, copy
+`custom-tnt-plugin/build/libs/CustomTNT-1.0.0.jar` to `server/plugins/`, then
+restart the server.

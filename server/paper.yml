@@ -127,9 +127,9 @@ world-settings:
     duplicate-uuid-saferegen-delete-range: 32
     keep-spawn-loaded-range: 4
     auto-save-interval: -1
-    container-update-tick-rate: 1
     nether-ceiling-void-damage: false
     allow-non-player-entities-on-scoreboards: false
+    container-update-tick-rate: 1
     frosted-ice:
       enabled: true
       delay:
@@ -177,9 +177,9 @@ world-settings:
     fire-physics-event-for-redstone: false
     spawner-nerfed-mobs-should-jump: false
     baby-zombie-movement-speed: 0.5
-    all-chunks-are-slime-chunks: false
-    mob-spawner-tick-rate: 1
     allow-leashing-undead-horse: false
+    mob-spawner-tick-rate: 1
+    all-chunks-are-slime-chunks: false
     squid-spawn-height:
       maximum: 63.0
       minimum: 45.0

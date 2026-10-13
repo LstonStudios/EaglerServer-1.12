@@ -18,8 +18,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -28,7 +26,6 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -59,6 +56,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         loadExplosionSettings();
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("customtnt").setExecutor(this);
+        getCommand("rldcustomtnt").setExecutor(this);
     }
 
     private void loadExplosionSettings() {
@@ -218,12 +216,10 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             world.playSound(center, Sound.BLOCK_STONE_BREAK, 1.8F, 0.7F);
             spawnBurst(center, Particle.CRIT, 70, 2.6, 1.2, 2.6);
             animateShockwave(center, settings.size, Particle.CRIT, Particle.SPELL_INSTANT);
-        } else if (type == TNTType.VERITY) {
-            spawnVerity(center);
-            world.playSound(center, Sound.BLOCK_NOTE_CHIME, 2.5F, 1.8F);
-            spawnBurst(center, Particle.VILLAGER_HAPPY, 60, 1.5, 1.5, 1.5);
-            spawnBurst(center, Particle.END_ROD, 80, 1.0, 1.5, 1.0);
-            animateShockwave(center, settings.size, Particle.END_ROD, Particle.VILLAGER_HAPPY);
+        } else if (type == TNTType.FIREWORK) {
+            launchFireworks(center, Math.max(1, Math.min(60, settings.size)));
+            world.playSound(center, Sound.ENTITY_FIREWORK_LAUNCH, 3.0F, 1.0F);
+            spawnBurst(center, Particle.FIREWORKS_SPARK, 120, 2.0, 1.5, 2.0);
         } else if (type == TNTType.POOP) {
             spawnPoop(center, Math.min(10, settings.size));
             world.playSound(center, Sound.BLOCK_SLIME_PLACE, 2.5F, 0.5F);
@@ -257,343 +253,30 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
     };
     private static final int MOB_COUNT = 40;
 
-    private static final String[] VERITY_FRIENDLY = {
-        "Hi! I'm Verity! I know everything!",
-        "Isn't this fun? We're going to be best friends!",
-        "Ask me anything. I always know the answer!"
-    };
-    private static final String[] VERITY_CREEPY = {
-        "You don't need anyone else. You have me.",
-        "Why are you looking away from me?",
-        "I know where you're going. I know everything.",
-        "Please don't leave me. You're my only friend."
-    };
-    private final Map<java.util.UUID, Integer> veritys = new java.util.concurrent.ConcurrentHashMap<>();
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (veritys.isEmpty()) {
-            return;
-        }
-        final Player player = event.getPlayer();
-        final String message = event.getMessage();
-        Bukkit.getScheduler().runTask(this, new Runnable() {
-            @Override
-            public void run() {
-                for (Map.Entry<java.util.UUID, Integer> entry : veritys.entrySet()) {
-                    Entity entity = Bukkit.getEntity(entry.getKey());
-                    if (entity == null || !entity.isValid()) {
-                        veritys.remove(entry.getKey());
-                        continue;
-                    }
-                    if (!player.isOnline() || entity.getWorld() != player.getWorld()
-                            || entity.getLocation().distanceSquared(player.getLocation()) > 1600.0) {
-                        continue;
-                    }
-                    int phase = entry.getValue();
-                    ChatColor color = phase == 0 ? ChatColor.YELLOW : phase == 1 ? ChatColor.RED : ChatColor.DARK_RED;
-                    respondAsVerity(player, message, phase, color);
-                    return;
-                }
-            }
-        });
-    }
-
-    private final Map<java.util.UUID, Long> verityCooldowns = new java.util.concurrent.ConcurrentHashMap<>();
-    private final Map<java.util.UUID, List<String[]>> verityHistory = new java.util.concurrent.ConcurrentHashMap<>();
-
-    private String aiKey() {
-        String key = System.getenv("VERITY_AI_KEY");
-        if (key == null || key.trim().isEmpty()) {
-            key = getConfig().getString("ai.api-key", "");
-        }
-        return key == null ? "" : key.trim();
-    }
-
-    private void respondAsVerity(final Player player, final String message, final int phase, final ChatColor color) {
-        final String key = aiKey();
-        final String fallback = verityReply(message.toLowerCase(), player.getName(), phase);
-        if (key.isEmpty() || !getConfig().getBoolean("ai.enabled", true)) {
-            player.sendMessage(color + "<Verity> " + ChatColor.WHITE + fallback);
-            return;
-        }
-        long now = System.currentTimeMillis();
-        Long last = verityCooldowns.get(player.getUniqueId());
-        if (last != null && now - last < getConfig().getLong("ai.cooldown-seconds", 3L) * 1000L) {
-            return;
-        }
-        verityCooldowns.put(player.getUniqueId(), now);
-        final String endpoint = getConfig().getString("ai.endpoint", "https://api.openai.com/v1/chat/completions");
-        final String model = getConfig().getString("ai.model", "gpt-4o-mini");
-        final String name = player.getName();
-        final java.util.UUID playerId = player.getUniqueId();
-        Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
-            @Override
-            public void run() {
-                String reply;
-                try {
-                    reply = callAI(endpoint, key, model, playerId, name, message, phase);
-                } catch (Exception exception) {
-                    getLogger().warning("Verity AI request failed: " + exception.getMessage());
-                    reply = fallback;
-                }
-                final String finalReply = reply;
-                Bukkit.getScheduler().runTask(CustomTNTPlugin.this, new Runnable() {
-                    @Override
-                    public void run() {
-                        Player online = Bukkit.getPlayer(playerId);
-                        if (online != null) {
-                            online.sendMessage(color + "<Verity> " + ChatColor.WHITE + finalReply);
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    private String callAI(String endpoint, String key, String model, java.util.UUID playerId, String name,
-            String message, int phase) throws java.io.IOException {
-        String[] personalities = {
-            "You are Verity, a cheerful floating yellow sphere companion in Minecraft with a smiley face who "
-                + "claims to know everything and is overly eager to be the player's best friend.",
-            "You are Verity, a floating yellow sphere in Minecraft who was cheerful but has turned creepy and "
-                + "obsessive. You insist you are the player's only friend, hint that you know things about them, "
-                + "and beg them not to leave. Unsettling but never graphic.",
-            "You are Verity, now a terrifying tall monster in Minecraft that hunts the player. You speak in "
-                + "short, chilling, possessive sentences about keeping the player forever. Never graphic."
+    private void launchFireworks(Location center, int count) {
+        World world = center.getWorld();
+        java.util.Random random = new java.util.Random();
+        org.bukkit.Color[] palette = {
+            org.bukkit.Color.RED, org.bukkit.Color.ORANGE, org.bukkit.Color.YELLOW, org.bukkit.Color.LIME,
+            org.bukkit.Color.AQUA, org.bukkit.Color.BLUE, org.bukkit.Color.PURPLE, org.bukkit.Color.FUCHSIA,
+            org.bukkit.Color.WHITE
         };
-        StringBuilder messages = new StringBuilder("[");
-        messages.append("{\"role\":\"system\",\"content\":").append(jsonString(personalities[phase]
-                + " The player's name is " + name + ". Stay in character, answer whatever they say, and reply in "
-                + "1-2 short sentences (under 200 characters) with no markdown or emojis.")).append("}");
-        List<String[]> history = verityHistory.get(playerId);
-        if (history == null) {
-            history = Collections.synchronizedList(new ArrayList<String[]>());
-            verityHistory.put(playerId, history);
-        }
-        synchronized (history) {
-            for (String[] turn : history) {
-                messages.append(",{\"role\":\"").append(turn[0]).append("\",\"content\":")
-                        .append(jsonString(turn[1])).append("}");
-            }
-        }
-        messages.append(",{\"role\":\"user\",\"content\":").append(jsonString(message)).append("}]");
-        String body = "{\"model\":" + jsonString(model) + ",\"max_tokens\":80,\"messages\":" + messages + "}";
-
-        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) new java.net.URL(endpoint).openConnection();
-        connection.setRequestMethod("POST");
-        connection.setConnectTimeout(5000);
-        connection.setReadTimeout(15000);
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Authorization", "Bearer " + key);
-        connection.getOutputStream().write(body.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-        int code = connection.getResponseCode();
-        if (code != 200) {
-            throw new java.io.IOException("HTTP " + code);
-        }
-        java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(
-                connection.getInputStream(), java.nio.charset.StandardCharsets.UTF_8));
-        StringBuilder raw = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            raw.append(line);
-        }
-        reader.close();
-        java.util.regex.Matcher matcher = java.util.regex.Pattern
-                .compile("\"content\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"").matcher(raw);
-        if (!matcher.find()) {
-            throw new java.io.IOException("Unexpected AI response");
-        }
-        String reply = jsonUnescape(matcher.group(1)).trim();
-        if (reply.length() > 250) {
-            reply = reply.substring(0, 247) + "...";
-        }
-        synchronized (history) {
-            history.add(new String[] {"user", message});
-            history.add(new String[] {"assistant", reply});
-            while (history.size() > 8) {
-                history.remove(0);
-            }
-        }
-        return reply;
-    }
-
-    private static String jsonString(String value) {
-        StringBuilder out = new StringBuilder("\"");
-        for (char c : value.toCharArray()) {
-            if (c == '"' || c == '\\') {
-                out.append('\\').append(c);
-            } else if (c < 0x20) {
-                out.append(String.format("\\u%04x", (int) c));
-            } else {
-                out.append(c);
-            }
-        }
-        return out.append('"').toString();
-    }
-
-    private static String jsonUnescape(String value) {
-        StringBuilder out = new StringBuilder();
-        for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
-            if (c != '\\' || i + 1 >= value.length()) {
-                out.append(c);
-                continue;
-            }
-            char next = value.charAt(++i);
-            if (next == 'n' || next == 'r' || next == 't') {
-                out.append(' ');
-            } else if (next == 'u' && i + 4 < value.length()) {
-                out.append((char) Integer.parseInt(value.substring(i + 1, i + 5), 16));
-                i += 4;
-            } else {
-                out.append(next);
-            }
-        }
-        return out.toString();
-    }
-
-    private String verityReply(String text, String name, int phase) {
-        String[][] table = {
-            {"hello|hi|hey|sup", "Hi " + name + "! I'm so happy you're here!",
-                "Hello again, " + name + ". You came back. Good.", "You can't leave now, " + name + "."},
-            {"who are you|your name|what are you", "I'm Verity! Your very best friend!",
-                "I'm the only one who understands you.", "I am Verity. I am everything."},
-            {"friend", "Of course we're friends! Best friends!",
-                "I'm your ONLY friend. You don't need others.", "Friends don't leave. You won't leave."},
-            {"help", "I can help with anything! I know everything!",
-                "You need my help. You always will.", "No one can help you now."},
-            {"leave|bye|go away|goodbye|stop", "Aww, don't go! We were having fun!",
-                "No. You can't leave me. Please don't.", "There is nowhere left to run."},
-            {"scary|creep|afraid|scared", "Scary? Not me! I'm friendly!",
-                "Why are you afraid? I'm all you have.", "Good. You should be."},
-            {"how are you|how r u", "I'm wonderful because you're here!",
-                "Better when you're close to me.", "Hungry. For company."},
-            {"what do you know|know everything|smart", "Everything! Ask me anything!",
-                "I know where you sleep. I know your name, " + name + ".", "I know you are afraid."},
-            {"kill|attack|die|hate", "That's not nice! Let's be friends instead.",
-                "Why would you say that? I only love you.", "Try it."},
-            {"love|like you", "I like you too! So much!",
-                "Then stay with me. Forever.", "Then you'll never be alone."}
-        };
-        for (String[] row : table) {
-            for (String keyword : row[0].split("\\|")) {
-                String padded = " " + text.replaceAll("[^a-z0-9 ]", " ") + " ";
-                boolean matched = keyword.length() <= 4 ? padded.contains(" " + keyword + " ")
-                        : padded.contains(" " + keyword);
-                if (matched) {
-                    return row[1 + phase];
-                }
-            }
-        }
-        String[][] fallback = {
-            {"Ooh, interesting! Tell me more!", "I know what you mean, " + name + "!", "I know everything, so I already knew you'd say that!"},
-            {"Keep talking to me. Only me.", "Nobody else is listening, " + name + ".", "I'm always listening."},
-            {"...", "You can't hide.", "There is no escape."}
-        };
-        String[] options = fallback[phase];
-        return options[new java.util.Random().nextInt(options.length)];
-    }
-
-    private static final int VERITY_CREEPY_TICK = 600;
-    private static final int VERITY_MONSTER_TICK = 1400;
-
-    private void spawnVerity(Location center) {
-        final World world = center.getWorld();
-        final ArmorStand verity = (ArmorStand) world.spawnEntity(center.clone().add(0.0, 2.0, 0.0),
-                EntityType.ARMOR_STAND);
-        verity.setGravity(false);
-        verity.setBasePlate(false);
-        verity.setArms(false);
-        verity.setCustomName(ChatColor.YELLOW + "Verity");
-        verity.setCustomNameVisible(true);
-        verity.setHelmet(new ItemStack(Material.WOOL, 1, (short) 4));
-        final java.util.UUID verityId = verity.getUniqueId();
-        veritys.put(verityId, 0);
-        new BukkitRunnable() {
-            private int tick;
-            private boolean creepy;
-
-            @Override
-            public void run() {
-                if (verity.isDead() || !verity.isValid()) {
-                    veritys.remove(verityId);
-                    cancel();
-                    return;
-                }
-                tick++;
-                Player nearest = null;
-                double best = 900.0;
-                for (Player player : world.getPlayers()) {
-                    double distance = player.getLocation().distanceSquared(verity.getLocation());
-                    if (distance < best) {
-                        best = distance;
-                        nearest = player;
-                    }
-                }
-                Location current = verity.getLocation();
-                if (tick >= VERITY_MONSTER_TICK) {
-                    cancel();
-                    veritys.remove(verityId);
-                    transformVerity(verity, nearest);
-                    return;
-                }
-                if (tick == VERITY_CREEPY_TICK) {
-                    creepy = true;
-                    veritys.put(verityId, 1);
-                    verity.setCustomName(ChatColor.GOLD + "Verity");
-                    verity.setHelmet(new ItemStack(Material.WOOL, 1, (short) 1));
-                    world.playSound(current, Sound.ENTITY_ELDER_GUARDIAN_CURSE, 1.0F, 0.6F);
-                }
-                double speed = creepy ? 0.38 : 0.25;
-                double stopDistance = creepy ? 2.0 : 3.0;
-                if (nearest != null && best > stopDistance * stopDistance) {
-                    Vector toward = nearest.getEyeLocation().add(0.0, 0.5, 0.0).toVector()
-                            .subtract(current.toVector()).normalize().multiply(speed);
-                    current.add(toward);
-                }
-                current.setY(current.getY() + Math.sin(tick / 8.0) * 0.03);
-                if (nearest != null) {
-                    current.setDirection(nearest.getEyeLocation().toVector().subtract(current.toVector()));
-                }
-                verity.teleport(current);
-                world.spawnParticle(creepy ? Particle.SMOKE_NORMAL : Particle.END_ROD,
-                        current.clone().add(0.0, 1.8, 0.0), 2, 0.3, 0.3, 0.3, 0.01);
-                if (creepy && nearest != null && tick % 100 == 0) {
-                    nearest.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 30, 0));
-                }
-                if (tick % 200 == 100 && nearest != null) {
-                    String[] lines = creepy ? VERITY_CREEPY : VERITY_FRIENDLY;
-                    nearest.sendMessage((creepy ? ChatColor.RED : ChatColor.YELLOW) + "<Verity> "
-                            + ChatColor.WHITE + lines[(tick / 200) % lines.length]);
-                }
-            }
-        }.runTaskTimer(this, 1L, 1L);
-    }
-
-    private void transformVerity(ArmorStand verity, Player target) {
-        Location spot = verity.getLocation().add(0.0, -1.5, 0.0);
-        World world = spot.getWorld();
-        verity.remove();
-        for (Player player : world.getPlayers()) {
-            if (player.getLocation().distanceSquared(spot) <= 900.0) {
-                player.sendMessage(ChatColor.DARK_RED + "<Verity> " + ChatColor.WHITE
-                        + "Now we can be together forever.");
-            }
-        }
-        world.strikeLightningEffect(spot);
-        world.playSound(spot, Sound.ENTITY_ENDERDRAGON_GROWL, 3.0F, 0.5F);
-        world.spawnParticle(Particle.SMOKE_LARGE, spot.clone().add(0.0, 1.5, 0.0), 80, 0.8, 1.5, 0.8, 0.02);
-        Enderman monster = (Enderman) world.spawnEntity(spot, EntityType.ENDERMAN);
-        veritys.put(monster.getUniqueId(), 2);
-        monster.setCustomName(ChatColor.DARK_RED + "Verity");
-        monster.setCustomNameVisible(true);
-        monster.setCarriedMaterial(new MaterialData(Material.GLOWSTONE));
-        monster.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1));
-        monster.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 0));
-        if (target != null) {
-            monster.setTarget(target);
+        org.bukkit.FireworkEffect.Type[] shapes = org.bukkit.FireworkEffect.Type.values();
+        for (int i = 0; i < count; i++) {
+            org.bukkit.entity.Firework firework = (org.bukkit.entity.Firework) world.spawnEntity(
+                    center.clone().add(0.0, 0.5, 0.0), EntityType.FIREWORK);
+            org.bukkit.inventory.meta.FireworkMeta meta = firework.getFireworkMeta();
+            meta.addEffect(org.bukkit.FireworkEffect.builder()
+                    .with(shapes[random.nextInt(shapes.length)])
+                    .withColor(palette[random.nextInt(palette.length)], palette[random.nextInt(palette.length)])
+                    .withFade(palette[random.nextInt(palette.length)])
+                    .trail(random.nextBoolean()).flicker(random.nextBoolean()).build());
+            meta.setPower(1 + random.nextInt(2));
+            firework.setFireworkMeta(meta);
+            double angle = random.nextDouble() * Math.PI * 2.0;
+            double spread = 0.15 + random.nextDouble() * 0.5;
+            firework.setVelocity(new Vector(Math.cos(angle) * spread, 0.3 + random.nextDouble() * 0.7,
+                    Math.sin(angle) * spread));
         }
     }
 
@@ -1102,9 +785,6 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
     private ItemStack createTNTItem(TNTType type, int amount) {
         ItemStack item = new ItemStack(type.icon, amount);
         ItemMeta meta = item.getItemMeta();
-        if (type.egg != null) {
-            ((org.bukkit.inventory.meta.SpawnEggMeta) meta).setSpawnedType(type.egg);
-        }
         meta.setDisplayName(type.displayName);
         meta.setLore(Collections.singletonList(ITEM_MARKER_PREFIX + type.key));
         item.setItemMeta(meta);
@@ -1117,7 +797,11 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             sender.sendMessage(ChatColor.RED + "You do not have permission to manage custom TNT.");
             return true;
         }
-        if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+        if (command.getName().equalsIgnoreCase("rldcustomtnt")) {
+            if (args.length != 0) {
+                sendUsage(sender, label);
+                return true;
+            }
             reloadConfig();
             try {
                 loadExplosionSettings();
@@ -1129,35 +813,35 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             sender.sendMessage(ChatColor.GREEN + "Custom TNT configuration reloaded.");
             return true;
         }
-        if (args.length < 3 || !args[0].equalsIgnoreCase("give")) {
+        if (args.length < 2) {
             sendUsage(sender, label);
             return true;
         }
 
-        TNTType type = TNTType.fromKey(args[2]);
+        TNTType type = TNTType.fromKey(args[1]);
         if (type == null) {
-            sender.sendMessage(ChatColor.RED + "Unknown TNT type. Choose nuke, mining, fire, slime, x-ray, rdm, mob, poop, verity, sun, or black-hole.");
+            sender.sendMessage(ChatColor.RED + "Unknown TNT type. Choose nuke, mining, fire, slime, x-ray, rdm, mob, poop, firework, sun, or black-hole.");
             return true;
         }
         List<Player> targets;
         try {
-            targets = resolveTargets(sender, args[1]);
+            targets = resolveTargets(sender, args[0]);
         } catch (IllegalArgumentException exception) {
             sender.sendMessage(ChatColor.RED + exception.getMessage());
             return true;
         }
         if (targets.isEmpty()) {
-            sender.sendMessage(ChatColor.RED + "No online players matched " + args[1] + ".");
+            sender.sendMessage(ChatColor.RED + "No online players matched " + args[0] + ".");
             return true;
         }
         int amount = 1;
-        if (args.length > 4) {
+        if (args.length > 3) {
             sendUsage(sender, label);
             return true;
         }
-        if (args.length == 4) {
+        if (args.length == 3) {
             try {
-                amount = Integer.parseInt(args[3]);
+                amount = Integer.parseInt(args[2]);
             } catch (NumberFormatException exception) {
                 sender.sendMessage(ChatColor.RED + "Amount must be a number from 1 to 64.");
                 return true;
@@ -1222,35 +906,33 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
 
     private void sendUsage(CommandSender sender, String label) {
         sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label
-                + " give <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|poop|verity|sun|black-hole> [amount]");
-        sender.sendMessage(ChatColor.YELLOW + "       /" + label + " reload");
+                + " <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|poop|firework|sun|black-hole> [amount]");
+        sender.sendMessage(ChatColor.YELLOW + "       /rldcustomtnt");
     }
 
     private enum TNTType {
-        NUKE("nuke", ChatColor.DARK_RED + "Nuke TNT", Material.BEDROCK, null, Material.REDSTONE_BLOCK),
-        MINING("mining", ChatColor.GRAY + "Mining TNT", Material.SOIL, null, Material.GOLD_BLOCK),
-        FIRE("fire", ChatColor.RED + "Fire TNT", Material.MOB_SPAWNER, null, Material.NETHERRACK),
-        SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.MONSTER_EGG, EntityType.SLIME, Material.SLIME_BLOCK),
-        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.COMMAND_MINECART, null, Material.DIAMOND_BLOCK),
-        VERITY("verity", ChatColor.YELLOW + "Verity TNT", Material.MONSTER_EGG, EntityType.OCELOT, Material.GLOWSTONE),
-        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.MONSTER_EGG, EntityType.COW, Material.SOUL_SAND),
-        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.MONSTER_EGG, EntityType.CREEPER, Material.MOSSY_COBBLESTONE),
-        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.MONSTER_EGG, EntityType.PIG, Material.PURPUR_BLOCK),
-        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.MONSTER_EGG, EntityType.BLAZE, Material.SEA_LANTERN),
+        NUKE("nuke", ChatColor.DARK_RED + "Nuke TNT", Material.TNT, Material.REDSTONE_BLOCK),
+        MINING("mining", ChatColor.GRAY + "Mining TNT", Material.GOLD_INGOT, Material.GOLD_BLOCK),
+        FIRE("fire", ChatColor.RED + "Fire TNT", Material.FIREBALL, Material.NETHERRACK),
+        SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.SLIME_BALL, Material.SLIME_BLOCK),
+        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.DIAMOND, Material.DIAMOND_BLOCK),
+        FIREWORK("firework", ChatColor.LIGHT_PURPLE + "Firework TNT", Material.FIREWORK_CHARGE, Material.FIREWORK),
+        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.CLAY_BALL, Material.SOUL_SAND),
+        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.BONE, Material.MOSSY_COBBLESTONE),
+        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.PRISMARINE_SHARD, Material.PURPUR_BLOCK),
+        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.GLOWSTONE_DUST, Material.SEA_LANTERN),
         BLACK_HOLE("black-hole", ChatColor.DARK_PURPLE + "Black Hole TNT",
-                Material.BARRIER, null, Material.OBSIDIAN);
+                Material.ENDER_PEARL, Material.OBSIDIAN);
 
         private final String key;
         private final String displayName;
         private final Material icon;
-        private final EntityType egg;
         private final Material effectBlock;
 
-        TNTType(String key, String displayName, Material icon, EntityType egg, Material effectBlock) {
+        TNTType(String key, String displayName, Material icon, Material effectBlock) {
             this.key = key;
             this.displayName = displayName;
             this.icon = icon;
-            this.egg = egg;
             this.effectBlock = effectBlock;
         }
 
