@@ -231,6 +231,12 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             spawnBurst(center, Particle.SPELL_WITCH, 120, 3.0, 1.5, 3.0);
             spawnBurst(center, Particle.CLOUD, 60, 2.5, 1.0, 2.5);
             animateShockwave(center, settings.size, Particle.SPELL_WITCH, Particle.CLOUD);
+        } else if (type == TNTType.BOSS) {
+            spawnBosses(center);
+            world.playSound(center, Sound.ENTITY_ENDERDRAGON_GROWL, 3.0F, 0.8F);
+            spawnBurst(center, Particle.DRAGON_BREATH, 120, 3.0, 1.5, 3.0);
+            spawnBurst(center, Particle.SMOKE_LARGE, 80, 2.5, 1.5, 2.5);
+            animateShockwave(center, settings.size, Particle.DRAGON_BREATH, Particle.SMOKE_LARGE);
         } else if (type == TNTType.RDM) {
             randomizeArea(center, Math.min(10, settings.size));
             world.playSound(center, Sound.ENTITY_ENDERMEN_TELEPORT, 2.0F, 1.5F);
@@ -364,6 +370,207 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             }
             world.spawnEntity(spot, MOB_TYPES[random.nextInt(MOB_TYPES.length)]);
             world.spawnParticle(Particle.SPELL_WITCH, spot, 8, 0.3, 0.5, 0.3, 0.0);
+        }
+    }
+
+    private void spawnBosses(Location center) {
+        World world = center.getWorld();
+        final java.util.List<org.bukkit.entity.LivingEntity> bosses = new java.util.ArrayList<>();
+        java.util.Random bolts = new java.util.Random();
+        for (int i = 0; i < 6; i++) {
+            double angle = Math.PI * 2.0 * i / 6 + bolts.nextDouble() * 0.5;
+            double distance = 3.0 + bolts.nextDouble() * 9.0;
+            Location bolt = center.clone().add(Math.cos(angle) * distance, 0.0, Math.sin(angle) * distance);
+            bolt.setY(world.getHighestBlockYAt(bolt));
+            world.strikeLightning(bolt);
+        }
+        for (int i = 0; i < 3; i++) {
+            double angle = Math.PI * 2.0 * i / 3;
+            Location spot = center.clone().add(Math.cos(angle) * 6.0, 0.5, Math.sin(angle) * 6.0);
+            for (int dy = 6; dy >= -6; dy--) {
+                Location probe = spot.clone().add(0.0, dy, 0.0);
+                if (probe.getBlock().getType().isSolid() && !probe.clone().add(0, 1, 0).getBlock().getType().isSolid()
+                        && !probe.clone().add(0, 2, 0).getBlock().getType().isSolid()) {
+                    spot = probe.add(0.0, 1.0, 0.0);
+                    break;
+                }
+            }
+            boolean giant = i == 0;
+            org.bukkit.entity.LivingEntity boss = (org.bukkit.entity.LivingEntity) world.spawnEntity(
+                    spot, giant ? EntityType.GIANT : EntityType.WITHER);
+            boss.setCustomName(ChatColor.DARK_RED + (giant ? "Giant Zombie Boss" : "Wither Boss"));
+            boss.setCustomNameVisible(true);
+            boss.setRemoveWhenFarAway(false);
+            addBossEffect(boss, org.bukkit.potion.PotionEffectType.HEALTH_BOOST, 4);
+            addBossEffect(boss, org.bukkit.potion.PotionEffectType.FIRE_RESISTANCE, 0);
+            addBossEffect(boss, org.bukkit.potion.PotionEffectType.REGENERATION, 1);
+            if (giant) {
+                addBossEffect(boss, org.bukkit.potion.PotionEffectType.INCREASE_DAMAGE, 1);
+                addBossEffect(boss, org.bukkit.potion.PotionEffectType.DAMAGE_RESISTANCE, 1);
+                addBossEffect(boss, org.bukkit.potion.PotionEffectType.SPEED, 1);
+                addBossEffect(boss, org.bukkit.potion.PotionEffectType.JUMP, 1);
+                addBossEffect(boss, org.bukkit.potion.PotionEffectType.NIGHT_VISION, 0);
+            }
+            boss.setHealth(boss.getMaxHealth());
+            world.strikeLightningEffect(spot);
+            bosses.add(boss);
+            boss.addScoreboardTag(BOSS_TAG);
+            lastBossHealth.put(boss.getUniqueId(), boss.getHealth());
+        }
+        new org.bukkit.scheduler.BukkitRunnable() {
+            private final java.util.Random random = new java.util.Random();
+            private int tick = 0;
+
+            @Override
+            public void run() {
+                tick += 2;
+                boolean anyAlive = false;
+                for (org.bukkit.entity.LivingEntity boss : bosses) {
+                    if (boss.isDead() || !boss.isValid()) {
+                        lastBossHealth.remove(boss.getUniqueId());
+                        continue;
+                    }
+                    Double previous = lastBossHealth.get(boss.getUniqueId());
+                    if (previous != null && boss.getHealth() < previous
+                            && !playerHit.contains(boss.getUniqueId())) {
+                        boss.setHealth(Math.min(previous, boss.getMaxHealth()));
+                    }
+                    lastBossHealth.put(boss.getUniqueId(), boss.getHealth());
+                    anyAlive = true;
+                    Location base = boss.getLocation();
+                    if (boss instanceof org.bukkit.entity.Creature) {
+                        org.bukkit.entity.LivingEntity current = ((org.bukkit.entity.Creature) boss).getTarget();
+                        if (current != null && !(current instanceof org.bukkit.entity.Player)) {
+                            ((org.bukkit.entity.Creature) boss).setTarget(null);
+                        }
+                    }
+                    if (boss.getType() == EntityType.GIANT) {
+                        for (int h = 0; h <= 12; h += 2) {
+                            for (int k = 0; k < 8; k++) {
+                                double a = Math.PI * 2.0 * k / 8 + tick * 0.15 + h * 0.4;
+                                Location p = base.clone().add(Math.cos(a) * 2.2, h, Math.sin(a) * 2.2);
+                                base.getWorld().spawnParticle(Particle.REDSTONE, p, 0, 1.0, 0.0, 0.0, 1.0);
+                            }
+                        }
+                    }
+                    org.bukkit.entity.Player target = null;
+                    double best = 60.0 * 60.0;
+                    for (org.bukkit.entity.Player player : base.getWorld().getPlayers()) {
+                        double d = player.getLocation().distanceSquared(base);
+                        if (player.getGameMode() != org.bukkit.GameMode.SPECTATOR && d < best) {
+                            best = d;
+                            target = player;
+                        }
+                    }
+                    if (target != null && boss.getType() == EntityType.GIANT) {
+                        org.bukkit.util.Vector dir = target.getLocation().toVector().subtract(base.toVector());
+                        dir.setY(0);
+                        if (dir.lengthSquared() > 16.0) {
+                            dir.normalize().multiply(0.35);
+                            org.bukkit.util.Vector velocity = boss.getVelocity();
+                            velocity.setX(dir.getX());
+                            velocity.setZ(dir.getZ());
+                            if (boss.isOnGround() && boss.getLocation().add(dir.clone().multiply(4)).getBlock()
+                                    .getType().isSolid()) {
+                                velocity.setY(0.6);
+                            }
+                            boss.setVelocity(velocity);
+                        }
+                        if (tick % 20 == 0 && target.getLocation().distanceSquared(base) < 36.0) {
+                            target.damage(8.0, boss);
+                        }
+                    }
+                    if (tick % 40 == 0) {
+                        for (int n = 0; n < 2; n++) {
+                            Location spot = base.clone().add((random.nextDouble() - 0.5) * 16.0,
+                                    random.nextDouble() * 2.0, (random.nextDouble() - 0.5) * 16.0);
+                            spot.getWorld().createExplosion(spot.getX(), spot.getY(), spot.getZ(), 3.0F, false, true);
+                        }
+                    }
+                }
+                playerHit.clear();
+                if (!anyAlive) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(this, 40L, 2L);
+    }
+
+    private void addBossEffect(org.bukkit.entity.LivingEntity boss, org.bukkit.potion.PotionEffectType type, int level) {
+        boss.addPotionEffect(new org.bukkit.potion.PotionEffect(type, Integer.MAX_VALUE, level, true, false));
+    }
+
+    private static final String BOSS_TAG = "customtnt_boss";
+    private final java.util.Map<java.util.UUID, Double> lastBossHealth = new java.util.HashMap<>();
+    private final java.util.Set<java.util.UUID> playerHit = new java.util.HashSet<>();
+
+    private boolean isBoss(org.bukkit.entity.Entity entity) {
+        return entity.getScoreboardTags().contains(BOSS_TAG);
+    }
+
+    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    public void onBossDamage(org.bukkit.event.entity.EntityDamageEvent event) {
+        if (!isBoss(event.getEntity())) {
+            return;
+        }
+        if (event instanceof org.bukkit.event.entity.EntityDamageByEntityEvent) {
+            org.bukkit.entity.Entity damager = ((org.bukkit.event.entity.EntityDamageByEntityEvent) event).getDamager();
+            if (damager instanceof org.bukkit.entity.Projectile) {
+                Object shooter = ((org.bukkit.entity.Projectile) damager).getShooter();
+                if (shooter instanceof org.bukkit.entity.Entity) {
+                    damager = (org.bukkit.entity.Entity) shooter;
+                }
+            }
+            if (damager instanceof org.bukkit.entity.Player) {
+                playerHit.add(event.getEntity().getUniqueId());
+                event.setCancelled(false);
+                return;
+            }
+        }
+        org.bukkit.event.entity.EntityDamageEvent.DamageCause cause = event.getCause();
+        if (cause == org.bukkit.event.entity.EntityDamageEvent.DamageCause.VOID
+                || cause == org.bukkit.event.entity.EntityDamageEvent.DamageCause.CUSTOM
+                || cause == org.bukkit.event.entity.EntityDamageEvent.DamageCause.SUICIDE) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    public void onBossSkullExplode(EntityExplodeEvent event) {
+        if (!(event.getEntity() instanceof org.bukkit.entity.WitherSkull)) {
+            return;
+        }
+        Object shooter = ((org.bukkit.entity.WitherSkull) event.getEntity()).getShooter();
+        if (!(shooter instanceof org.bukkit.entity.Entity) || !isBoss((org.bukkit.entity.Entity) shooter)) {
+            return;
+        }
+        event.blockList().clear();
+        Location center = event.getLocation();
+        World world = center.getWorld();
+        int radius = 3;
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (x * x + y * y + z * z > radius * radius) {
+                        continue;
+                    }
+                    org.bukkit.block.Block block = world.getBlockAt(center.getBlockX() + x,
+                            center.getBlockY() + y, center.getBlockZ() + z);
+                    if (block.getType() == Material.AIR && block.getRelative(0, -1, 0).getType().isSolid()) {
+                        block.setType(Material.FIRE);
+                    }
+                }
+            }
+        }
+        world.spawnParticle(Particle.FLAME, center, 40, 1.5, 0.5, 1.5, 0.02);
+    }
+
+    @EventHandler
+    public void onBossTarget(org.bukkit.event.entity.EntityTargetEvent event) {
+        if (isBoss(event.getEntity()) && event.getTarget() != null
+                && !(event.getTarget() instanceof org.bukkit.entity.Player)) {
+            event.setCancelled(true);
         }
     }
 
@@ -820,7 +1027,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
 
         TNTType type = TNTType.fromKey(args[1]);
         if (type == null) {
-            sender.sendMessage(ChatColor.RED + "Unknown TNT type. Choose nuke, mining, fire, slime, x-ray, rdm, mob, poop, firework, sun, or black-hole.");
+            sender.sendMessage(ChatColor.RED + "Unknown TNT type. Choose nuke, mining, fire, slime, x-ray, rdm, mob, boss, poop, firework, sun, or black-hole.");
             return true;
         }
         List<Player> targets;
@@ -906,23 +1113,24 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
 
     private void sendUsage(CommandSender sender, String label) {
         sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label
-                + " <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|poop|firework|sun|black-hole> [amount]");
+                + " <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|boss|poop|firework|sun|black-hole> [amount]");
         sender.sendMessage(ChatColor.YELLOW + "       /rldcustomtnt");
     }
 
     private enum TNTType {
         NUKE("nuke", ChatColor.DARK_RED + "Nuke TNT", Material.TNT, Material.REDSTONE_BLOCK),
-        MINING("mining", ChatColor.GRAY + "Mining TNT", Material.GOLD_INGOT, Material.GOLD_BLOCK),
-        FIRE("fire", ChatColor.RED + "Fire TNT", Material.FIREBALL, Material.NETHERRACK),
-        SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.SLIME_BALL, Material.SLIME_BLOCK),
-        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.DIAMOND, Material.DIAMOND_BLOCK),
-        FIREWORK("firework", ChatColor.LIGHT_PURPLE + "Firework TNT", Material.FIREWORK_CHARGE, Material.FIREWORK),
-        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.CLAY_BALL, Material.SOUL_SAND),
-        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.BONE, Material.MOSSY_COBBLESTONE),
-        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.PRISMARINE_SHARD, Material.PURPUR_BLOCK),
-        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.GLOWSTONE_DUST, Material.SEA_LANTERN),
+        MINING("mining", ChatColor.GRAY + "Mining TNT", Material.BARRIER, Material.GOLD_BLOCK),
+        FIRE("fire", ChatColor.RED + "Fire TNT", Material.COMMAND_MINECART, Material.NETHERRACK),
+        SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.GOLD_RECORD, Material.SLIME_BLOCK),
+        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.GREEN_RECORD, Material.DIAMOND_BLOCK),
+        FIREWORK("firework", ChatColor.LIGHT_PURPLE + "Firework TNT", Material.RECORD_3, Material.FIREWORK),
+        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.RECORD_4, Material.SOUL_SAND),
+        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.MONSTER_EGG, Material.MOSSY_COBBLESTONE),
+        BOSS("boss", ChatColor.DARK_RED + "Boss TNT", Material.RECORD_8, Material.BEDROCK),
+        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.RECORD_5, Material.PURPUR_BLOCK),
+        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.RECORD_6, Material.SEA_LANTERN),
         BLACK_HOLE("black-hole", ChatColor.DARK_PURPLE + "Black Hole TNT",
-                Material.ENDER_PEARL, Material.OBSIDIAN);
+                Material.RECORD_7, Material.OBSIDIAN);
 
         private final String key;
         private final String displayName;

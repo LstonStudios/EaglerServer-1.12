@@ -231,6 +231,7 @@ THEMES = {
     "slime": ((70, 190, 48), (226, 250, 190), (22, 80, 28), (200, 255, 120)),
     "xray": ((46, 112, 240), (200, 232, 255), (14, 40, 110), (120, 255, 255)),
     "rdm": ((226, 70, 200), (255, 240, 120), (40, 20, 60), (90, 255, 220)),
+    "boss": ((120, 10, 10), (30, 30, 30), (20, 0, 0), (255, 60, 30)),
     "mob": ((64, 140, 60), (214, 226, 190), (24, 44, 24), (255, 80, 60)),
     "poop": ((101, 67, 33), (160, 110, 60), (30, 18, 8), (190, 140, 80)),
     "firework": ((235, 40, 60), (255, 230, 60), (30, 30, 90), (80, 200, 255)),
@@ -240,10 +241,11 @@ THEMES = {
 
 ITEM_THEME = {
     "tnt": "nuke", "mining_tnt": "mining", "fire_tnt": "fire", "slime_tnt": "slime",
-    "xray_tnt": "xray", "rdm_tnt": "rdm", "mob_tnt": "mob", "poop_tnt": "poop", "firework_tnt": "firework", "firework_charge": "firework", "clay_ball": "poop", "bone": "mob", "prismarine_shard": "rdm", "sun_tnt": "sun", "black_hole_tnt": "black_hole",
-    "gold_ingot": "mining", "fireball": "fire", "slimeball": "slime",
-    "diamond": "xray", "diamond_ore": "xray", "glowstone_dust": "sun",
-    "ender_pearl": "black_hole",
+    "xray_tnt": "xray", "rdm_tnt": "rdm", "mob_tnt": "mob", "poop_tnt": "poop",
+    "firework_tnt": "firework", "sun_tnt": "sun", "black_hole_tnt": "black_hole",
+    "barrier": "mining", "minecart_command_block": "fire", "record_13": "slime",
+    "record_cat": "xray", "record_blocks": "firework", "record_chirp": "poop",
+    "spawn_egg": "mob", "record_far": "rdm", "record_stal": "boss", "boss_tnt": "boss", "record_mall": "sun", "record_mellohi": "black_hole",
 }
 
 
@@ -251,6 +253,7 @@ def build_detailed():
     for index, (item, theme) in enumerate(ITEM_THEME.items()):
         body, band, ink, spark = THEMES[theme]
         png_rgba(ASSETS / "items" / f"{item}.png", cube_icon(body, band, ink, spark, index + 1))
+    png_rgba(ASSETS / "items" / "spawn_egg_overlay.png", [[(0, 0, 0, 0)] * 32 for _ in range(32)])
     body, band, ink, spark = THEMES["nuke"]
     block_face_png(ASSETS / "blocks" / "tnt_side.png", face_texture("side", body, band, ink, spark, 5))
     block_face_png(ASSETS / "blocks" / "tnt_top.png", face_texture("top", body, band, ink, spark, 6))
@@ -303,12 +306,6 @@ def build():
         "items/xray_tnt.png": ((40, 112, 255, 255), (18, 55, 138, 255), (155, 203, 255, 255), (18, 55, 138, 255)),
         "items/sun_tnt.png": ((255, 192, 0, 255), (138, 94, 15, 255), (255, 242, 156, 255), (138, 94, 15, 255)),
         "items/black_hole_tnt.png": ((59, 30, 74, 255), (18, 12, 22, 255), (191, 129, 255, 255), (18, 12, 22, 255)),
-        "items/gold_ingot.png": ((218, 153, 42, 255), (122, 79, 23, 255), (255, 222, 105, 255), (122, 79, 23, 255)),
-        "items/fireball.png": ((238, 102, 24, 255), (133, 45, 15, 255), (255, 188, 47, 255), (133, 45, 15, 255)),
-        "items/slimeball.png": ((74, 188, 43, 255), (39, 114, 34, 255), (177, 247, 103, 255), (39, 114, 34, 255)),
-        "items/diamond_ore.png": ((40, 112, 255, 255), (18, 55, 138, 255), (155, 203, 255, 255), (18, 55, 138, 255)),
-        "items/glowstone_dust.png": ((255, 206, 82, 255), (138, 94, 15, 255), (255, 242, 156, 255), (138, 94, 15, 255)),
-        "items/ender_pearl.png": ((39, 39, 46, 255), (12, 12, 18, 255), (232, 232, 238, 255), (12, 12, 18, 255)),
     }
     for name, colors in tnt_themes.items():
         rows, palette = tnt_block_icon(*colors)

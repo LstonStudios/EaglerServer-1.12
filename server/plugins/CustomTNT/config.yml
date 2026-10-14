@@ -23,6 +23,10 @@ explosions:
     power: 0.0
     size: 10
     fire: false
+  boss:
+    power: 0.0
+    size: 10
+    fire: false
   mob:
     power: 0.0
     size: 10

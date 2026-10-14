@@ -119,7 +119,7 @@ live server folders manually.
 
 ### Custom TNT
 
-Adds nuke, mining, fire, slime, x-ray, sun, black-hole, rdm, mob, poop, and
+Adds nuke, mining, fire, slime, x-ray, sun, black-hole, rdm, mob, boss, poop, and
 firework TNT. Give variants with `/customtnt <player|@a|@s|@p> <type>
 [amount]` (`/ctnt` alias); custom variants are not separate items in the
 creative menu. Place most variants normally; right-click a block with mining,

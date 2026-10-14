@@ -15,6 +15,13 @@ settings:
   debug: false
   save-user-cache-on-stop-only: false
   sample-count: 12
+  attribute:
+    maxHealth:
+      max: 2048.0
+    movementSpeed:
+      max: 2048.0
+    attackDamage:
+      max: 2048.0
   bungeecord: false
   late-bind: false
   player-shuffle: 0
@@ -28,13 +35,6 @@ settings:
   restart-on-crash: true
   restart-script: ./start.sh
   netty-threads: 4
-  attribute:
-    maxHealth:
-      max: 2048.0
-    movementSpeed:
-      max: 2048.0
-    attackDamage:
-      max: 2048.0
   moved-too-quickly-threshold: 100.0
 commands:
   tab-complete: 0
@@ -64,6 +64,18 @@ stats:
 world-settings:
   default:
     verbose: true
+    mob-spawn-range: 4
+    growth:
+      cactus-modifier: 100
+      cane-modifier: 100
+      melon-modifier: 100
+      mushroom-modifier: 100
+      pumpkin-modifier: 100
+      sapling-modifier: 100
+      wheat-modifier: 100
+      netherwart-modifier: 100
+      vine-modifier: 100
+      cocoa-modifier: 100
     entity-activation-range:
       animals: 32
       monsters: 32
@@ -87,18 +99,6 @@ world-settings:
     seed-feature: 14357617
     seed-monument: 10387313
     seed-slime: 987234911
-    mob-spawn-range: 4
-    growth:
-      cactus-modifier: 100
-      cane-modifier: 100
-      melon-modifier: 100
-      mushroom-modifier: 100
-      pumpkin-modifier: 100
-      sapling-modifier: 100
-      wheat-modifier: 100
-      netherwart-modifier: 100
-      vine-modifier: 100
-      cocoa-modifier: 100
     hunger:
       jump-walk-exhaustion: 0.05
       jump-sprint-exhaustion: 0.2
