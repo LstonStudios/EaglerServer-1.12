@@ -142,3 +142,46 @@ with `/rldcustomtnt`.
 Build with `gradle -p custom-tnt-plugin build`, copy
 `custom-tnt-plugin/build/libs/CustomTNT-1.0.0.jar` to `server/plugins/`, then
 restart the server.
+
+### WorldEdit
+
+WorldEdit (`worldedit-bukkit-6.1.9.jar`) is an in-game building tool for
+operators. Select two corners with the wooden axe (`//wand`, left/right click)
+or `//pos1` and `//pos2`, then edit the selection: `//set <block>` fills it,
+`//replace <from> <to>` swaps blocks, `//copy`, `//paste`, `//undo`, and
+`//redo` move or revert builds, and `//sphere` / `//cyl` / `//fill` make shapes.
+Settings are in `server/plugins/WorldEdit/config.yml`.
+
+### WorldGuard
+
+WorldGuard (`worldguard-bukkit-6.2.2.jar`) protects areas and requires
+WorldEdit. Select an area with the WorldEdit wand, then
+`/region define <name>` creates a region, `/region addowner <name> <player>`
+and `/region addmember <name> <player>` choose who may build there, and
+`/region flag <name> <flag> <allow|deny>` controls behavior (for example
+`pvp`, `tnt`, `creeper-explosion`, `mob-spawning`, `entry`). Other commands:
+`/region list`, `/region info <name>`, `/region remove <name>`. Global settings
+are in `server/plugins/WorldGuard/config.yml` and per-world settings in
+`server/plugins/WorldGuard/worlds/`. Note that region flags (such as `tnt` and
+`other-explosion`) affect the Custom TNT plugin's explosions.
+
+### Custom Items
+
+Adds custom items. Give them with `/customitem <player|@a|@s|@p> <item>
+[amount]` (`/citem` alias, requires `customitems.admin`, default op).
+
+- `lightning`: Lightning Sword (gold sword, yellow and white). Hitting a living
+  entity strikes lightning on it.
+- `explosion`: Explosion Sword (iron sword, red and orange). Hitting a living
+  entity causes a power-3 explosion (no fire, breaks blocks unless protected,
+  and can hurt you if you are close).
+- `pearl`: Pearl Sword (diamond sword, purple and cyan). Hitting a living entity
+  teleports you to it.
+
+Amount is 1-64. The swords are unbreakable and glow. The resource pack
+retextures the vanilla gold, iron, and diamond swords, so every sword of those
+types looks like the custom ones.
+
+Build with `gradle -p custom-items-plugin build`, copy
+`custom-items-plugin/build/libs/CustomItems-1.0.0.jar` to `server/plugins/`, then
+restart the server.

@@ -261,6 +261,45 @@ def build_detailed():
     block_face_png(ASSETS / "blocks" / "tnt_bottom.png", bottom)
 
 
+def sword_icon(core, edge, guard, handle, outline):
+    rows = [["." for _ in range(16)] for _ in range(16)]
+
+    def put(x, y, color, overwrite=False):
+        if 0 <= x < 16 and 0 <= y < 16 and (overwrite or rows[y][x] == "."):
+            rows[y][x] = color
+
+    for x in range(5, 15):
+        y = 15 - x
+        put(x, y, "w", True)
+        put(x - 1, y, "y", True)
+        put(x, y + 1, "y", True)
+    for x in range(5, 15):
+        y = 15 - x
+        for dx, dy in ((-2, 0), (1, 0), (-1, -1), (0, -1), (-1, 2), (0, 2), (1, 1), (-2, 1)):
+            put(x + dx, y + dy, "o")
+    for x, y in ((2, 9), (3, 10), (4, 11), (5, 12), (6, 13)):
+        put(x, y, "g", True)
+    for x, y in ((3, 12), (2, 13)):
+        put(x, y, "h", True)
+    put(1, 14, "g", True)
+    palette = {
+        ".": (0, 0, 0, 0),
+        "w": core,
+        "y": edge,
+        "g": guard,
+        "h": handle,
+        "o": outline,
+    }
+    return ["".join(row) for row in rows], palette
+
+
+SWORD_THEMES = {
+    "gold_sword.png": ((255, 255, 255, 255), (255, 221, 31, 255), (255, 170, 0, 255), (120, 78, 32, 255), (96, 76, 8, 255)),
+    "iron_sword.png": ((255, 240, 150, 255), (230, 40, 20, 255), (255, 140, 0, 255), (70, 40, 30, 255), (80, 12, 8, 255)),
+    "diamond_sword.png": ((200, 255, 255, 255), (150, 60, 220, 255), (60, 220, 230, 255), (40, 25, 70, 255), (45, 20, 80, 255)),
+}
+
+
 def build():
     side_rows = [["r" for _ in range(16)] for _ in range(16)]
     for y in range(4, 11):
@@ -310,6 +349,10 @@ def build():
     for name, colors in tnt_themes.items():
         rows, palette = tnt_block_icon(*colors)
         png(ASSETS / name, rows, palette)
+
+    for name, colors in SWORD_THEMES.items():
+        rows, palette = sword_icon(*colors)
+        png(ASSETS / "items" / name, rows, palette)
 
     build_detailed()
 
