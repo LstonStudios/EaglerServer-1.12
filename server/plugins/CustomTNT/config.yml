@@ -1,7 +1,7 @@
 explosions:
   nuke:
-    power: 2.0
-    size: 8
+    power: 16.0
+    size: 64
     fire: true
   mining:
     power: 2.0
@@ -44,6 +44,10 @@ explosions:
     size: 10
     fire: false
   black-hole:
-    power: 15.0
-    size: 60
+    power: 2.0
+    size: 8
+    fire: false
+  anti-tnt:
+    power: 0.0
+    size: 32
     fire: false

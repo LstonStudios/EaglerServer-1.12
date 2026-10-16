@@ -10,13 +10,21 @@
 # REMEMBER TO KEEP PERIODICAL BACKUPS.
 #
 regions:
-    protected:
-        min: {x: -234.0, y: 0.0, z: 191.0}
-        max: {x: -217.0, y: 255.0, z: 208.0}
+    spn:
+        min: {x: -244.0, y: 63.0, z: 183.0}
+        max: {x: -196.0, y: 78.0, z: 212.0}
         members: {}
-        flags: {build: deny, use: allow, block-break: deny, interact: allow, pistons: allow,
-            block-place: deny}
+        flags: {build: deny, block-break: deny}
         owners: {}
+        type: cuboid
+        priority: 0
+    lahna:
+        min: {x: -218.0, y: 63.0, z: 176.0}
+        max: {x: -212.0, y: 78.0, z: 183.0}
+        members: {}
+        flags: {build: deny, block-break: deny}
+        owners:
+            unique-ids: [3d7730a7-1bf4-3e62-89ef-b0e2be4b840c]
         type: cuboid
         priority: 0
     __global__:

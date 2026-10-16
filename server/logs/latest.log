@@ -1,233 +1,256 @@
-[23:30:15] [Server thread/INFO]: Starting minecraft server version 1.12.2
-[23:30:15] [Server thread/INFO]: Loading properties
-[23:30:15] [Server thread/INFO]: Default game type: SURVIVAL
-[23:30:15] [Server thread/INFO]: This server is running Paper version git-Paper-1620 (MC: 1.12.2) (Implementing API version 1.12.2-R0.1-SNAPSHOT)
-[23:30:16] [Server thread/INFO]: Debug logging is disabled
-[23:30:16] [Server thread/INFO]: Server Ping Player Sample Count: 12
-[23:30:16] [Server thread/INFO]: Using 4 threads for Netty based IO
-[23:30:16] [Server thread/INFO]: Generating keypair
-[23:30:16] [Server thread/INFO]: Starting Minecraft server on localhost:25566
-[23:30:16] [Server thread/INFO]: Using default channel type
-[23:30:16] [Server thread/INFO]: Set PluginClassLoader as parallel capable
-[23:30:17] [Server thread/INFO]: [PlayerSkulls] Loading PlayerSkulls v1.0
-[23:30:17] [Server thread/INFO]: [WorldEdit] Loading WorldEdit v6.1.9;caf0ad9
-[23:30:17] [Server thread/INFO]: [UsernameEffects] Loading UsernameEffects v1.0.0
-[23:30:17] [Server thread/INFO]: [CustomTNT] Loading CustomTNT v1.0.0
-[23:30:17] [Server thread/INFO]: [CustomItems] Loading CustomItems v1.0.0
-[23:30:17] [Server thread/INFO]: [WorldGuard] Loading WorldGuard v6.2.2-SNAPSHOT;8eeab68
-[23:30:17] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
-[23:30:17] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[23:30:17] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[23:30:17] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[23:30:17] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[23:30:17] [Server thread/INFO]: **** Beginning UUID conversion, this may take A LONG time ****
-[23:30:17] [Server thread/INFO]: Preparing level "The Lston EaglerCraft Server"
-[23:30:17] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server] --------
-[23:30:17] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
-[23:30:17] [Server thread/INFO]: Max TNT Explosions: 100
-[23:30:17] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
-[23:30:17] [Server thread/INFO]: Mob Spawn Range: 4
-[23:30:17] [Server thread/INFO]: Cactus Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Cane Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Melon Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Mushroom Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Sapling Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Wheat Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: NetherWart Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Vine Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Cocoa Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
-[23:30:17] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
-[23:30:17] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
-[23:30:17] [Server thread/INFO]: Random Lighting Updates: false
-[23:30:17] [Server thread/INFO]: Structure Info Saving: true
-[23:30:17] [Server thread/INFO]: View Distance: 4
-[23:30:17] [Server thread/INFO]: Item Despawn Rate: 6000
-[23:30:17] [Server thread/INFO]: Item Merge Radius: 2.5
-[23:30:17] [Server thread/INFO]: Arrow Despawn Rate: 1200
-[23:30:17] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
-[23:30:17] [Server thread/INFO]: Experience Merge Radius: 3.0
-[23:30:17] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
-[23:30:17] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
-[23:30:17] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server_nether] --------
-[23:30:17] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
-[23:30:17] [Server thread/INFO]: Max TNT Explosions: 100
-[23:30:17] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
-[23:30:17] [Server thread/INFO]: Mob Spawn Range: 4
-[23:30:17] [Server thread/INFO]: Cactus Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Cane Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Melon Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Mushroom Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Sapling Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Wheat Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: NetherWart Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Vine Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Cocoa Growth Modifier: 100%
-[23:30:17] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
-[23:30:17] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
-[23:30:17] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
-[23:30:17] [Server thread/INFO]: Random Lighting Updates: false
-[23:30:17] [Server thread/INFO]: Structure Info Saving: true
-[23:30:17] [Server thread/INFO]: View Distance: 4
-[23:30:17] [Server thread/INFO]: Item Despawn Rate: 6000
-[23:30:17] [Server thread/INFO]: Item Merge Radius: 2.5
-[23:30:17] [Server thread/INFO]: Arrow Despawn Rate: 1200
-[23:30:17] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
-[23:30:17] [Server thread/INFO]: Experience Merge Radius: 3.0
-[23:30:17] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
-[23:30:17] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
-[23:30:18] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server_the_end] --------
-[23:30:18] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
-[23:30:18] [Server thread/INFO]: Max TNT Explosions: 100
-[23:30:18] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
-[23:30:18] [Server thread/INFO]: Mob Spawn Range: 4
-[23:30:18] [Server thread/INFO]: Cactus Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Cane Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Melon Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Mushroom Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Sapling Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Wheat Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: NetherWart Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Vine Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Cocoa Growth Modifier: 100%
-[23:30:18] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
-[23:30:18] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
-[23:30:18] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
-[23:30:18] [Server thread/INFO]: Random Lighting Updates: false
-[23:30:18] [Server thread/INFO]: Structure Info Saving: true
-[23:30:18] [Server thread/INFO]: View Distance: 4
-[23:30:18] [Server thread/INFO]: Item Despawn Rate: 6000
-[23:30:18] [Server thread/INFO]: Item Merge Radius: 2.5
-[23:30:18] [Server thread/INFO]: Arrow Despawn Rate: 1200
-[23:30:18] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
-[23:30:18] [Server thread/INFO]: Experience Merge Radius: 3.0
-[23:30:18] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
-[23:30:18] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
-[23:30:18] [Server thread/INFO]: Preparing start region for level 0 (Seed: -5782907558954678269)
-[23:30:19] [Server thread/INFO]: Preparing spawn area: 1%
-[23:30:19] [Server thread/INFO]: Preparing start region for level 1 (Seed: -5782907558954678269)
-[23:30:19] [Server thread/INFO]: Preparing start region for level 2 (Seed: -5782907558954678269)
-[23:30:19] [Server thread/INFO]: [PlayerSkulls] Enabling PlayerSkulls v1.0
-[23:30:19] [Server thread/INFO]: [WorldEdit] Enabling WorldEdit v6.1.9;caf0ad9
-[23:30:20] [Server thread/INFO]: WEPIF: Using the Bukkit Permissions API.
-[23:30:20] [Server thread/INFO]: [WorldEdit] Using com.sk89q.worldedit.bukkit.adapter.impl.Spigot_v1_12_R2 as the Bukkit adapter
-[23:30:20] [Server thread/INFO]: [UsernameEffects] Enabling UsernameEffects v1.0.0
-[23:30:20] [Server thread/INFO]: [CustomTNT] Enabling CustomTNT v1.0.0
-[23:30:20] [Server thread/INFO]: [CustomItems] Enabling CustomItems v1.0.0
-[23:30:20] [Server thread/INFO]: [WorldGuard] Enabling WorldGuard v6.2.2-SNAPSHOT;8eeab68
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) TNT ignition is PERMITTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lighters are PERMITTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lava fire is blocked.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Fire spread is UNRESTRICTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server'
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) TNT ignition is PERMITTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lighters are PERMITTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lava fire is blocked.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Fire spread is UNRESTRICTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_nether'
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) TNT ignition is PERMITTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lighters are PERMITTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lava fire is blocked.
-[23:30:20] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Fire spread is UNRESTRICTED.
-[23:30:20] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_the_end'
-[23:30:20] [Server thread/INFO]: [WorldGuard] Loading region data...
-[23:30:20] [Server thread/INFO]: Done (3.652s)! For help, type "help" or "?"
-[23:30:20] [Server thread/INFO]: Timings Reset
-[23:30:25] [User Authenticator #1/INFO]: UUID of player LstonStudiosf is 7bd1a46f-b5e2-3c3f-a4b6-7a088a2712a1
-[23:30:25] [Server thread/INFO]: LstonStudiosf[/127.0.0.1:35936] logged in with entity id 118 at ([The Lston EaglerCraft Server]-224.5, 64.0, 185.5)
-[23:30:34] [User Authenticator #1/INFO]: UUID of player Avatar59 is 3d7730a7-1bf4-3e62-89ef-b0e2be4b840c
-[23:30:34] [Server thread/INFO]: Avatar59[/127.0.0.1:39224] logged in with entity id 133 at ([The Lston EaglerCraft Server]-276.0047431879609, 63.0, 290.84354589800773)
-[23:30:50] [Server thread/INFO]: LstonStudiosf issued server command: /customitem @a pearl
-[23:30:54] [Server thread/INFO]: LstonStudiosf lost connection: Disconnected
-[23:30:54] [Server thread/INFO]: LstonStudiosf left the game
-[23:31:00] [User Authenticator #1/INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
-[23:31:00] [Server thread/INFO]: LstonStudios[/127.0.0.1:56142] logged in with entity id 580 at ([The Lston EaglerCraft Server]-247.54134411568816, 67.0, 223.0830727720476)
-[23:31:08] [Server thread/INFO]: LstonStudios issued server command: /customitem @a pearl
-[23:31:48] [Server thread/INFO]: Avatar59 hit the ground too hard
-[23:32:14] [Server thread/INFO]: LstonStudios lost connection: Disconnected
-[23:32:14] [Server thread/INFO]: LstonStudios left the game
-[23:32:23] [User Authenticator #2/INFO]: UUID of player LstonStudiosf is 7bd1a46f-b5e2-3c3f-a4b6-7a088a2712a1
-[23:32:23] [Server thread/INFO]: LstonStudiosf[/127.0.0.1:42264] logged in with entity id 1079 at ([The Lston EaglerCraft Server]-224.5, 64.0, 185.5)
-[23:32:57] [Server thread/INFO]: LstonStudiosf was slain by Avatar59
-[23:33:33] [Server thread/INFO]: Avatar59 was slain by LstonStudiosf using [Lightning Sword]
-[23:33:37] [Server thread/INFO]: [@: Set Avatar59's game mode to Survival Mode]
-[23:33:37] [Server thread/INFO]: [@: Given Mining Fatigue (ID 4) * 255 to Avatar59 for 999 seconds]
-[23:33:40] [Server thread/INFO]: LstonStudiosf went up in flames
-[23:34:52] [Server thread/INFO]: LstonStudiosf walked into fire whilst fighting Avatar59
-[23:34:55] [Server thread/INFO]: Avatar59 went up in flames
-[23:35:02] [Server thread/INFO]: LstonStudiosf lost connection: Disconnected
-[23:35:02] [Server thread/INFO]: LstonStudiosf left the game
-[23:35:08] [Server thread/INFO]: [@: Set Avatar59's game mode to Survival Mode]
-[23:35:08] [Server thread/INFO]: [@: Given Mining Fatigue (ID 4) * 255 to Avatar59 for 999 seconds]
-[23:35:12] [User Authenticator #3/INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
-[23:35:12] [Server thread/INFO]: LstonStudios[/127.0.0.1:32810] logged in with entity id 1631 at ([The Lston EaglerCraft Server]-246.30000001192093, 66.0, 223.30000001192093)
-[23:35:39] [Server thread/INFO]: LstonStudios issued server command: /summon iron_golam
-[23:35:39] [Server thread/WARN]: Skipping Entity with id minecraft:iron_golam
-[23:35:39] [Server thread/INFO]: [LstonStudios: Unable to summon object]
-[23:35:49] [Server thread/INFO]: LstonStudios issued server command: /summon iron_golem
-[23:35:49] [Server thread/WARN]: Skipping Entity with id minecraft:iron_golem
-[23:35:49] [Server thread/INFO]: [LstonStudios: Unable to summon object]
-[23:36:24] [Server thread/INFO]: LstonStudios issued server command: /clar
-[23:36:28] [Server thread/INFO]: LstonStudios issued server command: /clear
-[23:36:28] [Server thread/INFO]: [LstonStudios: Cleared the inventory of LstonStudios, removing 207 items]
-[23:36:40] [Server thread/INFO]: LstonStudios issued server command: /customitem @a expload
-[23:36:55] [Server thread/INFO]: LstonStudios issued server command: /customitem @a explosion
-[23:37:09] [Server thread/INFO]: Avatar59 was blown up by Endermite
-[23:37:13] [Server thread/INFO]: [@: Set Avatar59's game mode to Survival Mode]
-[23:37:13] [Server thread/INFO]: [@: Given Mining Fatigue (ID 4) * 255 to Avatar59 for 999 seconds]
-[23:37:45] [Server thread/INFO]: LstonStudios issued server command: /tp @a @s
-[23:37:45] [Server thread/INFO]: [LstonStudios: Teleported LstonStudios to LstonStudios]
-[23:37:45] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to LstonStudios]
-[23:37:55] [Server thread/INFO]: LstonStudios issued server command: /tp @a @s
-[23:37:55] [Server thread/INFO]: [LstonStudios: Teleported LstonStudios to LstonStudios]
-[23:37:55] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to LstonStudios]
-[23:38:00] [Server thread/INFO]: Scanning for legacy world dragon fight...
-[23:38:00] [Server thread/INFO]: Found that the dragon has been killed in this world already.
-[23:38:01] [Server thread/INFO]: LstonStudios issued server command: /tp @a @s
-[23:38:01] [Server thread/INFO]: [LstonStudios: Teleported LstonStudios to LstonStudios]
-[23:38:01] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to LstonStudios]
-[23:38:15] [Server thread/INFO]: [@: Set Avatar59's game mode to Survival Mode]
-[23:38:15] [Server thread/INFO]: [@: Given Mining Fatigue (ID 4) * 255 to Avatar59 for 999 seconds]
-[23:38:18] [Server thread/INFO]: LstonStudios issued server command: /kill @e[type=endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:18] [Server thread/INFO]: [LstonStudios: Killed Endermite]
-[23:38:19] [Server thread/INFO]: Avatar59 lost connection: Disconnected
-[23:38:19] [Server thread/INFO]: Avatar59 left the game
-[23:38:22] [Server thread/INFO]: LstonStudios issued server command: /tp @a @s
-[23:38:22] [Server thread/INFO]: [LstonStudios: Teleported LstonStudios to LstonStudios]
-[23:38:32] [Server thread/INFO]: LstonStudios lost connection: Disconnected
-[23:38:32] [Server thread/INFO]: LstonStudios left the game
-[23:41:59] [Thread-1/INFO]: Stopping server
+[19:32:30] [Server thread/INFO]: Starting minecraft server version 1.12.2
+[19:32:30] [Server thread/INFO]: Loading properties
+[19:32:31] [Server thread/INFO]: Default game type: SURVIVAL
+[19:32:31] [Server thread/INFO]: This server is running Paper version git-Paper-1620 (MC: 1.12.2) (Implementing API version 1.12.2-R0.1-SNAPSHOT)
+[19:32:31] [Server thread/INFO]: Debug logging is disabled
+[19:32:31] [Server thread/INFO]: Using 4 threads for Netty based IO
+[19:32:31] [Server thread/INFO]: Server Ping Player Sample Count: 12
+[19:32:32] [Server thread/INFO]: Generating keypair
+[19:32:32] [Server thread/INFO]: Starting Minecraft server on localhost:25566
+[19:32:32] [Server thread/INFO]: Using default channel type
+[19:32:33] [Server thread/INFO]: Set PluginClassLoader as parallel capable
+[19:32:33] [Server thread/INFO]: [PlayerSkulls] Loading PlayerSkulls v1.0
+[19:32:33] [Server thread/INFO]: [WorldEdit] Loading WorldEdit v6.1.9;caf0ad9
+[19:32:33] [Server thread/INFO]: [UsernameEffects] Loading UsernameEffects v1.0.0
+[19:32:33] [Server thread/INFO]: [CustomTNT] Loading CustomTNT v1.0.0
+[19:32:33] [Server thread/INFO]: [CustomAbility] Loading CustomAbility v1.0.0
+[19:32:33] [Server thread/INFO]: [SpawnMobs] Loading SpawnMobs v1.0.0
+[19:32:33] [Server thread/INFO]: [CustomItems] Loading CustomItems v1.0.0
+[19:32:33] [Server thread/INFO]: [WorldGuard] Loading WorldGuard v6.2.2-SNAPSHOT;8eeab68
+[19:32:33] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it
+[19:32:33] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[19:32:33] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[19:32:33] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[19:32:33] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[19:32:33] [Server thread/INFO]: **** Beginning UUID conversion, this may take A LONG time ****
+[19:32:33] [Server thread/INFO]: Preparing level "The Lston EaglerCraft Server"
+[19:32:33] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server] --------
+[19:32:33] [Server thread/INFO]: Cactus Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Cane Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Melon Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Mushroom Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Sapling Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Wheat Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: NetherWart Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Vine Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Cocoa Growth Modifier: 100%
+[19:32:33] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[19:32:33] [Server thread/INFO]: Mob Spawn Range: 4
+[19:32:33] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[19:32:33] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[19:32:33] [Server thread/INFO]: Random Lighting Updates: false
+[19:32:33] [Server thread/INFO]: Structure Info Saving: true
+[19:32:33] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[19:32:33] [Server thread/INFO]: Max TNT Explosions: 100
+[19:32:33] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[19:32:33] [Server thread/INFO]: View Distance: 4
+[19:32:33] [Server thread/INFO]: Item Despawn Rate: 6000
+[19:32:33] [Server thread/INFO]: Item Merge Radius: 2.5
+[19:32:33] [Server thread/INFO]: Arrow Despawn Rate: 1200
+[19:32:33] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[19:32:33] [Server thread/INFO]: Experience Merge Radius: 3.0
+[19:32:33] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
+[19:32:33] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
+[19:32:34] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server_nether] --------
+[19:32:34] [Server thread/INFO]: Cactus Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Cane Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Melon Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Mushroom Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Sapling Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Wheat Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: NetherWart Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Vine Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Cocoa Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[19:32:34] [Server thread/INFO]: Mob Spawn Range: 4
+[19:32:34] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[19:32:34] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[19:32:34] [Server thread/INFO]: Random Lighting Updates: false
+[19:32:34] [Server thread/INFO]: Structure Info Saving: true
+[19:32:34] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[19:32:34] [Server thread/INFO]: Max TNT Explosions: 100
+[19:32:34] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[19:32:34] [Server thread/INFO]: View Distance: 4
+[19:32:34] [Server thread/INFO]: Item Despawn Rate: 6000
+[19:32:34] [Server thread/INFO]: Item Merge Radius: 2.5
+[19:32:34] [Server thread/INFO]: Arrow Despawn Rate: 1200
+[19:32:34] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[19:32:34] [Server thread/INFO]: Experience Merge Radius: 3.0
+[19:32:34] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
+[19:32:34] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
+[19:32:34] [Server thread/INFO]: -------- World Settings For [The Lston EaglerCraft Server_the_end] --------
+[19:32:34] [Server thread/INFO]: Cactus Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Cane Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Melon Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Mushroom Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Pumpkin Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Sapling Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Wheat Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: NetherWart Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Vine Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Cocoa Growth Modifier: 100%
+[19:32:34] [Server thread/INFO]: Entity Activation Range: An 32 / Mo 32 / Mi 16 / Tiv true
+[19:32:34] [Server thread/INFO]: Mob Spawn Range: 4
+[19:32:34] [Server thread/INFO]: Entity Tracking Range: Pl 48 / An 48 / Mo 48 / Mi 32 / Other 64
+[19:32:34] [Server thread/INFO]: Hopper Transfer: 8 Hopper Check: 1 Hopper Amount: 1
+[19:32:34] [Server thread/INFO]: Random Lighting Updates: false
+[19:32:34] [Server thread/INFO]: Structure Info Saving: true
+[19:32:34] [Server thread/INFO]: Custom Map Seeds:  Village: 10387312 Feature: 14357617 Monument: 10387313 Slime: 987234911
+[19:32:34] [Server thread/INFO]: Max TNT Explosions: 100
+[19:32:34] [Server thread/INFO]: Tile Max Tick Time: 50ms Entity max Tick Time: 50ms
+[19:32:34] [Server thread/INFO]: View Distance: 4
+[19:32:34] [Server thread/INFO]: Item Despawn Rate: 6000
+[19:32:34] [Server thread/INFO]: Item Merge Radius: 2.5
+[19:32:34] [Server thread/INFO]: Arrow Despawn Rate: 1200
+[19:32:34] [Server thread/INFO]: Allow Zombie Pigmen to spawn from portal blocks: true
+[19:32:34] [Server thread/INFO]: Experience Merge Radius: 3.0
+[19:32:34] [Server thread/INFO]: Zombie Aggressive Towards Villager: true
+[19:32:34] [Server thread/INFO]: Nerfing mobs spawned from spawners: false
+[19:32:35] [Server thread/INFO]: Preparing start region for level 0 (Seed: -5782907558954678269)
+[19:32:36] [Server thread/INFO]: Preparing spawn area: 0%
+[19:32:37] [Server thread/INFO]: Preparing start region for level 1 (Seed: -5782907558954678269)
+[19:32:37] [Server thread/INFO]: Preparing start region for level 2 (Seed: -5782907558954678269)
+[19:32:37] [Server thread/INFO]: [PlayerSkulls] Enabling PlayerSkulls v1.0
+[19:32:37] [Server thread/INFO]: [WorldEdit] Enabling WorldEdit v6.1.9;caf0ad9
+[19:32:39] [Server thread/INFO]: WEPIF: Using the Bukkit Permissions API.
+[19:32:39] [Server thread/INFO]: [WorldEdit] Using com.sk89q.worldedit.bukkit.adapter.impl.Spigot_v1_12_R2 as the Bukkit adapter
+[19:32:39] [Server thread/INFO]: [UsernameEffects] Enabling UsernameEffects v1.0.0
+[19:32:39] [Server thread/INFO]: [CustomTNT] Enabling CustomTNT v1.0.0
+[19:32:39] [Server thread/INFO]: [CustomAbility] Enabling CustomAbility v1.0.0
+[19:32:39] [Server thread/INFO]: [SpawnMobs] Enabling SpawnMobs v1.0.0
+[19:32:39] [Server thread/INFO]: [CustomItems] Enabling CustomItems v1.0.0
+[19:32:39] [Server thread/INFO]: [WorldGuard] Enabling WorldGuard v6.2.2-SNAPSHOT;8eeab68
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) TNT ignition is PERMITTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lighters are PERMITTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Lava fire is blocked.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server) Fire spread is UNRESTRICTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server'
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) TNT ignition is PERMITTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lighters are PERMITTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Lava fire is blocked.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_nether) Fire spread is UNRESTRICTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_nether'
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) TNT ignition is PERMITTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lighters are PERMITTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Lava fire is blocked.
+[19:32:40] [Server thread/INFO]: [WorldGuard] (The Lston EaglerCraft Server_the_end) Fire spread is UNRESTRICTED.
+[19:32:40] [Server thread/INFO]: [WorldGuard] Loaded configuration for world 'The Lston EaglerCraft Server_the_end'
+[19:32:40] [Server thread/INFO]: [WorldGuard] Loading region data...
+[19:32:41] [Server thread/INFO]: Done (7.588s)! For help, type "help" or "?"
+[19:32:41] [Server thread/INFO]: Timings Reset
+[19:32:46] [User Authenticator #1/INFO]: UUID of player Avatar59 is 3d7730a7-1bf4-3e62-89ef-b0e2be4b840c
+[19:32:47] [Server thread/INFO]: Avatar59[/127.0.0.1:37724] logged in with entity id 109 at ([The Lston EaglerCraft Server]-212.30000001192093, 68.0, 178.9587781513557)
+[19:32:54] [Server thread/INFO]: Avatar59 lost connection: Disconnected
+[19:32:54] [Server thread/INFO]: Avatar59 left the game
+[19:33:03] [User Authenticator #1/INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
+[19:33:03] [Server thread/INFO]: LstonStudios[/127.0.0.1:42984] logged in with entity id 119 at ([The Lston EaglerCraft Server]-209.69999998807907, 68.97804771773932, 177.65457368017408)
+[19:33:22] [Server thread/INFO]: LstonStudios issued server command: //set iron_block
+[19:34:44] [Server thread/INFO]: LstonStudios issued server command: //set quartz_stairs
+[19:34:58] [Server thread/INFO]: LstonStudios issued server command: //set quartz_stairs
+[19:35:19] [Server thread/INFO]: LstonStudios issued server command: /tp @a
+[19:35:19] [Server thread/INFO]: [LstonStudios: Teleported LstonStudios to LstonStudios]
+[19:35:55] [User Authenticator #2/INFO]: UUID of player Avatar59 is 3d7730a7-1bf4-3e62-89ef-b0e2be4b840c
+[19:35:55] [Server thread/INFO]: Avatar59[/127.0.0.1:48858] logged in with entity id 283 at ([The Lston EaglerCraft Server]-212.30000001192093, 68.0, 178.9587781513557)
+[19:37:52] [Server thread/INFO]: LstonStudios issued server command: //wand
+[19:38:38] [Async Chat Thread - #0/INFO]: <Avatar59> am in math
+[19:39:03] [Async Chat Thread - #0/INFO]: [VIP] LstonStudios: from mom-GET OFF and pay attention
+[19:39:23] [Async Chat Thread - #0/INFO]: [VIP] LstonStudios: i did not say THAT...
+[19:40:23] [Server thread/INFO]: LstonStudios issued server command: /tp @a @s
+[19:40:23] [Server thread/INFO]: [LstonStudios: Teleported LstonStudios to LstonStudios]
+[19:40:23] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to LstonStudios]
+[19:40:31] [Server thread/INFO]: LstonStudios issued server command: /tp @a @s
+[19:40:31] [Server thread/INFO]: [LstonStudios: Teleported LstonStudios to LstonStudios]
+[19:40:31] [Server thread/INFO]: [LstonStudios: Teleported Avatar59 to LstonStudios]
+[19:40:48] [Server thread/INFO]: LstonStudios lost connection: Disconnected
+[19:40:48] [Server thread/INFO]: LstonStudios left the game
+[19:40:54] [User Authenticator #3/INFO]: UUID of player LstonStudiosf is 7bd1a46f-b5e2-3c3f-a4b6-7a088a2712a1
+[19:40:55] [Server thread/INFO]: LstonStudiosf[/127.0.0.1:48902] logged in with entity id 678 at ([The Lston EaglerCraft Server]-213.3728516809725, 68.0, 178.30584362353122)
+[19:41:34] [Server thread/INFO]: LstonStudiosf lost connection: Disconnected
+[19:41:34] [Server thread/INFO]: LstonStudiosf left the game
+[19:41:41] [User Authenticator #3/INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
+[19:41:41] [Server thread/INFO]: LstonStudios[/127.0.0.1:48598] logged in with entity id 713 at ([The Lston EaglerCraft Server]-242.39440757581298, 64.0, 182.28422602878825)
+[19:42:12] [Server thread/INFO]: LstonStudios issued server command: /region flag spawn block-break deny
+[19:42:31] [Async Chat Thread - #1/INFO]: <Avatar59> t
+[19:42:40] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:42:46] [Server thread/INFO]: LstonStudios issued server command: /region flag spawn pvp deny
+[19:43:10] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:43:19] [Server thread/INFO]: LstonStudios lost connection: Disconnected
+[19:43:19] [Server thread/INFO]: LstonStudios left the game
+[19:43:25] [User Authenticator #4/INFO]: UUID of player LstonStudiosf is 7bd1a46f-b5e2-3c3f-a4b6-7a088a2712a1
+[19:43:25] [Server thread/INFO]: LstonStudiosf[/127.0.0.1:48290] logged in with entity id 765 at ([The Lston EaglerCraft Server]-242.50710104332558, 64.0, 185.352353164815)
+[19:43:56] [Server thread/INFO]: LstonStudiosf lost connection: Disconnected
+[19:43:56] [Server thread/INFO]: LstonStudiosf left the game
+[19:44:02] [User Authenticator #4/INFO]: UUID of player LstonStudios__ is a729e9e3-9c1f-3ecd-b69c-e5231b8d88c4
+[19:44:02] [Server thread/INFO]: LstonStudios__[/127.0.0.1:55296] logged in with entity id 797 at ([The Lston EaglerCraft Server]-224.5, 64.0, 185.5)
+[19:45:23] [Server thread/WARN]: LstonStudios__ was kicked due to keepalive timeout!
+[19:45:23] [Server thread/INFO]: LstonStudios__ lost connection: Timed out
+[19:45:23] [Server thread/INFO]: LstonStudios__ left the game
+[19:45:23] [Server thread/WARN]: handleDisconnection() called twice
+[19:45:44] [User Authenticator #5/INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
+[19:45:44] [Server thread/INFO]: LstonStudios[/127.0.0.1:45552] logged in with entity id 827 at ([The Lston EaglerCraft Server]-244.5728196969624, 63.9375, 185.23852803488282)
+[19:45:58] [Server thread/INFO]: LstonStudios issued server command: /rg flag spawn passthrough deny
+[19:46:10] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:46:48] [Server thread/INFO]: Avatar59 lost connection: Disconnected
+[19:46:48] [Server thread/INFO]: Avatar59 left the game
+[19:46:55] [Server thread/INFO]: LstonStudios issued server command: /rg flag spawn build deny
+[19:47:10] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:47:14] [Server thread/INFO]: LstonStudios issued server command: /rg flag spawn build -g nonmembers deny
+[19:47:40] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:47:46] [Server thread/INFO]: LstonStudios lost connection: Disconnected
+[19:47:46] [Server thread/INFO]: LstonStudios left the game
+[19:47:53] [User Authenticator #6/INFO]: UUID of player LstonStudiosf is 7bd1a46f-b5e2-3c3f-a4b6-7a088a2712a1
+[19:47:53] [Server thread/INFO]: LstonStudiosf[/127.0.0.1:38854] logged in with entity id 900 at ([The Lston EaglerCraft Server]-222.01328417011203, 64.0, 191.08596667066706)
+[19:48:43] [User Authenticator #6/INFO]: UUID of player Avatar59 is 3d7730a7-1bf4-3e62-89ef-b0e2be4b840c
+[19:48:43] [Server thread/INFO]: Avatar59[/127.0.0.1:50296] logged in with entity id 923 at ([The Lston EaglerCraft Server]-227.6886829676557, 64.0, 187.53514827905985)
+[19:48:50] [Server thread/INFO]: Avatar59 lost connection: Disconnected
+[19:48:50] [Server thread/INFO]: Avatar59 left the game
+[19:49:15] [Netty Server IO #1/WARN]: io.netty.handler.timeout.ReadTimeoutException
+[19:49:15] [Server thread/INFO]: LstonStudiosf lost connection: Timed out
+[19:49:15] [Server thread/INFO]: LstonStudiosf left the game
+[19:49:29] [User Authenticator #6/INFO]: UUID of player LstonStudiosf is 7bd1a46f-b5e2-3c3f-a4b6-7a088a2712a1
+[19:49:29] [Server thread/INFO]: LstonStudiosf[/127.0.0.1:56270] logged in with entity id 950 at ([The Lston EaglerCraft Server]-211.29511403167746, 64.0, 193.36964433237645)
+[19:49:32] [Server thread/INFO]: LstonStudiosf lost connection: Disconnected
+[19:49:32] [Server thread/INFO]: LstonStudiosf left the game
+[19:49:37] [User Authenticator #6/INFO]: UUID of player LstonStudios is 88c73054-0fc6-3e03-ab5b-8d2ae71b1b16
+[19:49:37] [Server thread/INFO]: LstonStudios[/127.0.0.1:37344] logged in with entity id 962 at ([The Lston EaglerCraft Server]-244.5728196969624, 63.9375, 185.23852803488282)
+[19:49:44] [Server thread/INFO]: LstonStudios issued server command: /rg list
+[19:50:34] [Server thread/INFO]: LstonStudios issued server command: /rg delete protected
+[19:50:40] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:51:59] [Server thread/INFO]: LstonStudios issued server command: //set nether_brick
+[19:52:19] [Server thread/INFO]: LstonStudios issued server command: //set nether_brick
+[19:52:53] [Server thread/INFO]: LstonStudios issued server command: //set dirt
+[19:53:06] [Server thread/INFO]: LstonStudios issued server command: //undo
+[19:54:29] [Server thread/INFO]: LstonStudios issued server command: /rg define spn
+[19:54:35] [Server thread/INFO]: LstonStudios issued server command: /rg list
+[19:54:40] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:54:50] [Server thread/INFO]: LstonStudios issued server command: /rg delete spawn
+[19:55:10] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:55:26] [Server thread/INFO]: LstonStudios issued server command: /rg flag spn build deny
+[19:55:40] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:55:42] [Server thread/INFO]: LstonStudios issued server command: /rg flag spn block_break deny
+[19:56:31] [Server thread/INFO]: LstonStudios issued server command: /rg flag spn block-break deny
+[19:56:40] [Timer-2/INFO]: [WorldGuard] Region data changes made in 'The Lston EaglerCraft Server' have been background saved
+[19:56:47] [Server thread/INFO]: LstonStudios lost connection: Disconnected
+[19:56:47] [Server thread/INFO]: LstonStudios left the game
+[19:57:01] [User Authenticator #7/INFO]: UUID of player LstonStudios_ is 740b18ce-f70b-323f-8ad8-be0d26055fcb
+[19:57:01] [Server thread/INFO]: LstonStudios_[/127.0.0.1:32846] logged in with entity id 1333 at ([The Lston EaglerCraft Server]-224.4964464881923, 63.5, 186.37962808481632)
+[19:57:46] [Server thread/INFO]: LstonStudios_ lost connection: Disconnected
+[19:57:46] [Server thread/INFO]: LstonStudios_ left the game
+[19:57:51] [Server thread/INFO]: Stopping the server
+[19:57:51] [Server thread/INFO]: Stopping server
+[19:57:51] [Server thread/INFO]: [WorldGuard] Disabling WorldGuard v6.2.2-SNAPSHOT;8eeab68
+[19:57:51] [Server thread/INFO]: [WorldGuard] Shutting down executor and waiting for any pending tasks...
+[19:57:51] [Server thread/INFO]: [CustomItems] Disabling CustomItems v1.0.0
+[19:57:51] [Server thread/INFO]: [SpawnMobs] Disabling SpawnMobs v1.0.0
+[19:57:51] [Server thread/INFO]: [CustomAbility] Disabling CustomAbility v1.0.0
+[19:57:51] [Server thread/INFO]: [CustomTNT] Disabling CustomTNT v1.0.0
+[19:57:51] [Server thread/INFO]: [UsernameEffects] Disabling UsernameEffects v1.0.0
+[19:57:51] [Server thread/INFO]: [WorldEdit] Disabling WorldEdit v6.1.9;caf0ad9
+[19:57:51] [Server thread/INFO]: [PlayerSkulls] Disabling PlayerSkulls v1.0
+[19:57:51] [Server thread/INFO]: Saving players
+[19:57:51] [Server thread/INFO]: Saving worlds
+[19:57:51] [Server thread/INFO]: Saving chunks for level 'The Lston EaglerCraft Server'/overworld
+[19:57:51] [Server thread/INFO]: Saving chunks for level 'The Lston EaglerCraft Server_nether'/the_nether
+[19:57:51] [Server thread/INFO]: Saving chunks for level 'The Lston EaglerCraft Server_the_end'/the_end

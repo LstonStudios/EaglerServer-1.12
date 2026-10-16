@@ -82,9 +82,9 @@ world-settings:
     game-mechanics:
       allow-permanent-chunk-loaders: false
       scan-for-legacy-ender-dragon: true
+      disable-end-credits: false
       disable-player-crits: false
       disable-sprint-interruption-on-attack: false
-      disable-end-credits: false
       shield-blocking-delay: 5
       disable-chest-cat-detection: false
       disable-unloaded-chunk-enderpearl-exploit: true
@@ -127,15 +127,15 @@ world-settings:
     duplicate-uuid-saferegen-delete-range: 32
     keep-spawn-loaded-range: 4
     auto-save-interval: -1
-    parrots-are-unaffected-by-player-movement: false
+    container-update-tick-rate: 1
     nether-ceiling-void-damage: false
     allow-non-player-entities-on-scoreboards: false
-    container-update-tick-rate: 1
     frosted-ice:
       enabled: true
       delay:
         min: 20
         max: 40
+    parrots-are-unaffected-by-player-movement: false
     disable-explosion-knockback: false
     elytra-hit-wall-damage: true
     grass-spread-tick-rate: 1

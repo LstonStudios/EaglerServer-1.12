@@ -4,10 +4,10 @@ main: net.lstonstudios.customitems.CustomItemsPlugin
 author: LstonStudios
 description: Adds custom items such as the lightning sword.
 commands:
-  customitem:
-    description: Give custom items to players.
-    usage: /customitem <player|@a|@s|@p> <lightning|explosion|pearl> [amount]
-    aliases: [citem]
+  customsword:
+    description: Give custom swords to players.
+    usage: /customsword <player|@a|@s|@p> <lightning|explosion|pearl|fall|bad|tp|all> [amount]
+    aliases: [csword]
     permission: customitems.admin
 permissions:
   customitems.admin:

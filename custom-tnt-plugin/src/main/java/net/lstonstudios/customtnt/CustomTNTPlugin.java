@@ -2,7 +2,15 @@ package net.lstonstudios.customtnt;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +34,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
@@ -46,7 +55,12 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
 
     private static final String TNT_METADATA_KEY = "net.lstonstudios.customtnt.type";
     private static final String ITEM_MARKER_PREFIX = ChatColor.BLACK + "CustomTNT:";
+    private static final String HIDDEN_MARKER_PREFIX = "CustomTNT:";
     private final Map<TNTType, ExplosionSettings> explosionSettings = new HashMap<>();
+    private static final int JOURNAL_LIMIT = 400000;
+    private final LinkedHashMap<String, BlockSnapshot> journal = new LinkedHashMap<>();
+    private boolean journalDirty;
+    private boolean recordingExplosion;
 
     @Override
     public void onEnable() {
@@ -57,6 +71,21 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("customtnt").setExecutor(this);
         getCommand("rldcustomtnt").setExecutor(this);
+        loadJournal();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                saveJournal();
+            }
+        }.runTaskTimer(this, 2400L, 2400L);
+        for (org.bukkit.entity.Player online : getServer().getOnlinePlayers()) {
+            refreshItems(online);
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        saveJournal();
     }
 
     private void loadExplosionSettings() {
@@ -152,6 +181,9 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         TNTPrimed tnt = (TNTPrimed) spawned;
         tnt.setMetadata(TNT_METADATA_KEY, new FixedMetadataValue(this, type.key));
         startFuseEffects(tnt, type);
+        if (type == TNTType.NUKE) {
+            announceNuke(tnt);
+        }
         return true;
     }
 
@@ -193,7 +225,17 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             return;
         }
 
-        world.createExplosion(center.getX(), center.getY(), center.getZ(), settings.power, settings.fire, true);
+        if (type == TNTType.ANTI) {
+            undoTNTDamage(center, settings.size);
+            return;
+        }
+
+        recordingExplosion = true;
+        try {
+            world.createExplosion(center.getX(), center.getY(), center.getZ(), settings.power, settings.fire, true);
+        } finally {
+            recordingExplosion = false;
+        }
 
         if (type == TNTType.NUKE) {
             world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 4.0F, 0.5F);
@@ -248,6 +290,223 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             world.playSound(center, Sound.BLOCK_PORTAL_TRAVEL, 2.0F, 1.2F);
             spawnBurst(center, Particle.END_ROD, 90, 2.8, 1.4, 2.8);
             animateShockwave(center, settings.size, Particle.END_ROD, Particle.FIREWORKS_SPARK);
+        }
+    }
+
+
+    private static final class BlockSnapshot {
+        private final String world;
+        private final int x;
+        private final int y;
+        private final int z;
+        private final int id;
+        private final byte data;
+
+        private BlockSnapshot(String world, int x, int y, int z, int id, byte data) {
+            this.world = world;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.id = id;
+            this.data = data;
+        }
+
+        private String key() {
+            return journalKey(world, x, y, z);
+        }
+    }
+
+    private static String journalKey(String world, int x, int y, int z) {
+        return world + ":" + x + ":" + y + ":" + z;
+    }
+
+    // Keeps the first state seen for a block so Anti-TNT can restore the original.
+    @SuppressWarnings("deprecation")
+    private void remember(Block block) {
+        String world = block.getWorld().getName();
+        String key = journalKey(world, block.getX(), block.getY(), block.getZ());
+        if (journal.containsKey(key)) {
+            return;
+        }
+        journal.put(key, new BlockSnapshot(world, block.getX(), block.getY(), block.getZ(),
+                block.getTypeId(), block.getData()));
+        if (journal.size() > JOURNAL_LIMIT) {
+            Iterator<String> oldest = journal.keySet().iterator();
+            oldest.next();
+            oldest.remove();
+        }
+        journalDirty = true;
+    }
+
+    private void rememberExplosion(List<Block> blocks) {
+        for (Block block : blocks) {
+            if (!(block.getState() instanceof InventoryHolder)) {
+                remember(block);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onRecordedEntityExplode(EntityExplodeEvent event) {
+        if (recordingExplosion) {
+            rememberExplosion(event.blockList());
+            event.setYield(0.0F);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onRecordedBlockExplode(BlockExplodeEvent event) {
+        if (recordingExplosion) {
+            rememberExplosion(event.blockList());
+            event.setYield(0.0F);
+        }
+    }
+
+    private File journalFile() {
+        return new File(getDataFolder(), "journal.dat");
+    }
+
+    private void saveJournal() {
+        if (!journalDirty) {
+            return;
+        }
+        File target = journalFile();
+        File temp = new File(getDataFolder(), "journal.dat.tmp");
+        getDataFolder().mkdirs();
+        try (DataOutputStream out = new DataOutputStream(new java.io.BufferedOutputStream(new FileOutputStream(temp)))) {
+            out.writeInt(journal.size());
+            for (BlockSnapshot snapshot : journal.values()) {
+                out.writeUTF(snapshot.world);
+                out.writeInt(snapshot.x);
+                out.writeInt(snapshot.y);
+                out.writeInt(snapshot.z);
+                out.writeInt(snapshot.id);
+                out.writeByte(snapshot.data);
+            }
+        } catch (IOException exception) {
+            getLogger().warning("Could not save the Anti-TNT journal: " + exception.getMessage());
+            return;
+        }
+        if (!temp.renameTo(target)) {
+            target.delete();
+            if (!temp.renameTo(target)) {
+                getLogger().warning("Could not replace the Anti-TNT journal file.");
+                return;
+            }
+        }
+        journalDirty = false;
+    }
+
+    private void loadJournal() {
+        File file = journalFile();
+        if (!file.isFile()) {
+            return;
+        }
+        try (DataInputStream in = new DataInputStream(new java.io.BufferedInputStream(new FileInputStream(file)))) {
+            int count = in.readInt();
+            for (int i = 0; i < count; i++) {
+                BlockSnapshot snapshot = new BlockSnapshot(in.readUTF(), in.readInt(), in.readInt(), in.readInt(),
+                        in.readInt(), in.readByte());
+                journal.put(snapshot.key(), snapshot);
+            }
+        } catch (IOException exception) {
+            getLogger().warning("Could not read the Anti-TNT journal: " + exception.getMessage());
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void undoTNTDamage(final Location center, final int radius) {
+        final World world = center.getWorld();
+        final List<BlockSnapshot> found = new ArrayList<>();
+        double radiusSquared = (double) radius * radius;
+        for (BlockSnapshot snapshot : journal.values()) {
+            if (snapshot.world.equals(world.getName()) && distanceSquared(snapshot, center) <= radiusSquared) {
+                found.add(snapshot);
+            }
+        }
+        Collections.sort(found, new java.util.Comparator<BlockSnapshot>() {
+            @Override
+            public int compare(BlockSnapshot a, BlockSnapshot b) {
+                return Double.compare(distanceSquared(a, center), distanceSquared(b, center));
+            }
+        });
+
+        for (Entity entity : world.getNearbyEntities(center, radius, radius, radius)) {
+            if (isBoss(entity) && entity instanceof org.bukkit.entity.LivingEntity && !entity.isDead()) {
+                world.strikeLightningEffect(entity.getLocation());
+                lastBossHealth.remove(entity.getUniqueId());
+                ((org.bukkit.entity.LivingEntity) entity).setHealth(0.0);
+                continue;
+            }
+            if (entity.getFireTicks() > 0) {
+                entity.setFireTicks(0);
+            }
+        }
+        world.playSound(center, Sound.ENTITY_PLAYER_LEVELUP, 3.0F, 0.8F);
+        spawnBurst(center, Particle.END_ROD, 120, 2.5, 1.5, 2.5);
+        spawnBurst(center, Particle.VILLAGER_HAPPY, 60, 2.5, 1.5, 2.5);
+        animateShockwave(center, radius, Particle.END_ROD, Particle.VILLAGER_HAPPY);
+
+        final int total = found.size();
+        new BukkitRunnable() {
+            private int index;
+
+            @Override
+            public void run() {
+                int processed = 0;
+                while (processed < 120 && index < found.size()) {
+                    BlockSnapshot snapshot = found.get(index++);
+                    if (journal.remove(snapshot.key()) == null) {
+                        continue;
+                    }
+                    Block block = world.getBlockAt(snapshot.x, snapshot.y, snapshot.z);
+                    if (block.getTypeId() != snapshot.id || block.getData() != snapshot.data) {
+                        block.setTypeIdAndData(snapshot.id, snapshot.data, false);
+                        if (processed % 6 == 0) {
+                            world.spawnParticle(Particle.VILLAGER_HAPPY, block.getLocation().add(0.5, 0.5, 0.5),
+                                    2, 0.3, 0.3, 0.3, 0.0);
+                        }
+                    }
+                    processed++;
+                }
+                if (index >= found.size()) {
+                    cancel();
+                    extinguishFire(center, radius);
+                    journalDirty = true;
+                    saveJournal();
+                    for (Player player : playersNear(center, radius + 10)) {
+                        player.sendMessage(ChatColor.AQUA + "Anti-TNT restored " + total + " block"
+                                + (total == 1 ? "" : "s") + ".");
+                    }
+                }
+            }
+        }.runTaskTimer(this, 1L, 1L);
+    }
+
+    private static double distanceSquared(BlockSnapshot snapshot, Location center) {
+        double dx = snapshot.x + 0.5 - center.getX();
+        double dy = snapshot.y + 0.5 - center.getY();
+        double dz = snapshot.z + 0.5 - center.getZ();
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    private void extinguishFire(Location center, int radius) {
+        World world = center.getWorld();
+        int cx = center.getBlockX();
+        int cy = center.getBlockY();
+        int cz = center.getBlockZ();
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = Math.max(-radius, 1 - cy); y <= Math.min(radius, 255 - cy); y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (x * x + y * y + z * z > radius * radius) {
+                        continue;
+                    }
+                    Block block = world.getBlockAt(cx + x, cy + y, cz + z);
+                    if (block.getType() == Material.FIRE) {
+                        block.setType(Material.AIR, false);
+                    }
+                }
+            }
         }
     }
 
@@ -319,6 +578,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                         if (block.getType().isSolid() || block.getState() instanceof InventoryHolder) {
                             continue;
                         }
+                        remember(block);
                         block.setTypeIdAndData(random.nextBoolean() ? Material.WOOL.getId()
                                 : Material.CONCRETE.getId(), (byte) 12, false);
                     }
@@ -339,6 +599,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 Block above = world.getBlockAt(x, y + 1, z);
                 if (ground.getType().isSolid() && !above.getType().isSolid()
                         && !(ground.getState() instanceof InventoryHolder)) {
+                    remember(above);
                     above.setTypeIdAndData(random.nextBoolean() ? Material.WOOL.getId()
                             : Material.CONCRETE.getId(), (byte) 12, false);
                     break;
@@ -613,6 +874,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                     } else if (picked == Material.LOG) {
                         data = (byte) random.nextInt(4);
                     }
+                    remember(block);
                     block.setTypeIdAndData(picked.getId(), data, false);
                 }
             }
@@ -658,6 +920,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                                 || block.getState() instanceof InventoryHolder) {
                             continue;
                         }
+                        remember(block);
                         block.breakNaturally();
                     }
                 }
@@ -672,6 +935,62 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 step++;
             }
         }.runTaskTimer(this, 20L, MINING_STEP_TICKS);
+    }
+
+    private List<Player> playersNear(Location location, double radius) {
+        List<Player> result = new ArrayList<>();
+        for (Player player : location.getWorld().getPlayers()) {
+            if (player.getLocation().distanceSquared(location) <= radius * radius) {
+                result.add(player);
+            }
+        }
+        return result;
+    }
+
+    private void announceNuke(final TNTPrimed tnt) {
+        for (Player player : playersNear(tnt.getLocation(), 100)) {
+            player.sendTitle(ChatColor.DARK_RED + "" + ChatColor.BOLD + "NUKE TNT", ChatColor.RED + "INCOMING", 5, 40, 10);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_PLING, 2.0F, 0.5F);
+        }
+        getServer().getScheduler().runTaskLater(this, new Runnable() {
+            @Override
+            public void run() {
+                if (tnt.isDead() || !tnt.isValid()) {
+                    return;
+                }
+                nukeFlash(tnt.getLocation());
+            }
+        }, 60L);
+    }
+
+    private void nukeFlash(Location center) {
+        String block = "\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588";
+        String title = ChatColor.RED + block;
+        String subtitle = ChatColor.GOLD + "" + ChatColor.BOLD + "\u2738 \u2738 \u2738 BOOM \u2738 \u2738 \u2738";
+        for (Player player : playersNear(center, 100)) {
+            player.sendTitle(title, ChatColor.GOLD + block, 0, 25, 10);
+            player.sendMessage(subtitle);
+            player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2.0F, 0.6F);
+            Location eye = player.getEyeLocation();
+            Location ahead = eye.clone().add(eye.getDirection().multiply(2.0));
+            player.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, ahead, 6, 0.8, 0.6, 0.8, 0.0);
+            nukeParticles(eye, 6.0, 120);
+        }
+        nukeParticles(center.clone().add(0, 1, 0), 15.0, 400);
+    }
+
+    private void nukeParticles(Location center, double spread, int count) {
+        World world = center.getWorld();
+        double[][] colors = {{1.0, 0.0, 0.0}, {1.0, 0.5, 0.0}, {1.0, 1.0, 1.0}};
+        java.util.Random random = new java.util.Random();
+        for (int i = 0; i < count; i++) {
+            double[] c = colors[i % 3];
+            Location point = center.clone().add((random.nextDouble() * 2 - 1) * spread,
+                    (random.nextDouble() * 2 - 1) * spread / 2, (random.nextDouble() * 2 - 1) * spread);
+            world.spawnParticle(Particle.REDSTONE, point, 0, c[0], c[1], c[2], 1.0);
+        }
+        world.spawnParticle(Particle.FLAME, center, count, spread, spread / 2, spread, 0.08);
+        world.spawnParticle(Particle.LAVA, center, count / 4, spread, spread / 2, spread, 0.0);
     }
 
     private void startFuseEffects(final TNTPrimed tnt, final TNTType type) {
@@ -745,6 +1064,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                     if (material == Material.AIR || material == Material.BEDROCK || material == Material.BARRIER) {
                         continue;
                     }
+                    remember(block);
                     block.setType(Material.AIR);
                     world.spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 8,
                             0.2, 0.2, 0.2, 0.02, new MaterialData(material));
@@ -797,6 +1117,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                             || isOre(material)) {
                         continue;
                     }
+                    remember(block);
                     block.setType(Material.AIR);
                     world.spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(0.5, 0.5, 0.5), 8,
                             0.2, 0.2, 0.2, 0.02, new MaterialData(material));
@@ -837,6 +1158,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         }
 
         for (Block block : replacedBlocks.keySet()) {
+            remember(block);
             block.setType(Material.SEA_LANTERN);
         }
 
@@ -878,6 +1200,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                     if (isOre(material)) {
                         continue;
                     }
+                    remember(block);
                     BlockState newState = block.getState();
                     newState.setType(Material.SLIME_BLOCK);
                     BlockFormEvent formEvent = new BlockFormEvent(block, newState);
@@ -985,15 +1308,68 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             if (line.startsWith(ITEM_MARKER_PREFIX)) {
                 return TNTType.fromKey(line.substring(ITEM_MARKER_PREFIX.length()));
             }
+            int idx = line.indexOf(hide(HIDDEN_MARKER_PREFIX));
+            if (idx >= 0) {
+                return TNTType.fromKey(line.substring(idx + hide(HIDDEN_MARKER_PREFIX).length()).replace("\u00a7", ""));
+            }
         }
         return null;
+    }
+
+    private static String hide(String text) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            sb.append('\u00a7').append(c);
+        }
+        return sb.toString();
+    }
+
+    private void refreshItems(org.bukkit.entity.Player player) {
+        org.bukkit.inventory.PlayerInventory inv = player.getInventory();
+        for (int i = 0; i < inv.getSize(); i++) {
+            ItemStack old = inv.getItem(i);
+            if (old == null) {
+                continue;
+            }
+            TNTType type = getTNTType(old);
+            if (type != null) {
+                inv.setItem(i, createTNTItem(type, old.getAmount()));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onJoinRefresh(org.bukkit.event.player.PlayerJoinEvent event) {
+        refreshItems(event.getPlayer());
     }
 
     private ItemStack createTNTItem(TNTType type, int amount) {
         ItemStack item = new ItemStack(type.icon, amount);
         ItemMeta meta = item.getItemMeta();
+        if (meta instanceof org.bukkit.inventory.meta.SpawnEggMeta && type.egg != null) {
+            ((org.bukkit.inventory.meta.SpawnEggMeta) meta).setSpawnedType(type.egg);
+        }
         meta.setDisplayName(type.displayName);
-        meta.setLore(Collections.singletonList(ITEM_MARKER_PREFIX + type.key));
+        List<String> lore = new ArrayList<>();
+        StringBuilder cur = new StringBuilder();
+        for (String word : type.description.split(" ")) {
+            if (cur.length() > 0 && cur.length() + 1 + word.length() > 14) {
+                lore.add(ChatColor.GRAY + cur.toString());
+                cur.setLength(0);
+            }
+            if (cur.length() > 0) {
+                cur.append(' ');
+            }
+            cur.append(word);
+        }
+        if (cur.length() > 0) {
+            lore.add(ChatColor.GRAY + cur.toString());
+        }
+        int last = lore.size() - 1;
+        lore.set(last, lore.get(last) + hide(HIDDEN_MARKER_PREFIX + type.key));
+        meta.setLore(lore);
+        meta.addEnchant(org.bukkit.enchantments.Enchantment.DURABILITY, 1, true);
+        meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
         return item;
     }
@@ -1025,9 +1401,10 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             return true;
         }
 
-        TNTType type = TNTType.fromKey(args[1]);
-        if (type == null) {
-            sender.sendMessage(ChatColor.RED + "Unknown TNT type. Choose nuke, mining, fire, slime, x-ray, rdm, mob, boss, poop, firework, sun, or black-hole.");
+        boolean all = args[1].equalsIgnoreCase("all");
+        TNTType type = all ? null : TNTType.fromKey(args[1]);
+        if (!all && type == null) {
+            sender.sendMessage(ChatColor.RED + "Unknown TNT type. Choose nuke, mining, fire, slime, x-ray, rdm, mob, boss, poop, firework, sun, black-hole, anti-tnt, or all.");
             return true;
         }
         List<Player> targets;
@@ -1059,14 +1436,19 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             return true;
         }
 
+        TNTType[] given = all ? TNTType.values() : new TNTType[] { type };
         for (Player target : targets) {
-            Map<Integer, ItemStack> leftovers = target.getInventory().addItem(createTNTItem(type, amount));
-            for (ItemStack leftover : leftovers.values()) {
-                target.getWorld().dropItemNaturally(target.getLocation(), leftover);
+            for (TNTType t : given) {
+                Map<Integer, ItemStack> leftovers = target.getInventory().addItem(createTNTItem(t, amount));
+                for (ItemStack leftover : leftovers.values()) {
+                    target.getWorld().dropItemNaturally(target.getLocation(), leftover);
+                }
             }
-            target.sendMessage(ChatColor.GREEN + "You received " + amount + " " + type.displayName + ChatColor.GREEN + ".");
+            target.sendMessage(ChatColor.GREEN + "You received " + amount + " "
+                    + (all ? "of every custom TNT" : type.displayName) + ChatColor.GREEN + ".");
         }
-        sender.sendMessage(ChatColor.GREEN + "Gave " + amount + " " + type.displayName + ChatColor.GREEN
+        sender.sendMessage(ChatColor.GREEN + "Gave " + amount + " "
+                + (all ? "of every custom TNT" : type.displayName) + ChatColor.GREEN
                 + " to " + targets.size() + (targets.size() == 1 ? " player." : " players."));
         return true;
     }
@@ -1113,39 +1495,63 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
 
     private void sendUsage(CommandSender sender, String label) {
         sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label
-                + " <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|boss|poop|firework|sun|black-hole> [amount]");
+                + " <player|@a|@s|@p> <nuke|mining|fire|slime|x-ray|rdm|mob|boss|poop|firework|sun|black-hole|anti-tnt|all> [amount]");
         sender.sendMessage(ChatColor.YELLOW + "       /rldcustomtnt");
     }
 
     private enum TNTType {
-        NUKE("nuke", ChatColor.DARK_RED + "Nuke TNT", Material.TNT, Material.REDSTONE_BLOCK),
-        MINING("mining", ChatColor.GRAY + "Mining TNT", Material.BARRIER, Material.GOLD_BLOCK),
-        FIRE("fire", ChatColor.RED + "Fire TNT", Material.COMMAND_MINECART, Material.NETHERRACK),
-        SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.GOLD_RECORD, Material.SLIME_BLOCK),
-        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.GREEN_RECORD, Material.DIAMOND_BLOCK),
-        FIREWORK("firework", ChatColor.LIGHT_PURPLE + "Firework TNT", Material.RECORD_3, Material.FIREWORK),
-        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.RECORD_4, Material.SOUL_SAND),
-        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.MONSTER_EGG, Material.MOSSY_COBBLESTONE),
-        BOSS("boss", ChatColor.DARK_RED + "Boss TNT", Material.RECORD_8, Material.BEDROCK),
-        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.RECORD_5, Material.PURPUR_BLOCK),
-        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.RECORD_6, Material.SEA_LANTERN),
+        NUKE("nuke", ChatColor.DARK_RED + "Nuke TNT", Material.TNT, Material.REDSTONE_BLOCK, "A huge, devastating blast."),
+        MINING("mining", ChatColor.GRAY + "Mining TNT", Material.BARRIER, Material.GOLD_BLOCK, "Digs a mining tunnel where placed."),
+        FIRE("fire", ChatColor.RED + "Fire TNT", Material.COMMAND_MINECART, Material.NETHERRACK, "Sets the area ablaze."),
+        SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.POISONOUS_POTATO, Material.SLIME_BLOCK, "Covers the area in bouncy slime."),
+        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.GOLD_HOE, Material.DIAMOND_BLOCK, "Reveals ores in a wide area."),
+        FIREWORK("firework", ChatColor.LIGHT_PURPLE + "Firework TNT", Material.MONSTER_EGG, Material.FIREWORK, "Bursts into a firework show."),
+        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.MONSTER_EGG, Material.SOUL_SAND, "Leaves a messy surprise."),
+        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.MONSTER_EGG, Material.MOSSY_COBBLESTONE, "Summons mobs when it blows."),
+        BOSS("boss", ChatColor.DARK_RED + "Boss TNT", Material.MONSTER_EGG, Material.BEDROCK, "Calls in a powerful boss."),
+        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.MONSTER_EGG, Material.PURPUR_BLOCK, "A random explosion every time."),
+        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.MONSTER_EGG, Material.SEA_LANTERN, "Burns bright like a small sun."),
         BLACK_HOLE("black-hole", ChatColor.DARK_PURPLE + "Black Hole TNT",
-                Material.RECORD_7, Material.OBSIDIAN);
+                Material.MONSTER_EGG, Material.OBSIDIAN, "Pulls everything into a black hole."),
+        ANTI("anti-tnt", ChatColor.AQUA + "Anti-TNT", Material.NETHER_BRICK_ITEM, Material.QUARTZ_BLOCK,
+                "Undoes damage and changes from other custom TNT.");
 
         private final String key;
         private final String displayName;
         private final Material icon;
         private final Material effectBlock;
+        private final String description;
+        private EntityType egg;
 
-        TNTType(String key, String displayName, Material icon, Material effectBlock) {
+        TNTType(String key, String displayName, Material icon, Material effectBlock, String description) {
             this.key = key;
             this.displayName = displayName;
             this.icon = icon;
             this.effectBlock = effectBlock;
+            this.description = description;
+        }
+
+        static {
+            FIREWORK.egg = null;
+            POOP.egg = EntityType.ILLUSIONER;
+            MOB.egg = EntityType.GIANT;
+            BOSS.egg = EntityType.ARROW;
+            RDM.egg = EntityType.SNOWBALL;
+            SUN.egg = EntityType.ENDER_PEARL;
+            BLACK_HOLE.egg = EntityType.FALLING_BLOCK;
+            NUKE.egg = EntityType.PRIMED_TNT;
+            MINING.egg = EntityType.PIG_ZOMBIE;
+            FIRE.egg = EntityType.BLAZE;
+            SLIME.egg = EntityType.SLIME;
+            X_RAY.egg = EntityType.SILVERFISH;
+            ANTI.egg = EntityType.ENDERMITE;
         }
 
         private static TNTType fromKey(String key) {
             String normalizedInput = key == null ? "" : key.replaceAll("[^a-z0-9]", "").toLowerCase();
+            if (normalizedInput.equals("anti")) {
+                return ANTI;
+            }
             for (TNTType type : values()) {
                 String normalizedType = type.key.replaceAll("[^a-z0-9]", "").toLowerCase();
                 if (normalizedType.equals(normalizedInput)) {

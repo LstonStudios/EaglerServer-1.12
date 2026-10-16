@@ -236,7 +236,9 @@ THEMES = {
     "poop": ((101, 67, 33), (160, 110, 60), (30, 18, 8), (190, 140, 80)),
     "firework": ((235, 40, 60), (255, 230, 60), (30, 30, 90), (80, 200, 255)),
     "sun": ((255, 196, 20), (255, 250, 200), (130, 80, 10), (255, 255, 255)),
+    "egg": ((235, 235, 235), (255, 255, 255), (150, 150, 150), (255, 255, 255)),
     "black_hole": ((56, 36, 84), (210, 200, 230), (12, 8, 20), (190, 120, 255)),
+    "anti": ((70, 200, 230), (245, 255, 255), (10, 60, 90), (255, 255, 255)),
 }
 
 ITEM_THEME = {
@@ -245,7 +247,7 @@ ITEM_THEME = {
     "firework_tnt": "firework", "sun_tnt": "sun", "black_hole_tnt": "black_hole",
     "barrier": "mining", "minecart_command_block": "fire", "record_13": "slime",
     "record_cat": "xray", "record_blocks": "firework", "record_chirp": "poop",
-    "spawn_egg": "mob", "record_far": "rdm", "record_stal": "boss", "boss_tnt": "boss", "record_mall": "sun", "record_mellohi": "black_hole",
+    "spawn_egg": "egg", "potato_poisonous": "slime", "gold_hoe": "xray", "record_far": "rdm", "record_stal": "boss", "boss_tnt": "boss", "record_mall": "sun", "record_mellohi": "black_hole", "netherbrick": "anti",
 }
 
 
@@ -297,6 +299,9 @@ SWORD_THEMES = {
     "gold_sword.png": ((255, 255, 255, 255), (255, 221, 31, 255), (255, 170, 0, 255), (120, 78, 32, 255), (96, 76, 8, 255)),
     "iron_sword.png": ((255, 240, 150, 255), (230, 40, 20, 255), (255, 140, 0, 255), (70, 40, 30, 255), (80, 12, 8, 255)),
     "diamond_sword.png": ((200, 255, 255, 255), (150, 60, 220, 255), (60, 220, 230, 255), (40, 25, 70, 255), (45, 20, 80, 255)),
+    "stone_sword.png": ((220, 255, 220, 255), (30, 170, 60, 255), (20, 110, 40, 255), (70, 50, 30, 255), (10, 60, 20, 255)),
+    "wood_sword.png": ((200, 200, 200, 255), (60, 60, 60, 255), (150, 20, 20, 255), (50, 30, 20, 255), (20, 20, 20, 255)),
+    "diamond_axe.png": ((255, 225, 255, 255), (255, 110, 220, 255), (255, 255, 255, 255), (90, 40, 90, 255), (110, 30, 100, 255)),
 }
 
 

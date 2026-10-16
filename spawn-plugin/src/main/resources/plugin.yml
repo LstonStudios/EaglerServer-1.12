@@ -1,0 +1,15 @@
+name: SpawnMobs
+version: 1.0.0
+main: net.lstonstudios.spawn.SpawnMobsPlugin
+author: LstonStudios
+description: Spawn many entities in an area with /spawn.
+commands:
+  spawn:
+    description: Spawn multiple entities in an area.
+    usage: /spawn <entity> [<x> <y> <z> [amount] [radius]]
+    aliases: [spawnmob]
+    permission: spawnmobs.use
+permissions:
+  spawnmobs.use:
+    description: Allows spawning entities with /spawn.
+    default: op

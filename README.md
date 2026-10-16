@@ -117,7 +117,47 @@ live server folders manually.
 
 ## Plugins
 
-### Custom TNT
+### Basic plugins
+
+#### WorldEdit
+
+WorldEdit (`worldedit-bukkit-6.1.9.jar`) is an in-game building tool for
+operators. Select two corners with the wooden axe (`//wand`, left/right click)
+or `//pos1` and `//pos2`, then edit the selection: `//set <block>` fills it,
+`//replace <from> <to>` swaps blocks, `//copy`, `//paste`, `//undo`, and
+`//redo` move or revert builds, and `//sphere` / `//cyl` / `//fill` make shapes.
+Settings are in `server/plugins/WorldEdit/config.yml`.
+
+#### WorldGuard
+
+WorldGuard (`worldguard-bukkit-6.2.2.jar`) protects areas and requires
+WorldEdit. Select an area with the WorldEdit wand, then
+`/region define <name>` creates a region, `/region addowner <name> <player>`
+and `/region addmember <name> <player>` choose who may build there, and
+`/region flag <name> <flag> <allow|deny>` controls behavior (for example
+`pvp`, `tnt`, `creeper-explosion`, `mob-spawning`, `entry`). Other commands:
+`/region list`, `/region info <name>`, `/region remove <name>`. Global settings
+are in `server/plugins/WorldGuard/config.yml` and per-world settings in
+`server/plugins/WorldGuard/worlds/`. Note that region flags (such as `tnt` and
+`other-explosion`) affect the Custom TNT plugin's explosions.
+
+#### Spawn Mobs
+
+Adds `/spawn <entity> <x y z> [amount] [radius]` (`/spawnmob` alias, requires
+`spawnmobs.use`, default op) to spawn many entities in an area, for example
+`/spawn pig -197 64 229 10` or `/spawn wither_skeleton ~ ~ ~ 10 5`. Entities
+are spread randomly within the radius (default 3 when amount is more than 1,
+max 50). Coordinates accept `~` relative values, amount is 1-100, and entity
+names use Bukkit names such as `pig`, `wither_skeleton`, or `zombie`. It works
+from players and command blocks, and `/spawn <entity>` spawns one at your feet.
+
+Build with `gradle -p spawn-plugin build`, copy
+`spawn-plugin/build/libs/SpawnMobs-1.0.0.jar` to `server/plugins/`, then
+restart the server.
+
+### Custom plugins
+
+#### Custom TNT
 
 Adds nuke, mining, fire, slime, x-ray, sun, black-hole, rdm, mob, boss, poop, and
 firework TNT. Give variants with `/customtnt <player|@a|@s|@p> <type>
@@ -143,32 +183,10 @@ Build with `gradle -p custom-tnt-plugin build`, copy
 `custom-tnt-plugin/build/libs/CustomTNT-1.0.0.jar` to `server/plugins/`, then
 restart the server.
 
-### WorldEdit
+#### Custom Items
 
-WorldEdit (`worldedit-bukkit-6.1.9.jar`) is an in-game building tool for
-operators. Select two corners with the wooden axe (`//wand`, left/right click)
-or `//pos1` and `//pos2`, then edit the selection: `//set <block>` fills it,
-`//replace <from> <to>` swaps blocks, `//copy`, `//paste`, `//undo`, and
-`//redo` move or revert builds, and `//sphere` / `//cyl` / `//fill` make shapes.
-Settings are in `server/plugins/WorldEdit/config.yml`.
-
-### WorldGuard
-
-WorldGuard (`worldguard-bukkit-6.2.2.jar`) protects areas and requires
-WorldEdit. Select an area with the WorldEdit wand, then
-`/region define <name>` creates a region, `/region addowner <name> <player>`
-and `/region addmember <name> <player>` choose who may build there, and
-`/region flag <name> <flag> <allow|deny>` controls behavior (for example
-`pvp`, `tnt`, `creeper-explosion`, `mob-spawning`, `entry`). Other commands:
-`/region list`, `/region info <name>`, `/region remove <name>`. Global settings
-are in `server/plugins/WorldGuard/config.yml` and per-world settings in
-`server/plugins/WorldGuard/worlds/`. Note that region flags (such as `tnt` and
-`other-explosion`) affect the Custom TNT plugin's explosions.
-
-### Custom Items
-
-Adds custom items. Give them with `/customitem <player|@a|@s|@p> <item>
-[amount]` (`/citem` alias, requires `customitems.admin`, default op).
+Adds custom items. Give them with `/customsword <player|@a|@s|@p> <item|all>
+[amount]` (`/csword` alias, requires `customitems.admin`, default op).
 
 - `lightning`: Lightning Sword (gold sword, yellow and white). Hitting a living
   entity strikes lightning on it.

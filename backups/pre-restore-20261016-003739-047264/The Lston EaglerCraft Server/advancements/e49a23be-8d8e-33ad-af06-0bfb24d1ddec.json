@@ -1,0 +1,29 @@
+{
+  "minecraft:story/shiny_gear": {
+    "criteria": {
+      "diamond_leggings": "2026-10-16 00:24:27 +0000",
+      "diamond_helmet": "2026-10-16 00:24:27 +0000",
+      "diamond_chestplate": "2026-10-16 00:24:27 +0000",
+      "diamond_boots": "2026-10-16 00:24:27 +0000"
+    },
+    "done": true
+  },
+  "minecraft:nether/root": {
+    "criteria": {
+      "entered_nether": "2026-10-16 00:23:13 +0000"
+    },
+    "done": true
+  },
+  "minecraft:story/enter_the_nether": {
+    "criteria": {
+      "entered_nether": "2026-10-16 00:23:13 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "plains": "2026-10-16 00:22:42 +0000"
+    },
+    "done": false
+  }
+}
