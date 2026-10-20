@@ -1,0 +1,20 @@
+{
+  "minecraft:recipes/building_blocks/sea_lantern": {
+    "criteria": {
+      "has_prismarine_crystals": "2026-10-16 20:20:15 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "plains": "2026-09-28 19:01:20 +0000"
+    },
+    "done": false
+  },
+  "minecraft:recipes/building_blocks/nether_brick": {
+    "criteria": {
+      "has_netherbrick": "2026-10-16 20:19:02 +0000"
+    },
+    "done": true
+  }
+}

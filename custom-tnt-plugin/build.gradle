@@ -21,6 +21,8 @@ dependencies {
     compileOnly('org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT') {
         transitive = false
     }
+    compileOnly files('../server/plugins/worldguard-bukkit-6.2.2.jar',
+            '../server/plugins/worldedit-bukkit-6.1.9.jar')
 }
 
 tasks.jar {

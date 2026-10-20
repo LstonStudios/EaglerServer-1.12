@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-if [ "$#" -ne 1 ]; then
-  echo "Usage: startserver 1|2" >&2
+if [ "$#" -gt 1 ]; then
+  echo "Usage: startserver [1|2]" >&2
   exit 1
 fi
 
-case "$1" in
+case "${1:-}" in
   1)
     cd /workspaces/EaglerServer-1.12/bungee || exit 1
     exec sudo java -Deaglerxvelocity.stfu=true -jar bungee.jar
@@ -14,9 +14,43 @@ case "$1" in
     cd /workspaces/EaglerServer-1.12/server || exit 1
     exec sudo java -jar server.jar
     ;;
+  "")
+    ;;
   *)
     echo "Unknown server target: $1" >&2
-    echo "Usage: startserver 1|2" >&2
+    echo "Usage: startserver [1|2]" >&2
     exit 1
     ;;
 esac
+
+sudo -v || exit 1
+
+console_dir="$(mktemp -d)" || exit 1
+console_pipe="$console_dir/server-console"
+if ! mkfifo "$console_pipe"; then
+  rmdir "$console_dir"
+  exit 1
+fi
+exec 3<>"$console_pipe"
+
+cleanup() {
+  trap - EXIT INT TERM
+  if kill -0 "$server_pid" 2>/dev/null; then
+    printf 'stop\n' >&3
+    wait "$server_pid" || true
+  fi
+  exec 3>&-
+  rm -f "$console_pipe"
+  rmdir "$console_dir"
+}
+
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+cd /workspaces/EaglerServer-1.12/server || exit 1
+sudo java -jar server.jar <"$console_pipe" &
+server_pid=$!
+
+cd /workspaces/EaglerServer-1.12/bungee || exit 1
+sudo java -Deaglerxvelocity.stfu=true -jar bungee.jar

@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -51,6 +52,12 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.LocalPlayer;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+
 public final class CustomTNTPlugin extends JavaPlugin implements Listener {
 
     private static final String TNT_METADATA_KEY = "net.lstonstudios.customtnt.type";
@@ -59,11 +66,14 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
     private final Map<TNTType, ExplosionSettings> explosionSettings = new HashMap<>();
     private static final int JOURNAL_LIMIT = 400000;
     private final LinkedHashMap<String, BlockSnapshot> journal = new LinkedHashMap<>();
+    private LocalPlayer protectionActor;
     private boolean journalDirty;
     private boolean recordingExplosion;
 
     @Override
     public void onEnable() {
+        protectionActor = WorldGuardPlugin.inst().wrapOfflinePlayer(
+                Bukkit.getOfflinePlayer(UUID.fromString("f9f4c342-b5b7-4a88-b2ba-e16c57815c29")));
         saveDefaultConfig();
         getConfig().options().copyDefaults(true);
         saveConfig();
@@ -293,6 +303,26 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onGuardedEntityExplode(EntityExplodeEvent event) {
+        event.blockList().removeIf(this::isGuardedBlock);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onGuardedBlockExplode(BlockExplodeEvent event) {
+        event.blockList().removeIf(this::isGuardedBlock);
+    }
+
+    private boolean isGuardedBlock(Block block) {
+        RegionManager regions = WorldGuardPlugin.inst().getRegionManager(block.getWorld());
+        if (regions == null) {
+            return false;
+        }
+        StateFlag.State state = regions.getApplicableRegions(block.getLocation()).queryState(protectionActor,
+                DefaultFlag.BUILD, DefaultFlag.BLOCK_BREAK, DefaultFlag.TNT);
+        return state == StateFlag.State.DENY;
+    }
+
 
     private static final class BlockSnapshot {
         private final String world;
@@ -420,7 +450,8 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         final List<BlockSnapshot> found = new ArrayList<>();
         double radiusSquared = (double) radius * radius;
         for (BlockSnapshot snapshot : journal.values()) {
-            if (snapshot.world.equals(world.getName()) && distanceSquared(snapshot, center) <= radiusSquared) {
+            if (snapshot.world.equals(world.getName()) && distanceSquared(snapshot, center) <= radiusSquared
+                    && !isGuardedBlock(world.getBlockAt(snapshot.x, snapshot.y, snapshot.z))) {
                 found.add(snapshot);
             }
         }
@@ -456,10 +487,13 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 int processed = 0;
                 while (processed < 120 && index < found.size()) {
                     BlockSnapshot snapshot = found.get(index++);
+                    Block block = world.getBlockAt(snapshot.x, snapshot.y, snapshot.z);
+                    if (isGuardedBlock(block)) {
+                        continue;
+                    }
                     if (journal.remove(snapshot.key()) == null) {
                         continue;
                     }
-                    Block block = world.getBlockAt(snapshot.x, snapshot.y, snapshot.z);
                     if (block.getTypeId() != snapshot.id || block.getData() != snapshot.data) {
                         block.setTypeIdAndData(snapshot.id, snapshot.data, false);
                         if (processed % 6 == 0) {
@@ -502,7 +536,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                         continue;
                     }
                     Block block = world.getBlockAt(cx + x, cy + y, cz + z);
-                    if (block.getType() == Material.FIRE) {
+                    if (!isGuardedBlock(block) && block.getType() == Material.FIRE) {
                         block.setType(Material.AIR, false);
                     }
                 }
@@ -575,7 +609,8 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                             continue;
                         }
                         Block block = world.getBlockAt(x + dx, ground + 1 + layer, z + dz);
-                        if (block.getType().isSolid() || block.getState() instanceof InventoryHolder) {
+                        if (isGuardedBlock(block) || block.getType().isSolid()
+                                || block.getState() instanceof InventoryHolder) {
                             continue;
                         }
                         remember(block);
@@ -597,7 +632,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
             for (int y = cy + 6; y >= Math.max(1, cy - 6); y--) {
                 Block ground = world.getBlockAt(x, y, z);
                 Block above = world.getBlockAt(x, y + 1, z);
-                if (ground.getType().isSolid() && !above.getType().isSolid()
+                if (!isGuardedBlock(above) && ground.getType().isSolid() && !above.getType().isSolid()
                         && !(ground.getState() instanceof InventoryHolder)) {
                     remember(above);
                     above.setTypeIdAndData(random.nextBoolean() ? Material.WOOL.getId()
@@ -818,7 +853,8 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                     }
                     org.bukkit.block.Block block = world.getBlockAt(center.getBlockX() + x,
                             center.getBlockY() + y, center.getBlockZ() + z);
-                    if (block.getType() == Material.AIR && block.getRelative(0, -1, 0).getType().isSolid()) {
+                    if (!isGuardedBlock(block) && block.getType() == Material.AIR
+                            && block.getRelative(0, -1, 0).getType().isSolid()) {
                         block.setType(Material.FIRE);
                     }
                 }
@@ -862,7 +898,8 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                     }
                     Block block = world.getBlockAt(cx + x, cy + y, cz + z);
                     Material material = block.getType();
-                    if (!material.isSolid() || material == Material.BEDROCK || material == Material.BARRIER
+                    if (isGuardedBlock(block) || !material.isSolid()
+                            || material == Material.BEDROCK || material == Material.BARRIER
                             || block.getState() instanceof InventoryHolder) {
                         continue;
                     }
@@ -913,7 +950,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                         }
                         Block block = world.getBlockAt(cx + dz * side, y, cz + dx * side);
                         Material material = block.getType();
-                        if (material == Material.AIR || material == Material.BEDROCK
+                        if (isGuardedBlock(block) || material == Material.AIR || material == Material.BEDROCK
                                 || material == Material.BARRIER || material == Material.WATER
                                 || material == Material.STATIONARY_WATER || material == Material.LAVA
                                 || material == Material.STATIONARY_LAVA
@@ -1061,7 +1098,8 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 while (processed < 18 && index[0] < targets.size()) {
                     Block block = targets.get(index[0]++);
                     Material material = block.getType();
-                    if (material == Material.AIR || material == Material.BEDROCK || material == Material.BARRIER) {
+                    if (isGuardedBlock(block) || material == Material.AIR || material == Material.BEDROCK
+                            || material == Material.BARRIER) {
                         continue;
                     }
                     remember(block);
@@ -1090,7 +1128,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 for (int y = cy - 2; y <= cy + 2; y++) {
                     Block block = world.getBlockAt(x, y, z);
                     Material material = block.getType();
-                    if (material == Material.AIR || material == Material.BEDROCK
+                    if (isGuardedBlock(block) || material == Material.AIR || material == Material.BEDROCK
                             || material == Material.BARRIER || material == Material.WATER
                             || material == Material.LAVA || block.getState() instanceof InventoryHolder
                             || isOre(material)) {
@@ -1113,7 +1151,8 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 while (processed < 30 && index[0] < targets.size()) {
                     Block block = targets.get(index[0]++);
                     Material material = block.getType();
-                    if (material == Material.AIR || material == Material.BEDROCK || material == Material.BARRIER
+                    if (isGuardedBlock(block) || material == Material.AIR || material == Material.BEDROCK
+                            || material == Material.BARRIER
                             || isOre(material)) {
                         continue;
                     }
@@ -1143,7 +1182,7 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 for (int y = cy - 2; y <= cy + 2; y++) {
                     Block block = world.getBlockAt(x, y, z);
                     Material material = block.getType();
-                    if (material == Material.AIR || material == Material.BEDROCK
+                    if (isGuardedBlock(block) || material == Material.AIR || material == Material.BEDROCK
                             || material == Material.BARRIER || material == Material.WATER
                             || material == Material.LAVA || block.getState() instanceof InventoryHolder) {
                         continue;
@@ -1158,6 +1197,9 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
         }
 
         for (Block block : replacedBlocks.keySet()) {
+            if (isGuardedBlock(block)) {
+                continue;
+            }
             remember(block);
             block.setType(Material.SEA_LANTERN);
         }
@@ -1170,7 +1212,8 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 ticks += 10;
                 if (ticks >= seconds * 20) {
                     for (Map.Entry<Block, Material> entry : replacedBlocks.entrySet()) {
-                        if (entry.getKey().getType() == Material.SEA_LANTERN) {
+                        if (!isGuardedBlock(entry.getKey())
+                                && entry.getKey().getType() == Material.SEA_LANTERN) {
                             entry.getKey().setType(entry.getValue());
                         }
                     }
@@ -1192,7 +1235,8 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
                 for (int dy = -1; dy <= 1; dy++) {
                     Block block = world.getBlockAt(x, y + dy, z);
                     Material material = block.getType();
-                    if (!material.isSolid() || material == Material.BEDROCK || material == Material.BARRIER
+                    if (isGuardedBlock(block) || !material.isSolid()
+                            || material == Material.BEDROCK || material == Material.BARRIER
                             || material == Material.SLIME_BLOCK || material == Material.WATER
                             || material == Material.LAVA || block.getState() instanceof InventoryHolder) {
                         continue;

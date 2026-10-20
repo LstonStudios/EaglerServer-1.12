@@ -21,9 +21,13 @@ now you have your own free server instance to host eaglercraft. Next you need to
 <br>
 Create a terminal tab and paste the following:<br>
 <br>
-enter the following: `startserver 1`
+enter the following: `startserver`
 <br>
-then, make a new tab and enter the following: `startserver 2`
+This starts both the game server and the EaglerCraft gateway. Press `Ctrl+C`
+to stop them; the game server will save and shut down cleanly.
+<br>
+To start either server separately instead, use `startserver 1` for the gateway
+or `startserver 2` for the game server.
 <br>
 Now go to the ports area and forward (and make public) port `8081`
 <br>
