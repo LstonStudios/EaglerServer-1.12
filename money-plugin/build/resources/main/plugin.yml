@@ -1,0 +1,81 @@
+name: Money
+version: 1.0.0
+main: net.lstonstudios.money.MoneyPlugin
+author: LstonStudios
+description: Earn money by mining and killing, then spend it in shops.
+commands:
+  mgive:
+    aliases: [moneygive]
+    description: Send money to a player (admins give unlimited money).
+    usage: /mgive <player> <amount>
+  minfo:
+    aliases: [moneyinfo]
+    description: Show a player's balance.
+    usage: /minfo [player]
+  mhelp:
+    aliases: [moneyhelp]
+    description: Explain how the money system works.
+    usage: /mhelp
+  sinfo:
+    aliases: [serverinfo]
+    description: Get a server guide paper.
+    usage: /sinfo
+  mshop:
+    aliases: [moneyshop]
+    description: Open a shop (1-5). Admins edit it; members buy from it.
+    usage: /mshop <1-5> [view|section <color> <name>|rename <name>|setblock|delblock]
+  login:
+    description: Admins sign in (or set a password the first time).
+    usage: /login <password> [new-password]
+  admin:
+    description: Make a player an admin (can only ban, kick, mute, timeout and change gamemodes).
+    usage: /admin <player>
+    permission: money.admin
+  op:
+    description: Make a player an op (full control).
+    usage: /op <player>
+    permission: money.admin
+  deadmin:
+    description: Remove a player's admin status.
+    usage: /deadmin <player>
+    permission: money.admin
+  deop:
+    description: Remove a player's op status.
+    usage: /deop <player>
+    permission: money.admin
+  permhelp:
+    description: List the commands you can use as staff.
+    usage: /permhelp
+  unban:
+    description: Unban a player or IP.
+    usage: /unban <player|ip>
+    permission: money.moderate
+  mute:
+    description: Stop a player from chatting.
+    usage: /mute <player> [reason]
+    permission: money.moderate
+  unmute:
+    description: Let a muted player chat again.
+    usage: /unmute <player>
+    permission: money.moderate
+  timeout:
+    description: Freeze and silence a player for a number of minutes.
+    usage: /timeout <player> <minutes|off> [reason]
+    permission: money.moderate
+  mclear:
+    aliases: [moneyclear]
+    description: Reset a player's balance to zero.
+    usage: /mclear <player>
+    permission: money.admin
+  mreload:
+    aliases: [moneyreload]
+    description: Reload the money configuration.
+    usage: /mreload
+    permission: money.admin
+permissions:
+  money.admin:
+    description: Allows giving money and managing shop blocks.
+    default: op
+  money.moderate:
+    description: Allows muting and timing out players.
+    default: op

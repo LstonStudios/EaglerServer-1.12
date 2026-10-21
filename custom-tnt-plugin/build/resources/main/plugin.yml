@@ -3,6 +3,7 @@ version: 1.0.0
 main: net.lstonstudios.customtnt.CustomTNTPlugin
 author: LstonStudios
 description: Adds themed nuke, mining, fire, slime, rdm, and black hole TNT.
+depend: [WorldGuard]
 commands:
   customtnt:
     description: Give custom TNT to players.

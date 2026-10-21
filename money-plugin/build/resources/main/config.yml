@@ -1,0 +1,305 @@
+currency-symbol: "$"
+
+rewards:
+  player: 20
+  mob: 15
+  # Any block not listed below pays this much (the least rare blocks).
+  block: 1
+  achievement: 50
+  # Block rewards, from $1 (most common) to $10 (rarest). Blocks you place yourself pay nothing.
+  blocks:
+    # $1 - Common
+    STONE: 1
+    GRASS: 1
+    DIRT: 1
+    COBBLESTONE: 1
+    WOOD: 1
+    SAPLING: 1
+    SAND: 1
+    GRAVEL: 1
+    LOG: 1
+    LEAVES: 1
+    GLASS: 1
+    SANDSTONE: 1
+    BED_BLOCK: 1
+    POWERED_RAIL: 1
+    DETECTOR_RAIL: 1
+    PISTON_STICKY_BASE: 1
+    WEB: 1
+    LONG_GRASS: 1
+    DEAD_BUSH: 1
+    PISTON_BASE: 1
+    WOOL: 1
+    YELLOW_FLOWER: 1
+    RED_ROSE: 1
+    BROWN_MUSHROOM: 1
+    RED_MUSHROOM: 1
+    DOUBLE_STEP: 1
+    STEP: 1
+    TORCH: 1
+    WOOD_STAIRS: 1
+    CHEST: 1
+    REDSTONE_WIRE: 1
+    WORKBENCH: 1
+    CROPS: 1
+    SOIL: 1
+    FURNACE: 1
+    SIGN_POST: 1
+    WOODEN_DOOR: 1
+    LADDER: 1
+    RAILS: 1
+    COBBLESTONE_STAIRS: 1
+    WALL_SIGN: 1
+    LEVER: 1
+    STONE_PLATE: 1
+    IRON_DOOR_BLOCK: 1
+    WOOD_PLATE: 1
+    REDSTONE_TORCH_OFF: 1
+    REDSTONE_TORCH_ON: 1
+    STONE_BUTTON: 1
+    SNOW: 1
+    SNOW_BLOCK: 1
+    CACTUS: 1
+    SUGAR_CANE_BLOCK: 1
+    FENCE: 1
+    PUMPKIN: 1
+    NETHERRACK: 1
+    JACK_O_LANTERN: 1
+    CAKE_BLOCK: 1
+    DIODE_BLOCK_OFF: 1
+    DIODE_BLOCK_ON: 1
+    STAINED_GLASS: 1
+    TRAP_DOOR: 1
+    MONSTER_EGGS: 1
+    HUGE_MUSHROOM_1: 1
+    HUGE_MUSHROOM_2: 1
+    IRON_FENCE: 1
+    THIN_GLASS: 1
+    MELON_BLOCK: 1
+    PUMPKIN_STEM: 1
+    MELON_STEM: 1
+    VINE: 1
+    FENCE_GATE: 1
+    WATER_LILY: 1
+    CAULDRON: 1
+    WOOD_DOUBLE_STEP: 1
+    WOOD_STEP: 1
+    SANDSTONE_STAIRS: 1
+    TRIPWIRE_HOOK: 1
+    TRIPWIRE: 1
+    SPRUCE_WOOD_STAIRS: 1
+    BIRCH_WOOD_STAIRS: 1
+    JUNGLE_WOOD_STAIRS: 1
+    FLOWER_POT: 1
+    CARROT: 1
+    POTATO: 1
+    WOOD_BUTTON: 1
+    SKULL: 1
+    TRAPPED_CHEST: 1
+    GOLD_PLATE: 1
+    IRON_PLATE: 1
+    REDSTONE_COMPARATOR_OFF: 1
+    REDSTONE_COMPARATOR_ON: 1
+    ACTIVATOR_RAIL: 1
+    STAINED_GLASS_PANE: 1
+    LEAVES_2: 1
+    LOG_2: 1
+    ACACIA_STAIRS: 1
+    DARK_OAK_STAIRS: 1
+    IRON_TRAPDOOR: 1
+    HAY_BLOCK: 1
+    CARPET: 1
+    DOUBLE_PLANT: 1
+    STANDING_BANNER: 1
+    WALL_BANNER: 1
+    RED_SANDSTONE: 1
+    RED_SANDSTONE_STAIRS: 1
+    DOUBLE_STONE_SLAB2: 1
+    STONE_SLAB2: 1
+    SPRUCE_FENCE_GATE: 1
+    BIRCH_FENCE_GATE: 1
+    JUNGLE_FENCE_GATE: 1
+    DARK_OAK_FENCE_GATE: 1
+    ACACIA_FENCE_GATE: 1
+    SPRUCE_FENCE: 1
+    BIRCH_FENCE: 1
+    JUNGLE_FENCE: 1
+    DARK_OAK_FENCE: 1
+    ACACIA_FENCE: 1
+    SPRUCE_DOOR: 1
+    BIRCH_DOOR: 1
+    JUNGLE_DOOR: 1
+    ACACIA_DOOR: 1
+    DARK_OAK_DOOR: 1
+    BEETROOT_BLOCK: 1
+    GRASS_PATH: 1
+    CONCRETE: 1
+    CONCRETE_POWDER: 1
+    # $2 - Uncommon
+    COAL_ORE: 2
+    NOTE_BLOCK: 2
+    BRICK: 2
+    MOSSY_COBBLESTONE: 2
+    ICE: 2
+    CLAY: 2
+    JUKEBOX: 2
+    SOUL_SAND: 2
+    SMOOTH_BRICK: 2
+    BRICK_STAIRS: 2
+    SMOOTH_STAIRS: 2
+    MYCEL: 2
+    NETHER_BRICK: 2
+    NETHER_FENCE: 2
+    NETHER_BRICK_STAIRS: 2
+    COBBLE_WALL: 2
+    STAINED_CLAY: 2
+    HARD_CLAY: 2
+    MAGMA: 2
+    # $3 - Somewhat rare
+    DISPENSER: 3
+    TNT: 3
+    REDSTONE_ORE: 3
+    GLOWING_REDSTONE_ORE: 3
+    GLOWSTONE: 3
+    NETHER_WARTS: 3
+    ENDER_STONE: 3
+    COCOA: 3
+    QUARTZ_ORE: 3
+    HOPPER: 3
+    DROPPER: 3
+    PACKED_ICE: 3
+    NETHER_WART_BLOCK: 3
+    RED_NETHER_BRICK: 3
+    BONE_BLOCK: 3
+    # $4 - Valuable
+    IRON_ORE: 4
+    BOOKSHELF: 4
+    OBSIDIAN: 4
+    DAYLIGHT_DETECTOR: 4
+    PRISMARINE: 4
+    SEA_LANTERN: 4
+    COAL_BLOCK: 4
+    DAYLIGHT_DETECTOR_INVERTED: 4
+    END_ROD: 4
+    CHORUS_PLANT: 4
+    CHORUS_FLOWER: 4
+    PURPUR_BLOCK: 4
+    PURPUR_PILLAR: 4
+    PURPUR_STAIRS: 4
+    PURPUR_DOUBLE_SLAB: 4
+    PURPUR_SLAB: 4
+    END_BRICKS: 4
+    # $5 - Rare
+    SPONGE: 5
+    LAPIS_ORE: 5
+    IRON_BLOCK: 5
+    REDSTONE_LAMP_OFF: 5
+    REDSTONE_LAMP_ON: 5
+    ANVIL: 5
+    REDSTONE_BLOCK: 5
+    QUARTZ_BLOCK: 5
+    QUARTZ_STAIRS: 5
+    SLIME_BLOCK: 5
+    OBSERVER: 5
+    # $6 - Very rare
+    GOLD_ORE: 6
+    LAPIS_BLOCK: 6
+    ENCHANTMENT_TABLE: 6
+    BREWING_STAND: 6
+    ENDER_CHEST: 6
+    # $7 - Precious
+    GOLD_BLOCK: 7
+    MOB_SPAWNER: 7
+    WHITE_SHULKER_BOX: 7
+    ORANGE_SHULKER_BOX: 7
+    MAGENTA_SHULKER_BOX: 7
+    LIGHT_BLUE_SHULKER_BOX: 7
+    YELLOW_SHULKER_BOX: 7
+    LIME_SHULKER_BOX: 7
+    PINK_SHULKER_BOX: 7
+    GRAY_SHULKER_BOX: 7
+    SILVER_SHULKER_BOX: 7
+    CYAN_SHULKER_BOX: 7
+    PURPLE_SHULKER_BOX: 7
+    BLUE_SHULKER_BOX: 7
+    BROWN_SHULKER_BOX: 7
+    GREEN_SHULKER_BOX: 7
+    RED_SHULKER_BOX: 7
+    BLACK_SHULKER_BOX: 7
+    # $8 - Epic
+    DIAMOND_ORE: 8
+    WHITE_GLAZED_TERRACOTTA: 8
+    ORANGE_GLAZED_TERRACOTTA: 8
+    MAGENTA_GLAZED_TERRACOTTA: 8
+    LIGHT_BLUE_GLAZED_TERRACOTTA: 8
+    YELLOW_GLAZED_TERRACOTTA: 8
+    LIME_GLAZED_TERRACOTTA: 8
+    PINK_GLAZED_TERRACOTTA: 8
+    GRAY_GLAZED_TERRACOTTA: 8
+    SILVER_GLAZED_TERRACOTTA: 8
+    CYAN_GLAZED_TERRACOTTA: 8
+    PURPLE_GLAZED_TERRACOTTA: 8
+    BLUE_GLAZED_TERRACOTTA: 8
+    BROWN_GLAZED_TERRACOTTA: 8
+    GREEN_GLAZED_TERRACOTTA: 8
+    RED_GLAZED_TERRACOTTA: 8
+    BLACK_GLAZED_TERRACOTTA: 8
+    # $9 - Legendary
+    DIAMOND_BLOCK: 9
+    BEACON: 9
+    # $10 - Mythic
+    DRAGON_EGG: 10
+    EMERALD_ORE: 10
+    EMERALD_BLOCK: 10
+
+# Five shop menus: /mshop 1 ... /mshop 5, or a block set with /mshop <n> setblock.
+# Rename a menu in game with /mshop <n> rename <name>.
+# Each category gets its own header row, then its items below it,
+# sorted from weakest/cheapest to strongest/most expensive.
+# An item with a "command" runs it as console when bought (%player% = buyer);
+# otherwise the item itself is given. "name", "description" and "glow: true" are optional.
+# Admins edit shops in game (open /mshop <n>); layouts are saved here as slots after the first load.
+shops:
+  "1":
+    title: "Shop"
+    categories:
+      - name: "&c&lAbilities"
+        items:
+          - {material: MONSTER_EGG, name: "&fGale Force", description: "Launches you 10 blocks up, no fall damage.", price: 400, glow: true, command: "customability %player% gale 1"}
+          - {material: MONSTER_EGG, name: "&dQuantum Shift", description: "Teleports you 6 blocks forward.", price: 500, glow: true, command: "customability %player% quantum 1"}
+          - {material: MONSTER_EGG, name: "&aTailwind", description: "Speed II for you and nearby teammates.", price: 600, glow: true, command: "customability %player% tailwind 1"}
+          - {material: MONSTER_EGG, name: "&6Overclock", description: "Speed III and Haste II for 10s.", price: 700, glow: true, command: "customability %player% overclock 1"}
+          - {material: MONSTER_EGG, name: "&bSonic Boom", description: "Knocks back everything within 4 blocks.", price: 800, glow: true, command: "customability %player% sonic 1"}
+          - {material: MONSTER_EGG, name: "&7Chitinous Shield", description: "Resistance III and Slowness I for 5s.", price: 900, glow: true, command: "customability %player% chitinous 1"}
+          - {material: MONSTER_EGG, name: "&eAegis Burst", description: "Clears bad effects, grants absorption.", price: 1000, glow: true, command: "customability %player% aegis 1"}
+          - {material: MONSTER_EGG, name: "&8Shadow Step", description: "Invisible for 4s with gear hidden.", price: 1100, glow: true, command: "customability %player% shadow 1"}
+          - {material: MONSTER_EGG, name: "&cPyroclastic Smash", description: "Fire wave: 3 hearts of damage and burning.", price: 1200, glow: true, command: "customability %player% pyroclastic 1"}
+          - {material: MONSTER_EGG, name: "&4Reaper's Harvest", description: "Strength II for 6s, but Hunger III.", price: 1300, glow: true, command: "customability %player% reaper 1"}
+          - {material: MONSTER_EGG, name: "&5Void Tether", description: "Pull a hit player closer and slow them.", price: 1500, glow: true, command: "customability %player% void 1"}
+      - name: "&6&lCustom TNT"
+        items:
+          - {material: COMMAND_MINECART, name: "&8Poop TNT", description: "Leaves a messy surprise.", price: 600, glow: true, command: "customtnt %player% poop 1"}
+          - {material: COMMAND_MINECART, name: "&dFirework TNT", description: "Bursts into a firework show.", price: 800, glow: true, command: "customtnt %player% firework 1"}
+          - {material: COMMAND_MINECART, name: "&aSlime TNT", description: "Covers the area in bouncy slime.", price: 1000, glow: true, command: "customtnt %player% slime 1"}
+          - {material: COMMAND_MINECART, name: "&bAnti-TNT", description: "Undoes damage from other custom TNT.", price: 1200, glow: true, command: "customtnt %player% anti-tnt 1"}
+          - {material: COMMAND_MINECART, name: "&cFire TNT", description: "Sets the area ablaze.", price: 1500, glow: true, command: "customtnt %player% fire 1"}
+          - {material: COMMAND_MINECART, name: "&drdmTNT", description: "A random explosion every time.", price: 2000, glow: true, command: "customtnt %player% rdm 1"}
+          - {material: COMMAND_MINECART, name: "&9X-Ray TNT", description: "Reveals ores in a wide area.", price: 2500, glow: true, command: "customtnt %player% x-ray 1"}
+          - {material: COMMAND_MINECART, name: "&7Mining TNT", description: "Digs a mining tunnel where placed.", price: 3000, glow: true, command: "customtnt %player% mining 1"}
+          - {material: COMMAND_MINECART, name: "&2Mob TNT", description: "Summons mobs when it blows.", price: 3500, glow: true, command: "customtnt %player% mob 1"}
+          - {material: COMMAND_MINECART, name: "&6Sun TNT", description: "Burns bright like a small sun.", price: 4000, glow: true, command: "customtnt %player% sun 1"}
+          - {material: COMMAND_MINECART, name: "&4Boss TNT", description: "Calls in a powerful boss.", price: 4500, glow: true, command: "customtnt %player% boss 1"}
+          - {material: COMMAND_MINECART, name: "&5Black Hole TNT", description: "Pulls everything into a black hole.", price: 5000, glow: true, command: "customtnt %player% black-hole 1"}
+          - {material: COMMAND_MINECART, name: "&4Nuke TNT", description: "A huge, devastating blast.", price: 6000, glow: true, command: "customtnt %player% nuke 1"}
+  "2":
+    title: "Shop 2"
+    categories: []
+  "3":
+    title: "Shop 3"
+    categories: []
+  "4":
+    title: "Shop 4"
+    categories: []
+  "5":
+    title: "Shop 5"
+    categories: []

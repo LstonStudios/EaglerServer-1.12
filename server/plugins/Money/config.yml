@@ -1,0 +1,768 @@
+# 
+# Five shop menus: /mshop 1 ... /mshop 5, or a block set with /mshop <n> setblock.
+# Rename a menu in game with /mshop <n> rename <name>.
+# Each category gets its own header row, then its items below it,
+# sorted from weakest/cheapest to strongest/most expensive.
+# An item with a "command" runs it as console when bought (%player% = buyer);
+# otherwise the item itself is given. "name", "description" and "glow: true" are optional.
+# Admins edit shops in game (open /mshop <n>); layouts are saved here as slots after the first load.
+currency-symbol: $
+rewards:
+  player: 20
+  mob: 15
+  block: 1
+  achievement: 50
+  blocks:
+    STONE: 1
+    GRASS: 1
+    DIRT: 1
+    COBBLESTONE: 1
+    WOOD: 1
+    SAPLING: 1
+    SAND: 1
+    GRAVEL: 1
+    LOG: 1
+    LEAVES: 1
+    GLASS: 1
+    SANDSTONE: 1
+    BED_BLOCK: 1
+    POWERED_RAIL: 1
+    DETECTOR_RAIL: 1
+    PISTON_STICKY_BASE: 1
+    WEB: 1
+    LONG_GRASS: 1
+    DEAD_BUSH: 1
+    PISTON_BASE: 1
+    WOOL: 1
+    YELLOW_FLOWER: 1
+    RED_ROSE: 1
+    BROWN_MUSHROOM: 1
+    RED_MUSHROOM: 1
+    DOUBLE_STEP: 1
+    STEP: 1
+    TORCH: 1
+    WOOD_STAIRS: 1
+    CHEST: 1
+    REDSTONE_WIRE: 1
+    WORKBENCH: 1
+    CROPS: 1
+    SOIL: 1
+    FURNACE: 1
+    SIGN_POST: 1
+    WOODEN_DOOR: 1
+    LADDER: 1
+    RAILS: 1
+    COBBLESTONE_STAIRS: 1
+    WALL_SIGN: 1
+    LEVER: 1
+    STONE_PLATE: 1
+    IRON_DOOR_BLOCK: 1
+    WOOD_PLATE: 1
+    REDSTONE_TORCH_OFF: 1
+    REDSTONE_TORCH_ON: 1
+    STONE_BUTTON: 1
+    SNOW: 1
+    SNOW_BLOCK: 1
+    CACTUS: 1
+    SUGAR_CANE_BLOCK: 1
+    FENCE: 1
+    PUMPKIN: 1
+    NETHERRACK: 1
+    JACK_O_LANTERN: 1
+    CAKE_BLOCK: 1
+    DIODE_BLOCK_OFF: 1
+    DIODE_BLOCK_ON: 1
+    STAINED_GLASS: 1
+    TRAP_DOOR: 1
+    MONSTER_EGGS: 1
+    HUGE_MUSHROOM_1: 1
+    HUGE_MUSHROOM_2: 1
+    IRON_FENCE: 1
+    THIN_GLASS: 1
+    MELON_BLOCK: 1
+    PUMPKIN_STEM: 1
+    MELON_STEM: 1
+    VINE: 1
+    FENCE_GATE: 1
+    WATER_LILY: 1
+    CAULDRON: 1
+    WOOD_DOUBLE_STEP: 1
+    WOOD_STEP: 1
+    SANDSTONE_STAIRS: 1
+    TRIPWIRE_HOOK: 1
+    TRIPWIRE: 1
+    SPRUCE_WOOD_STAIRS: 1
+    BIRCH_WOOD_STAIRS: 1
+    JUNGLE_WOOD_STAIRS: 1
+    FLOWER_POT: 1
+    CARROT: 1
+    POTATO: 1
+    WOOD_BUTTON: 1
+    SKULL: 1
+    TRAPPED_CHEST: 1
+    GOLD_PLATE: 1
+    IRON_PLATE: 1
+    REDSTONE_COMPARATOR_OFF: 1
+    REDSTONE_COMPARATOR_ON: 1
+    ACTIVATOR_RAIL: 1
+    STAINED_GLASS_PANE: 1
+    LEAVES_2: 1
+    LOG_2: 1
+    ACACIA_STAIRS: 1
+    DARK_OAK_STAIRS: 1
+    IRON_TRAPDOOR: 1
+    HAY_BLOCK: 1
+    CARPET: 1
+    DOUBLE_PLANT: 1
+    STANDING_BANNER: 1
+    WALL_BANNER: 1
+    RED_SANDSTONE: 1
+    RED_SANDSTONE_STAIRS: 1
+    DOUBLE_STONE_SLAB2: 1
+    STONE_SLAB2: 1
+    SPRUCE_FENCE_GATE: 1
+    BIRCH_FENCE_GATE: 1
+    JUNGLE_FENCE_GATE: 1
+    DARK_OAK_FENCE_GATE: 1
+    ACACIA_FENCE_GATE: 1
+    SPRUCE_FENCE: 1
+    BIRCH_FENCE: 1
+    JUNGLE_FENCE: 1
+    DARK_OAK_FENCE: 1
+    ACACIA_FENCE: 1
+    SPRUCE_DOOR: 1
+    BIRCH_DOOR: 1
+    JUNGLE_DOOR: 1
+    ACACIA_DOOR: 1
+    DARK_OAK_DOOR: 1
+    BEETROOT_BLOCK: 1
+    GRASS_PATH: 1
+    CONCRETE: 1
+    CONCRETE_POWDER: 1
+    COAL_ORE: 2
+    NOTE_BLOCK: 2
+    BRICK: 2
+    MOSSY_COBBLESTONE: 2
+    ICE: 2
+    CLAY: 2
+    JUKEBOX: 2
+    SOUL_SAND: 2
+    SMOOTH_BRICK: 2
+    BRICK_STAIRS: 2
+    SMOOTH_STAIRS: 2
+    MYCEL: 2
+    NETHER_BRICK: 2
+    NETHER_FENCE: 2
+    NETHER_BRICK_STAIRS: 2
+    COBBLE_WALL: 2
+    STAINED_CLAY: 2
+    HARD_CLAY: 2
+    MAGMA: 2
+    DISPENSER: 3
+    TNT: 3
+    REDSTONE_ORE: 3
+    GLOWING_REDSTONE_ORE: 3
+    GLOWSTONE: 3
+    NETHER_WARTS: 3
+    ENDER_STONE: 3
+    COCOA: 3
+    QUARTZ_ORE: 3
+    HOPPER: 3
+    DROPPER: 3
+    PACKED_ICE: 3
+    NETHER_WART_BLOCK: 3
+    RED_NETHER_BRICK: 3
+    BONE_BLOCK: 3
+    IRON_ORE: 4
+    BOOKSHELF: 4
+    OBSIDIAN: 4
+    DAYLIGHT_DETECTOR: 4
+    PRISMARINE: 4
+    SEA_LANTERN: 4
+    COAL_BLOCK: 4
+    DAYLIGHT_DETECTOR_INVERTED: 4
+    END_ROD: 4
+    CHORUS_PLANT: 4
+    CHORUS_FLOWER: 4
+    PURPUR_BLOCK: 4
+    PURPUR_PILLAR: 4
+    PURPUR_STAIRS: 4
+    PURPUR_DOUBLE_SLAB: 4
+    PURPUR_SLAB: 4
+    END_BRICKS: 4
+    SPONGE: 5
+    LAPIS_ORE: 5
+    IRON_BLOCK: 5
+    REDSTONE_LAMP_OFF: 5
+    REDSTONE_LAMP_ON: 5
+    ANVIL: 5
+    REDSTONE_BLOCK: 5
+    QUARTZ_BLOCK: 5
+    QUARTZ_STAIRS: 5
+    SLIME_BLOCK: 5
+    OBSERVER: 5
+    GOLD_ORE: 6
+    LAPIS_BLOCK: 6
+    ENCHANTMENT_TABLE: 6
+    BREWING_STAND: 6
+    ENDER_CHEST: 6
+    GOLD_BLOCK: 7
+    MOB_SPAWNER: 7
+    WHITE_SHULKER_BOX: 7
+    ORANGE_SHULKER_BOX: 7
+    MAGENTA_SHULKER_BOX: 7
+    LIGHT_BLUE_SHULKER_BOX: 7
+    YELLOW_SHULKER_BOX: 7
+    LIME_SHULKER_BOX: 7
+    PINK_SHULKER_BOX: 7
+    GRAY_SHULKER_BOX: 7
+    SILVER_SHULKER_BOX: 7
+    CYAN_SHULKER_BOX: 7
+    PURPLE_SHULKER_BOX: 7
+    BLUE_SHULKER_BOX: 7
+    BROWN_SHULKER_BOX: 7
+    GREEN_SHULKER_BOX: 7
+    RED_SHULKER_BOX: 7
+    BLACK_SHULKER_BOX: 7
+    DIAMOND_ORE: 8
+    WHITE_GLAZED_TERRACOTTA: 8
+    ORANGE_GLAZED_TERRACOTTA: 8
+    MAGENTA_GLAZED_TERRACOTTA: 8
+    LIGHT_BLUE_GLAZED_TERRACOTTA: 8
+    YELLOW_GLAZED_TERRACOTTA: 8
+    LIME_GLAZED_TERRACOTTA: 8
+    PINK_GLAZED_TERRACOTTA: 8
+    GRAY_GLAZED_TERRACOTTA: 8
+    SILVER_GLAZED_TERRACOTTA: 8
+    CYAN_GLAZED_TERRACOTTA: 8
+    PURPLE_GLAZED_TERRACOTTA: 8
+    BLUE_GLAZED_TERRACOTTA: 8
+    BROWN_GLAZED_TERRACOTTA: 8
+    GREEN_GLAZED_TERRACOTTA: 8
+    RED_GLAZED_TERRACOTTA: 8
+    BLACK_GLAZED_TERRACOTTA: 8
+    DIAMOND_BLOCK: 9
+    BEACON: 9
+    DRAGON_EGG: 10
+    EMERALD_ORE: 10
+    EMERALD_BLOCK: 10
+shops:
+  '1':
+    title: Shop
+    slots:
+      '0':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: ' '
+      '1':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: ' '
+      '2':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: ' '
+      '3':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: ' '
+      '4':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: '&c&lAbilities'
+      '5':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: ' '
+      '6':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: ' '
+      '7':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: ' '
+      '8':
+        material: STAINED_GLASS_PANE
+        data: 14
+        amount: 1
+        price: -1
+        name: ' '
+      '9':
+        material: MONSTER_EGG
+        amount: 1
+        price: 400
+        name: '&fGale Force'
+        description: Launches you 10 blocks up, no fall damage.
+        command: customability %player% gale 1
+        glow: true
+      '10':
+        material: MONSTER_EGG
+        amount: 1
+        price: 500
+        name: '&dQuantum Shift'
+        description: Teleports you 6 blocks forward.
+        command: customability %player% quantum 1
+        glow: true
+      '11':
+        material: MONSTER_EGG
+        amount: 1
+        price: 600
+        name: '&aTailwind'
+        description: Speed II for you and nearby teammates.
+        command: customability %player% tailwind 1
+        glow: true
+      '12':
+        material: MONSTER_EGG
+        amount: 1
+        price: 700
+        name: '&6Overclock'
+        description: Speed III and Haste II for 10s.
+        command: customability %player% overclock 1
+        glow: true
+      '13':
+        material: MONSTER_EGG
+        amount: 1
+        price: 800
+        name: '&bSonic Boom'
+        description: Knocks back everything within 4 blocks.
+        command: customability %player% sonic 1
+        glow: true
+      '14':
+        material: MONSTER_EGG
+        amount: 1
+        price: 900
+        name: '&7Chitinous Shield'
+        description: Resistance III and Slowness I for 5s.
+        command: customability %player% chitinous 1
+        glow: true
+      '15':
+        material: MONSTER_EGG
+        amount: 1
+        price: 1000
+        name: '&eAegis Burst'
+        description: Clears bad effects, grants absorption.
+        command: customability %player% aegis 1
+        glow: true
+      '16':
+        material: MONSTER_EGG
+        amount: 1
+        price: 1100
+        name: '&8Shadow Step'
+        description: Invisible for 4s with gear hidden.
+        command: customability %player% shadow 1
+        glow: true
+      '17':
+        material: MONSTER_EGG
+        amount: 1
+        price: 1200
+        name: '&cPyroclastic Smash'
+        description: 'Fire wave: 3 hearts of damage and burning.'
+        command: customability %player% pyroclastic 1
+        glow: true
+      '18':
+        material: MONSTER_EGG
+        amount: 1
+        price: 1300
+        name: '&4Reaper''s Harvest'
+        description: Strength II for 6s, but Hunger III.
+        command: customability %player% reaper 1
+        glow: true
+      '19':
+        material: MONSTER_EGG
+        amount: 1
+        price: 1500
+        name: '&5Void Tether'
+        description: Pull a hit player closer and slow them.
+        command: customability %player% void 1
+        glow: true
+      '27':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: ' '
+      '28':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: ' '
+      '29':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: ' '
+      '30':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: ' '
+      '31':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: '&6&lCustom TNT'
+      '32':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: ' '
+      '33':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: ' '
+      '34':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: ' '
+      '35':
+        material: STAINED_GLASS_PANE
+        data: 11
+        amount: 1
+        price: -1
+        name: ' '
+      '36':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 600
+        name: '&8Poop TNT'
+        description: Leaves a messy surprise.
+        command: customtnt %player% poop 1
+        glow: true
+      '37':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 800
+        name: '&dFirework TNT'
+        description: Bursts into a firework show.
+        command: customtnt %player% firework 1
+        glow: true
+      '38':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 1000
+        name: '&aSlime TNT'
+        description: Covers the area in bouncy slime.
+        command: customtnt %player% slime 1
+        glow: true
+      '39':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 1200
+        name: '&bAnti-TNT'
+        description: Undoes damage from other custom TNT.
+        command: customtnt %player% anti-tnt 1
+        glow: true
+      '40':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 1500
+        name: '&cFire TNT'
+        description: Sets the area ablaze.
+        command: customtnt %player% fire 1
+        glow: true
+      '41':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 2000
+        name: '&drdmTNT'
+        description: A random explosion every time.
+        command: customtnt %player% rdm 1
+        glow: true
+      '42':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 2500
+        name: '&9X-Ray TNT'
+        description: Reveals ores in a wide area.
+        command: customtnt %player% x-ray 1
+        glow: true
+      '43':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 3000
+        name: '&7Mining TNT'
+        description: Digs a mining tunnel where placed.
+        command: customtnt %player% mining 1
+        glow: true
+      '44':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 3500
+        name: '&2Mob TNT'
+        description: Summons mobs when it blows.
+        command: customtnt %player% mob 1
+        glow: true
+      '45':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 4000
+        name: '&6Sun TNT'
+        description: Burns bright like a small sun.
+        command: customtnt %player% sun 1
+        glow: true
+      '46':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 4500
+        name: '&4Boss TNT'
+        description: Calls in a powerful boss.
+        command: customtnt %player% boss 1
+        glow: true
+      '47':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 5000
+        name: '&5Black Hole TNT'
+        description: Pulls everything into a black hole.
+        command: customtnt %player% black-hole 1
+        glow: true
+      '48':
+        material: COMMAND_MINECART
+        amount: 1
+        price: 6000
+        name: '&4Nuke TNT'
+        description: A huge, devastating blast.
+        command: customtnt %player% nuke 1
+        glow: true
+  '2':
+    title: Shop 2
+    slots:
+      '0':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '1':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '2':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '3':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '4':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '5':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '6':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '7':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '8':
+        material: STAINED_GLASS_PANE
+        data: 4
+        amount: 1
+        price: -1
+      '9':
+        material: GOLD_SWORD
+        amount: 1
+        price: 300
+        name: '&e&l✦ Lightning &f&lSword &e&l✦'
+        command: customsword %player% lightning 1
+      '10':
+        material: IRON_SWORD
+        amount: 1
+        price: 1000
+        name: '&c&l✦ Explosion &6&lSword &c&l✦'
+        command: customsword %player% explosion 1
+      '11':
+        material: DIAMOND_SWORD
+        amount: 1
+        price: 1500
+        name: '&5&l✦ Pearl &b&lSword &5&l✦'
+        command: customsword %player% pearl 1
+      '12':
+        material: STONE_SWORD
+        amount: 1
+        price: 2000
+        name: '&2&l✦ Fall &a&lSword &2&l✦'
+        command: customsword %player% fall 1
+      '13':
+        material: WOOD_SWORD
+        amount: 1
+        price: 5000
+        name: '&8&l✦ Bad &4&lSword &8&l✦'
+        command: customsword %player% bad 1
+      '14':
+        material: DIAMOND_AXE
+        amount: 1
+        price: 4000
+        name: '&d&l✦ TP &f&lSword &d&l✦'
+        command: customsword %player% tp 1
+      '18':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+      '19':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+      '20':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+      '21':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+      '22':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+        name: '&d&lCustom Guns'
+      '23':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+      '24':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+      '25':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+      '26':
+        material: STAINED_GLASS_PANE
+        data: 6
+        amount: 1
+        price: -1
+      '27':
+        material: GOLD_HOE
+        amount: 1
+        price: 500
+        name: '&7&l✦ Pistol ✦'
+        description: Reliable and accurate. 3 hearts.
+        command: cgun %player% pistol 1
+        glow: true
+      '28':
+        material: GOLD_HOE
+        amount: 1
+        price: 1000
+        name: '&e&l✦ SMG ✦'
+        description: Rapid fire, low damage.
+        command: cgun %player% smg 1
+        glow: true
+      '29':
+        material: GOLD_HOE
+        amount: 1
+        price: 1500
+        name: '&6&l✦ Shotgun ✦'
+        description: Six pellets, deadly up close.
+        command: cgun %player% shotgun 1
+        glow: true
+      '30':
+        material: GOLD_HOE
+        amount: 1
+        price: 2000
+        name: '&4&l✦ Revolver ✦'
+        description: Heavy rounds, steady aim.
+        command: cgun %player% revolver 1
+        glow: true
+      '31':
+        material: GOLD_HOE
+        amount: 1
+        price: 2500
+        name: '&a&l✦ Assault Rifle ✦'
+        description: Fast, accurate bursts.
+        command: cgun %player% rifle 1
+        glow: true
+      '32':
+        material: GOLD_HOE
+        amount: 1
+        price: 3000
+        name: '&8&l✦ Minigun ✦'
+        description: A storm of weak, wild bullets.
+        command: cgun %player% minigun 1
+        glow: true
+      '33':
+        material: GOLD_HOE
+        amount: 1
+        price: 3500
+        name: '&b&l✦ Freeze Ray ✦'
+        description: Chills targets with heavy slowness.
+        command: cgun %player% freeze 1
+        glow: true
+      '34':
+        material: GOLD_HOE
+        amount: 1
+        price: 4000
+        name: '&b&l✦ Sniper ✦'
+        description: One long-range, high-damage shot.
+        command: cgun %player% sniper 1
+        glow: true
+      '36':
+        material: GOLD_HOE
+        amount: 1
+        price: 5000
+        name: '&c&l✦ Rocket Launcher ✦'
+        description: Explodes where it lands, no block damage.
+        command: cgun %player% rocket 1
+        glow: true
+      '37':
+        material: GOLD_HOE
+        amount: 1
+        price: 6000
+        name: '&5&l✦ Railgun ✦'
+        description: Pierces through every target in line.
+        command: cgun %player% railgun 1
+        glow: true
+  '3':
+    title: Shop 3
+  '4':
+    title: Shop 4
+  '5':
+    title: Shop 5

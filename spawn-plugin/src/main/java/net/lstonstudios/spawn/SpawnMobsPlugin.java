@@ -31,9 +31,13 @@ public class SpawnMobsPlugin extends JavaPlugin implements TabExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if ((args.length != 1 && args.length < 4) || args.length > 6) {
+        if (args.length < 1 || args.length > 6) {
             return false;
         }
+        // No coordinates: /spawn <entity> [amount] [radius] spawns at the sender.
+        boolean noCoords = args.length <= 3;
+        int amountIdx = noCoords ? 1 : 4;
+        int radiusIdx = noCoords ? 2 : 5;
 
         EntityType type = parseType(args[0]);
         if (type == null) {
@@ -48,7 +52,7 @@ public class SpawnMobsPlugin extends JavaPlugin implements TabExecutor {
         }
 
         Location center;
-        if (args.length == 1) {
+        if (noCoords) {
             center = origin;
         } else {
             Double x = parseCoordinate(args[1], origin.getX());
@@ -62,9 +66,9 @@ public class SpawnMobsPlugin extends JavaPlugin implements TabExecutor {
         }
 
         int amount = 1;
-        if (args.length >= 5) {
+        if (args.length > amountIdx) {
             try {
-                amount = Integer.parseInt(args[4]);
+                amount = Integer.parseInt(args[amountIdx]);
             } catch (NumberFormatException e) {
                 sender.sendMessage("§cAmount must be a whole number.");
                 return true;
@@ -76,9 +80,9 @@ public class SpawnMobsPlugin extends JavaPlugin implements TabExecutor {
         }
 
         double radius = amount > 1 ? DEFAULT_RADIUS : 0;
-        if (args.length == 6) {
+        if (args.length > radiusIdx) {
             try {
-                radius = Double.parseDouble(args[5]);
+                radius = Double.parseDouble(args[radiusIdx]);
             } catch (NumberFormatException e) {
                 sender.sendMessage("§cRadius must be a number.");
                 return true;

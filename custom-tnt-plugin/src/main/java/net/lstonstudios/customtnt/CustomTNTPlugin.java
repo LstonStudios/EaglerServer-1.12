@@ -1544,20 +1544,20 @@ public final class CustomTNTPlugin extends JavaPlugin implements Listener {
     }
 
     private enum TNTType {
-        NUKE("nuke", ChatColor.DARK_RED + "Nuke TNT", Material.TNT, Material.REDSTONE_BLOCK, "A huge, devastating blast."),
-        MINING("mining", ChatColor.GRAY + "Mining TNT", Material.BARRIER, Material.GOLD_BLOCK, "Digs a mining tunnel where placed."),
+        NUKE("nuke", ChatColor.DARK_RED + "Nuke TNT", Material.COMMAND_MINECART, Material.REDSTONE_BLOCK, "A huge, devastating blast."),
+        MINING("mining", ChatColor.GRAY + "Mining TNT", Material.COMMAND_MINECART, Material.GOLD_BLOCK, "Digs a mining tunnel where placed."),
         FIRE("fire", ChatColor.RED + "Fire TNT", Material.COMMAND_MINECART, Material.NETHERRACK, "Sets the area ablaze."),
-        SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.POISONOUS_POTATO, Material.SLIME_BLOCK, "Covers the area in bouncy slime."),
-        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.GOLD_HOE, Material.DIAMOND_BLOCK, "Reveals ores in a wide area."),
-        FIREWORK("firework", ChatColor.LIGHT_PURPLE + "Firework TNT", Material.MONSTER_EGG, Material.FIREWORK, "Bursts into a firework show."),
-        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.MONSTER_EGG, Material.SOUL_SAND, "Leaves a messy surprise."),
-        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.MONSTER_EGG, Material.MOSSY_COBBLESTONE, "Summons mobs when it blows."),
-        BOSS("boss", ChatColor.DARK_RED + "Boss TNT", Material.MONSTER_EGG, Material.BEDROCK, "Calls in a powerful boss."),
-        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.MONSTER_EGG, Material.PURPUR_BLOCK, "A random explosion every time."),
-        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.MONSTER_EGG, Material.SEA_LANTERN, "Burns bright like a small sun."),
+        SLIME("slime", ChatColor.GREEN + "Slime TNT", Material.COMMAND_MINECART, Material.SLIME_BLOCK, "Covers the area in bouncy slime."),
+        X_RAY("x-ray", ChatColor.BLUE + "X-Ray TNT", Material.COMMAND_MINECART, Material.DIAMOND_BLOCK, "Reveals ores in a wide area."),
+        FIREWORK("firework", ChatColor.LIGHT_PURPLE + "Firework TNT", Material.COMMAND_MINECART, Material.FIREWORK, "Bursts into a firework show."),
+        POOP("poop", ChatColor.DARK_GRAY + "Poop TNT", Material.COMMAND_MINECART, Material.SOUL_SAND, "Leaves a messy surprise."),
+        MOB("mob", ChatColor.DARK_GREEN + "Mob TNT", Material.COMMAND_MINECART, Material.MOSSY_COBBLESTONE, "Summons mobs when it blows."),
+        BOSS("boss", ChatColor.DARK_RED + "Boss TNT", Material.COMMAND_MINECART, Material.BEDROCK, "Calls in a powerful boss."),
+        RDM("rdm", ChatColor.LIGHT_PURPLE + "rdmTNT", Material.COMMAND_MINECART, Material.PURPUR_BLOCK, "A random explosion every time."),
+        SUN("sun", ChatColor.GOLD + "Sun TNT", Material.COMMAND_MINECART, Material.SEA_LANTERN, "Burns bright like a small sun."),
         BLACK_HOLE("black-hole", ChatColor.DARK_PURPLE + "Black Hole TNT",
-                Material.MONSTER_EGG, Material.OBSIDIAN, "Pulls everything into a black hole."),
-        ANTI("anti-tnt", ChatColor.AQUA + "Anti-TNT", Material.NETHER_BRICK_ITEM, Material.QUARTZ_BLOCK,
+                Material.COMMAND_MINECART, Material.OBSIDIAN, "Pulls everything into a black hole."),
+        ANTI("anti-tnt", ChatColor.AQUA + "Anti-TNT", Material.COMMAND_MINECART, Material.QUARTZ_BLOCK,
                 "Undoes damage and changes from other custom TNT.");
 
         private final String key;

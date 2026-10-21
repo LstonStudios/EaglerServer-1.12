@@ -207,3 +207,10 @@ types looks like the custom ones.
 Build with `gradle -p custom-items-plugin build`, copy
 `custom-items-plugin/build/libs/CustomItems-1.0.0.jar` to `server/plugins/`, then
 restart the server.
+
+## Custom guns
+
+Build with `gradle -p custom-gun-plugin build`, copy
+`custom-gun-plugin/build/libs/CustomGun-1.0.0.jar` to `server/plugins/`, then restart.
+Admins and ops use `/cgun <player|@a|@s|@p> <gun|all> (27 guns; run /cgun with a bad name to list them) [amount]`
+(alias `/customgun`). All guns are golden hoes with a gun texture from the resource pack. Right-click to shoot; shots are instant, cost no ammo, and have a short cooldown.

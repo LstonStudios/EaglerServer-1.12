@@ -105,15 +105,16 @@ public final class UsernameEffectsPlugin extends JavaPlugin implements Listener 
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("usernameeffects.admin")) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission to manage username effects.");
-            return true;
-        }
+        boolean admin = sender.hasPermission("usernameeffects.admin");
         if (args.length == 0) {
-            sendUsage(sender, label);
+            sendUsage(sender, label, admin);
             return true;
         }
         if (args[0].equalsIgnoreCase("reload")) {
+            if (!admin) {
+                sender.sendMessage(ChatColor.RED + "You do not have permission to do that.");
+                return true;
+            }
             reloadConfig();
             loadEffects();
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -122,16 +123,34 @@ public final class UsernameEffectsPlugin extends JavaPlugin implements Listener 
             sender.sendMessage(ChatColor.GREEN + "Username effects reloaded.");
             return true;
         }
-        if (args.length < 2) {
-            sendUsage(sender, label);
+        boolean clear = args[0].equalsIgnoreCase("clear");
+        boolean set = args[0].equalsIgnoreCase("set");
+        if (!clear && !set) {
+            sendUsage(sender, label, admin);
             return true;
         }
-        Player target = Bukkit.getPlayerExact(args[1]);
-        if (target == null) {
-            sender.sendMessage(ChatColor.RED + "That player must be online.");
-            return true;
+        Player target;
+        int styleStart;
+        if (admin) {
+            if (args.length < 2) {
+                sendUsage(sender, label, true);
+                return true;
+            }
+            target = Bukkit.getPlayerExact(args[1]);
+            styleStart = 2;
+            if (target == null) {
+                sender.sendMessage(ChatColor.RED + "That player must be online.");
+                return true;
+            }
+        } else {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage("Only players can use this.");
+                return true;
+            }
+            target = (Player) sender;
+            styleStart = 1;
         }
-        if (args[0].equalsIgnoreCase("clear")) {
+        if (clear) {
             effects.remove(target.getUniqueId());
             getConfig().set("players." + target.getUniqueId(), null);
             saveConfig();
@@ -139,12 +158,12 @@ public final class UsernameEffectsPlugin extends JavaPlugin implements Listener 
             sender.sendMessage(ChatColor.GREEN + "Cleared the username effect for " + target.getName() + ".");
             return true;
         }
-        if (!args[0].equalsIgnoreCase("set") || args.length < 3) {
-            sendUsage(sender, label);
+        if (args.length <= styleStart) {
+            sendUsage(sender, label, admin);
             return true;
         }
 
-        String style = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+        String style = String.join(" ", Arrays.copyOfRange(args, styleStart, args.length));
         int separator = style.indexOf('|');
         String prefix = color((separator < 0 ? style : style.substring(0, separator)).trim());
         String suffix = color(separator < 0 ? "" : style.substring(separator + 1).trim());
@@ -168,9 +187,14 @@ public final class UsernameEffectsPlugin extends JavaPlugin implements Listener 
         return true;
     }
 
-    private void sendUsage(CommandSender sender, String label) {
-        sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " set <player> <prefix>|<suffix>");
-        sender.sendMessage(ChatColor.YELLOW + "       /" + label + " clear <player>  or  /" + label + " reload");
+    private void sendUsage(CommandSender sender, String label, boolean admin) {
+        if (admin) {
+            sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " set <player> <prefix>|<suffix>");
+            sender.sendMessage(ChatColor.YELLOW + "       /" + label + " clear <player>  or  /" + label + " reload");
+        } else {
+            sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " set <prefix>|<suffix>  (use & color codes)");
+            sender.sendMessage(ChatColor.YELLOW + "       /" + label + " clear");
+        }
     }
 
     private static final class NameEffect {

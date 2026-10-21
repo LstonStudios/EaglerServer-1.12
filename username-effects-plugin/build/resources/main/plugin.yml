@@ -6,8 +6,7 @@ description: Formats player names in chat, the player list, and overhead nametag
 commands:
   nameeffect:
     description: Set or clear a player's name effect.
-    usage: /nameeffect <set|clear|reload>
-    permission: usernameeffects.admin
+    usage: /nameeffect <set|clear> ...
     aliases: [ueffect]
 permissions:
   usernameeffects.admin:

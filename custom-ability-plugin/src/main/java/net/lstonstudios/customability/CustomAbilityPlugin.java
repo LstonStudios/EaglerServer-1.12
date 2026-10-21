@@ -44,30 +44,32 @@ import org.bukkit.util.Vector;
 public final class CustomAbilityPlugin extends JavaPlugin implements Listener {
 
     private static final String MARKER_PREFIX = "CustomAbility:";
+    private static final String USES_MARKER_PREFIX = "CustomAbilityUses:";
+    private static final int MAX_USES = 5;
     private static final String LEGACY_MARKER_PREFIX = ChatColor.BLACK + "CustomAbility:";
 
     private enum Ability {
-        PYROCLASTIC_SMASH("pyroclastic", Material.MAGMA_CREAM, ChatColor.RED, "Pyroclastic Smash",
+        PYROCLASTIC_SMASH("pyroclastic", Material.MONSTER_EGG, ChatColor.RED, "Pyroclastic Smash",
                 "Fire wave: 3 hearts of damage and 4s of burning.", 8),
-        VOID_TETHER("void", Material.NETHER_STAR, ChatColor.DARK_PURPLE, "Void Tether",
+        VOID_TETHER("void", Material.MONSTER_EGG, ChatColor.DARK_PURPLE, "Void Tether",
                 "Hit a player to pull them 5 blocks closer and slow them (Slowness II, 3s).", 12),
-        REAPERS_HARVEST("reaper", Material.FLINT, ChatColor.DARK_RED, "Reaper's Harvest",
+        REAPERS_HARVEST("reaper", Material.MONSTER_EGG, ChatColor.DARK_RED, "Reaper's Harvest",
                 "Strength II for 6s, but Hunger III while it lasts.", 25),
-        SONIC_BOOM("sonic", Material.PRISMARINE_SHARD, ChatColor.AQUA, "Sonic Boom",
+        SONIC_BOOM("sonic", Material.MONSTER_EGG, ChatColor.AQUA, "Sonic Boom",
                 "Knocks back everything within 4 blocks by 5 blocks and inflicts Nausea (5s).", 10),
-        QUANTUM_SHIFT("quantum", Material.CHORUS_FRUIT, ChatColor.LIGHT_PURPLE, "Quantum Shift",
+        QUANTUM_SHIFT("quantum", Material.MONSTER_EGG, ChatColor.LIGHT_PURPLE, "Quantum Shift",
                 "Teleports you 6 blocks forward, even through thin walls.", 8),
-        CHITINOUS_SHIELD("chitinous", Material.IRON_BARDING, ChatColor.GRAY, "Chitinous Shield",
+        CHITINOUS_SHIELD("chitinous", Material.MONSTER_EGG, ChatColor.GRAY, "Chitinous Shield",
                 "Resistance III and Slowness I for 5s.", 20),
-        OVERCLOCK("overclock", Material.BLAZE_POWDER, ChatColor.GOLD, "Overclock",
+        OVERCLOCK("overclock", Material.MONSTER_EGG, ChatColor.GOLD, "Overclock",
                 "Speed III and Haste II for 10s.", 25),
-        AEGIS_BURST("aegis", Material.GHAST_TEAR, ChatColor.YELLOW, "Aegis Burst",
+        AEGIS_BURST("aegis", Material.MONSTER_EGG, ChatColor.YELLOW, "Aegis Burst",
                 "Clears negative effects and grants 2 absorption hearts.", 30),
-        GALE_FORCE("gale", Material.FEATHER, ChatColor.WHITE, "Gale Force",
+        GALE_FORCE("gale", Material.MONSTER_EGG, ChatColor.WHITE, "Gale Force",
                 "Launches you 10 blocks up with fall damage immunity for 4s.", 15),
-        SHADOW_STEP("shadow", Material.FERMENTED_SPIDER_EYE, ChatColor.DARK_GRAY, "Shadow Step",
+        SHADOW_STEP("shadow", Material.MONSTER_EGG, ChatColor.DARK_GRAY, "Shadow Step",
                 "Invisible, with armor and held items hidden, for 4s.", 20),
-        TAILWIND("tailwind", Material.RABBIT_FOOT, ChatColor.GREEN, "Tailwind",
+        TAILWIND("tailwind", Material.MONSTER_EGG, ChatColor.GREEN, "Tailwind",
                 "Speed II for 8s for you and teammates within 8 blocks.", 20);
 
         final String key;
@@ -127,7 +129,7 @@ public final class CustomAbilityPlugin extends JavaPlugin implements Listener {
             }
             Ability a = getAbility(old);
             if (a != null) {
-                inv.setItem(i, createItem(a, old.getAmount()));
+                inv.setItem(i, createItem(a, old.getAmount(), getUses(old)));
             }
         }
     }
@@ -138,6 +140,10 @@ public final class CustomAbilityPlugin extends JavaPlugin implements Listener {
     }
 
     private ItemStack createItem(Ability a, int amount) {
+        return createItem(a, amount, MAX_USES);
+    }
+
+    private ItemStack createItem(Ability a, int amount, int uses) {
         ItemStack item = new ItemStack(a.material, amount);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(a.color + "" + ChatColor.BOLD + "\u2726 " + a.name + " \u2726");
@@ -148,7 +154,9 @@ public final class CustomAbilityPlugin extends JavaPlugin implements Listener {
         lore.add(ChatColor.DARK_GRAY + "Right-click to");
         lore.add(ChatColor.DARK_GRAY + "use. Cooldown:");
         lore.add(ChatColor.DARK_GRAY + "" + a.cooldownSeconds + "s" + hide(MARKER_PREFIX + a.key));
+        lore.add(ChatColor.YELLOW + "Uses left: " + uses + "/" + MAX_USES + hide(USES_MARKER_PREFIX + uses));
         meta.setLore(lore);
+        meta.addEnchant(org.bukkit.enchantments.Enchantment.DURABILITY, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
         return item;
@@ -179,6 +187,36 @@ public final class CustomAbilityPlugin extends JavaPlugin implements Listener {
             lines.add(cur.toString());
         }
         return lines;
+    }
+
+    private int getUses(ItemStack item) {
+        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+            return MAX_USES;
+        }
+        for (String line : item.getItemMeta().getLore()) {
+            int idx = line.indexOf(hide(USES_MARKER_PREFIX));
+            if (idx >= 0) {
+                try {
+                    int uses = Integer.parseInt(line.substring(idx + hide(USES_MARKER_PREFIX).length()).replace("\u00a7", ""));
+                    return Math.max(1, Math.min(MAX_USES, uses));
+                } catch (NumberFormatException e) {
+                    return MAX_USES;
+                }
+            }
+        }
+        return MAX_USES;
+    }
+
+    // Uses one charge. When a stack's current item runs out, the next one starts with full uses.
+    private ItemStack spendUse(ItemStack item, Ability a) {
+        int uses = getUses(item) - 1;
+        if (uses <= 0) {
+            if (item.getAmount() <= 1) {
+                return null;
+            }
+            return createItem(a, item.getAmount() - 1, MAX_USES);
+        }
+        return createItem(a, item.getAmount(), uses);
     }
 
     private Ability getAbility(ItemStack item) {
@@ -319,8 +357,20 @@ public final class CustomAbilityPlugin extends JavaPlugin implements Listener {
             player.sendMessage(ChatColor.RED + ability.name + " is on cooldown for " + ((ready - now + 999) / 1000) + "s.");
             return;
         }
+        ItemStack original = player.getInventory().getItemInMainHand().clone();
+        boolean creative = player.getGameMode() == org.bukkit.GameMode.CREATIVE;
+        // Spend the charge first: Shadow Step stashes the held item while it runs.
+        if (!creative) {
+            player.getInventory().setItemInMainHand(spendUse(original, ability));
+        }
         if (activate(player, ability)) {
             map.put(ability, now + ability.cooldownSeconds * 1000L);
+            if (!creative && getUses(original) <= 1) {
+                player.sendMessage(ChatColor.RED + ability.name + " is used up"
+                        + (original.getAmount() > 1 ? "." : ". Buy another from the shop."));
+            }
+        } else if (!creative) {
+            player.getInventory().setItemInMainHand(original);
         }
     }
 

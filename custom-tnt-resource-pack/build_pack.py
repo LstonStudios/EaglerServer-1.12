@@ -2,6 +2,7 @@
 """Build the 1.8-compatible custom TNT resource pack and web download."""
 
 from pathlib import Path
+import colorsys
 import struct
 import zlib
 import zipfile
@@ -242,25 +243,73 @@ THEMES = {
 }
 
 ITEM_THEME = {
-    "tnt": "nuke", "mining_tnt": "mining", "fire_tnt": "fire", "slime_tnt": "slime",
+    "mining_tnt": "mining", "fire_tnt": "fire", "slime_tnt": "slime",
     "xray_tnt": "xray", "rdm_tnt": "rdm", "mob_tnt": "mob", "poop_tnt": "poop",
     "firework_tnt": "firework", "sun_tnt": "sun", "black_hole_tnt": "black_hole",
-    "barrier": "mining", "minecart_command_block": "fire", "record_13": "slime",
+    "barrier": "mining", "record_13": "slime",
     "record_cat": "xray", "record_blocks": "firework", "record_chirp": "poop",
-    "spawn_egg": "egg", "potato_poisonous": "slime", "gold_hoe": "xray", "record_far": "rdm", "record_stal": "boss", "boss_tnt": "boss", "record_mall": "sun", "record_mellohi": "black_hole", "netherbrick": "anti",
+    "spawn_egg": "egg", "potato_poisonous": "slime", "record_far": "rdm", "record_stal": "boss", "boss_tnt": "boss", "record_mall": "sun", "record_mellohi": "black_hole", "netherbrick": "anti",
 }
+
+
+GUN_ART = [
+    "................",
+    "................",
+    "................",
+    "..oooooooooooo..",
+    ".oGGGGGGGGGGGGo.",
+    ".oGyyyyyyyyyyGo.",
+    ".oGGGGGGGGGGGGoo",
+    ".ooooooGGoooooo.",
+    "......oGGo......",
+    "......oGGGo.....",
+    ".....oGGGGo.....",
+    ".....oGGGGo.....",
+    ".....oGGGo......",
+    ".....oooo.......",
+    "................",
+    "................",
+]
+GUN_COLORS = {
+    "o": (40, 34, 30, 255),
+    "G": (80, 82, 90, 255),
+    "y": (255, 205, 40, 255),
+}
+
+
+def gun_icon():
+    image = [[(0, 0, 0, 0)] * 32 for _ in range(32)]
+    for y, row in enumerate(GUN_ART):
+        for x, char in enumerate(row):
+            if char in GUN_COLORS:
+                for dy in range(2):
+                    for dx in range(2):
+                        image[y * 2 + dy][x * 2 + dx] = GUN_COLORS[char]
+    return image
 
 
 def build_detailed():
     for index, (item, theme) in enumerate(ITEM_THEME.items()):
         body, band, ink, spark = THEMES[theme]
         png_rgba(ASSETS / "items" / f"{item}.png", cube_icon(body, band, ink, spark, index + 1))
+    png_rgba(ASSETS / "items" / "gold_hoe.png", gun_icon())
     png_rgba(ASSETS / "items" / "spawn_egg_overlay.png", [[(0, 0, 0, 0)] * 32 for _ in range(32)])
-    body, band, ink, spark = THEMES["nuke"]
-    block_face_png(ASSETS / "blocks" / "tnt_side.png", face_texture("side", body, band, ink, spark, 5))
-    block_face_png(ASSETS / "blocks" / "tnt_top.png", face_texture("top", body, band, ink, spark, 6))
-    bottom = face_texture("top", body, body, ink, spark, 9)
-    block_face_png(ASSETS / "blocks" / "tnt_bottom.png", bottom)
+    png_rgba(ASSETS / "items" / "minecart_command_block.png", rainbow(cube_icon(*THEMES["fire"], 3)))
+
+
+def rainbow(image):
+    out = []
+    for y, row in enumerate(image):
+        new_row = []
+        for x, pixel in enumerate(row):
+            if pixel[3] == 0:
+                new_row.append(pixel)
+                continue
+            _, lightness, saturation = colorsys.rgb_to_hls(*(c / 255.0 for c in pixel[:3]))
+            red, green, blue = colorsys.hls_to_rgb(((x + y) % 32) / 32.0, lightness, max(saturation, 0.75))
+            new_row.append((int(red * 255), int(green * 255), int(blue * 255), pixel[3]))
+        out.append(new_row)
+    return out
 
 
 def sword_icon(core, edge, guard, handle, outline):
@@ -306,44 +355,7 @@ SWORD_THEMES = {
 
 
 def build():
-    side_rows = [["r" for _ in range(16)] for _ in range(16)]
-    for y in range(4, 11):
-        side_rows[y] = ["w" for _ in range(16)]
-    glyphs = {"T": ("111", "010", "010"), "N": ("101", "111", "101")}
-    for index, letter in enumerate("TNT"):
-        for y, line in enumerate(glyphs[letter]):
-            for x, pixel in enumerate(line):
-                if pixel == "1":
-                    side_rows[6 + y][2 + index * 4 + x] = "k"
-    block_palette = {
-        "r": (191, 38, 32, 255),
-        "d": (92, 25, 24, 255),
-        "w": (224, 218, 195, 255),
-        "b": (45, 39, 34, 255),
-        "y": (217, 170, 74, 255),
-        "k": (35, 31, 29, 255),
-    }
-    png(ASSETS / "blocks" / "tnt_side.png", ["".join(row) for row in side_rows], block_palette)
-
-    top = [["r" for _ in range(16)] for _ in range(16)]
-    top_palette = dict(block_palette)
-    for y in range(4, 12):
-        for x in range(4, 12):
-            top[y][x] = "w"
-    for x, y, color in (
-        (7, 4, "b"), (8, 4, "b"), (7, 5, "b"), (8, 5, "b"),
-        (7, 6, "y"), (8, 6, "y"), (6, 7, "y"), (9, 7, "y"),
-        (7, 8, "y"), (8, 8, "y"), (7, 9, "b"), (8, 9, "b"),
-        (7, 10, "b"), (8, 10, "b"),
-    ):
-        top[y][x] = color
-    png(ASSETS / "blocks" / "tnt_top.png", ["".join(row) for row in top], top_palette)
-    bottom_rows = ["".join("d" if (x + y) % 4 == 0 else "r" for x in range(16))
-                   for y in range(16)]
-    png(ASSETS / "blocks" / "tnt_bottom.png", bottom_rows, block_palette)
-
     tnt_themes = {
-        "items/tnt.png": ((191, 38, 32, 255), (92, 25, 24, 255), (235, 88, 65, 255), (92, 25, 24, 255)),
         "items/mining_tnt.png": ((169, 169, 169, 255), (89, 89, 89, 255), (230, 230, 230, 255), (89, 89, 89, 255)),
         "items/fire_tnt.png": ((238, 102, 24, 255), (133, 45, 15, 255), (255, 188, 47, 255), (133, 45, 15, 255)),
         "items/slime_tnt.png": ((74, 188, 43, 255), (39, 114, 34, 255), (177, 247, 103, 255), (39, 114, 34, 255)),

@@ -1,0 +1,15 @@
+name: CustomGun
+version: 1.0.0
+main: net.lstonstudios.customgun.CustomGunPlugin
+author: LstonStudios
+description: Right-click guns with hitscan shots.
+commands:
+  cgun:
+    description: Give custom guns to players.
+    usage: /cgun <player|@a|@s|@p> <gun|all> [amount]
+    aliases: [customgun]
+    permission: customgun.admin
+permissions:
+  customgun.admin:
+    description: Allows giving custom guns.
+    default: op

@@ -6,7 +6,7 @@ description: Spawn many entities in an area with /spawn.
 commands:
   spawn:
     description: Spawn multiple entities in an area.
-    usage: /spawn <entity> [<x> <y> <z> [amount] [radius]]
+    usage: /spawn <entity> [amount] [radius] | <entity> <x> <y> <z> [amount] [radius]
     aliases: [spawnmob]
     permission: spawnmobs.use
 permissions:
