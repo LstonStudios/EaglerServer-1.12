@@ -2,4 +2,4 @@
 set -euo pipefail
 
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-exec ls -lh "$ROOT/backups" "$@"
+exec ls -lh --hide='pre-restore-*' "$ROOT/backups" "$@"

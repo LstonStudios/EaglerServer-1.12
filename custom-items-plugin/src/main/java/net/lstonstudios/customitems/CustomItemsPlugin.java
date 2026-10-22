@@ -3,6 +3,7 @@ package net.lstonstudios.customitems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Map;
@@ -22,21 +23,31 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
+import org.bukkit.material.Button;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 public final class CustomItemsPlugin extends JavaPlugin implements Listener {
+
+    private static final String PASS_MARKER = "CustomItems:one-time-redstone-pass";
+    private static final String PASS_BUTTON_MARKER = "CustomItems:one-time-redstone-button";
 
     private enum SwordType {
         LIGHTNING("lightning", Material.GOLD_SWORD, ChatColor.YELLOW, ChatColor.WHITE, "Lightning", "Strikes lightning on whoever you hit."),
@@ -79,14 +90,31 @@ public final class CustomItemsPlugin extends JavaPlugin implements Listener {
     }
 
     private final Set<UUID> slamming = new HashSet<>();
+    private final Set<String> specialButtons = new HashSet<>();
+    private final Map<Location, BukkitTask> activeButtonPulses = new HashMap<>();
 
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("customsword").setExecutor(this);
+        getCommand("pass").setExecutor(this);
+        getCommand("passbutton").setExecutor(this);
+        specialButtons.addAll(getConfig().getStringList("special-buttons"));
         for (org.bukkit.entity.Player online : getServer().getOnlinePlayers()) {
             refreshItems(online);
         }
+    }
+
+    @Override
+    public void onDisable() {
+        for (Map.Entry<Location, BukkitTask> entry : activeButtonPulses.entrySet()) {
+            entry.getValue().cancel();
+            Block block = entry.getKey().getBlock();
+            if (isButton(block.getType())) {
+                setButtonPowered(block, false);
+            }
+        }
+        activeButtonPulses.clear();
     }
 
     private void refreshItems(org.bukkit.entity.Player player) {
@@ -328,6 +356,12 @@ public final class CustomItemsPlugin extends JavaPlugin implements Listener {
             sender.sendMessage(ChatColor.RED + "You do not have permission to manage custom items.");
             return true;
         }
+        if (command.getName().equalsIgnoreCase("pass")) {
+            return givePasses(sender, label, args);
+        }
+        if (command.getName().equalsIgnoreCase("passbutton")) {
+            return givePassButtons(sender, label, args);
+        }
         if (args.length < 2 || args.length > 3) {
             sendUsage(sender, label);
             return true;
@@ -381,6 +415,262 @@ public final class CustomItemsPlugin extends JavaPlugin implements Listener {
         sender.sendMessage(ChatColor.GREEN + "Gave " + amount + " " + what + ChatColor.GREEN + (all || amount == 1 ? "" : "s")
                 + " to " + targets.size() + (targets.size() == 1 ? " player." : " players."));
         return true;
+    }
+
+    private boolean givePasses(CommandSender sender, String label, String[] args) {
+        if (args.length < 1 || args.length > 2) {
+            sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " <player|@a|@s|@p> [amount]");
+            return true;
+        }
+
+        List<Player> targets;
+        try {
+            targets = resolveTargets(sender, args[0]);
+        } catch (IllegalArgumentException exception) {
+            sender.sendMessage(ChatColor.RED + exception.getMessage());
+            return true;
+        }
+        if (targets.isEmpty()) {
+            sender.sendMessage(ChatColor.RED + "No online players matched " + args[0] + ".");
+            return true;
+        }
+
+        int amount = 1;
+        if (args.length == 2) {
+            try {
+                amount = Integer.parseInt(args[1]);
+            } catch (NumberFormatException exception) {
+                sender.sendMessage(ChatColor.RED + "Amount must be a number from 1 to 64.");
+                return true;
+            }
+        }
+        if (amount < 1 || amount > 64) {
+            sender.sendMessage(ChatColor.RED + "Amount must be from 1 to 64.");
+            return true;
+        }
+
+        for (Player target : targets) {
+            ItemStack passes = createPass(amount);
+            Map<Integer, ItemStack> leftovers = target.getInventory().addItem(passes);
+            for (ItemStack leftover : leftovers.values()) {
+                target.getWorld().dropItemNaturally(target.getLocation(), leftover);
+            }
+            target.sendMessage(ChatColor.GREEN + "You received " + amount + " redstone pass"
+                    + (amount == 1 ? "." : "es."));
+        }
+        sender.sendMessage(ChatColor.GREEN + "Gave " + amount + " redstone pass"
+                + (amount == 1 ? "" : "es") + " to " + targets.size()
+                + (targets.size() == 1 ? " player." : " players."));
+        return true;
+    }
+
+    private boolean givePassButtons(CommandSender sender, String label, String[] args) {
+        if (args.length < 1 || args.length > 2) {
+            sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " <player|@a|@s|@p> [amount]");
+            return true;
+        }
+
+        List<Player> targets;
+        try {
+            targets = resolveTargets(sender, args[0]);
+        } catch (IllegalArgumentException exception) {
+            sender.sendMessage(ChatColor.RED + exception.getMessage());
+            return true;
+        }
+        if (targets.isEmpty()) {
+            sender.sendMessage(ChatColor.RED + "No online players matched " + args[0] + ".");
+            return true;
+        }
+
+        int amount = 1;
+        if (args.length == 2) {
+            try {
+                amount = Integer.parseInt(args[1]);
+            } catch (NumberFormatException exception) {
+                sender.sendMessage(ChatColor.RED + "Amount must be a number from 1 to 64.");
+                return true;
+            }
+        }
+        if (amount < 1 || amount > 64) {
+            sender.sendMessage(ChatColor.RED + "Amount must be from 1 to 64.");
+            return true;
+        }
+
+        for (Player target : targets) {
+            Map<Integer, ItemStack> leftovers = target.getInventory().addItem(createPassButton(amount));
+            for (ItemStack leftover : leftovers.values()) {
+                target.getWorld().dropItemNaturally(target.getLocation(), leftover);
+            }
+            target.sendMessage(ChatColor.GREEN + "You received " + amount + " special pass button"
+                    + (amount == 1 ? "." : "s."));
+        }
+        sender.sendMessage(ChatColor.GREEN + "Gave " + amount + " special pass button"
+                + (amount == 1 ? "" : "s") + " to " + targets.size()
+                + (targets.size() == 1 ? " player." : " players."));
+        return true;
+    }
+
+    private ItemStack createPass(int amount) {
+        ItemStack item = new ItemStack(Material.PAPER, amount);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "One-Time Redstone Pass");
+        List<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.GRAY + "Right-click a stone or wooden button.");
+        lore.add(ChatColor.GRAY + "Powers it for 3 seconds, then consumes this pass."
+                + hide(PASS_MARKER));
+        meta.setLore(lore);
+        meta.addEnchant(Enchantment.DURABILITY, 1, true);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private ItemStack createPassButton(int amount) {
+        ItemStack item = new ItemStack(Material.STONE_BUTTON, amount);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Pass Button");
+        List<String> lore = new ArrayList<String>();
+        lore.add(ChatColor.GRAY + "Special button: requires a redstone pass.");
+        lore.add(ChatColor.GRAY + "Place it, then right-click it with a pass."
+                + hide(PASS_BUTTON_MARKER));
+        meta.setLore(lore);
+        meta.addEnchant(Enchantment.DURABILITY, 1, true);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPassButtonPlace(BlockPlaceEvent event) {
+        Block block = event.getBlockPlaced();
+        if (!isButton(block.getType()) || !isPassButton(event.getItemInHand())) {
+            return;
+        }
+        specialButtons.add(buttonKey(block.getLocation()));
+        saveSpecialButtons();
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPassButtonBreak(BlockBreakEvent event) {
+        if (specialButtons.remove(buttonKey(event.getBlock().getLocation()))) {
+            saveSpecialButtons();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPassUse(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND || event.getAction() != Action.RIGHT_CLICK_BLOCK
+                || event.getClickedBlock() == null || !isButton(event.getClickedBlock().getType())) {
+            return;
+        }
+        ItemStack item = event.getItem();
+        if (!specialButtons.contains(buttonKey(event.getClickedBlock().getLocation()))) {
+            if (isPass(item)) {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(ChatColor.RED + "Passes only work on special pass buttons.");
+            }
+            return;
+        }
+
+        if (!isPass(item)) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.RED + "You need a one-time redstone pass to use this button.");
+            return;
+        }
+
+        event.setCancelled(true);
+        consumeMainHandPass(event.getPlayer());
+        pulseButton(event.getClickedBlock());
+        event.getPlayer().sendMessage(ChatColor.GREEN + "The button is powered for 3 seconds.");
+    }
+
+    private boolean isPassButton(ItemStack item) {
+        if (item == null || item.getType() != Material.STONE_BUTTON || !item.hasItemMeta()) {
+            return false;
+        }
+        List<String> lore = item.getItemMeta().getLore();
+        return lore != null && containsHidden(lore, PASS_BUTTON_MARKER);
+    }
+
+    private boolean isPass(ItemStack item) {
+        if (item == null || item.getType() != Material.PAPER || !item.hasItemMeta()) {
+            return false;
+        }
+        List<String> lore = item.getItemMeta().getLore();
+        return lore != null && containsHidden(lore, PASS_MARKER);
+    }
+
+    private void consumeMainHandPass(Player player) {
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (item.getAmount() <= 1) {
+            player.getInventory().setItemInMainHand(null);
+        } else {
+            item.setAmount(item.getAmount() - 1);
+            player.getInventory().setItemInMainHand(item);
+        }
+    }
+
+    private boolean isButton(Material material) {
+        return material == Material.STONE_BUTTON || material == Material.WOOD_BUTTON;
+    }
+
+    private String buttonKey(Location location) {
+        return location.getWorld().getUID() + ":" + location.getBlockX() + ":"
+                + location.getBlockY() + ":" + location.getBlockZ();
+    }
+
+    private void saveSpecialButtons() {
+        getConfig().set("special-buttons", new ArrayList<String>(specialButtons));
+        saveConfig();
+    }
+
+    private void pulseButton(final Block block) {
+        final Location location = block.getLocation();
+        BukkitTask previous = activeButtonPulses.remove(location);
+        if (previous != null) {
+            previous.cancel();
+        }
+        setButtonPowered(block, true);
+
+        BukkitTask task = getServer().getScheduler().runTaskLater(this, new Runnable() {
+            @Override
+            public void run() {
+                activeButtonPulses.remove(location);
+                Block current = location.getBlock();
+                if (isButton(current.getType())) {
+                    setButtonPowered(current, false);
+                }
+            }
+        }, 60L);
+        activeButtonPulses.put(location, task);
+    }
+
+    private void setButtonPowered(Block block, boolean powered) {
+        MaterialData data = block.getState().getData();
+        if (data instanceof Button) {
+            Button button = (Button) data;
+            button.setPowered(powered);
+            block.setData(button.getData(), true);
+            notifyRedstone(block, block.getRelative(button.getAttachedFace()));
+        }
+    }
+
+    // Changing block data does not notify neighbours, so send the same updates vanilla buttons do.
+    private void notifyRedstone(Block button, Block attached) {
+        try {
+            String version = getServer().getClass().getPackage().getName().split("\\.")[3];
+            Class<?> craftWorld = Class.forName("org.bukkit.craftbukkit." + version + ".CraftWorld");
+            Class<?> magic = Class.forName("org.bukkit.craftbukkit." + version + ".util.CraftMagicNumbers");
+            Class<?> posClass = Class.forName("net.minecraft.server." + version + ".BlockPosition");
+            Class<?> nmsBlock = Class.forName("net.minecraft.server." + version + ".Block");
+            Object world = craftWorld.getMethod("getHandle").invoke(button.getWorld());
+            Object block = magic.getMethod("getBlock", Material.class).invoke(null, button.getType());
+            java.lang.reflect.Method apply = world.getClass().getMethod("applyPhysics", posClass, nmsBlock, boolean.class);
+            java.lang.reflect.Constructor<?> pos = posClass.getConstructor(int.class, int.class, int.class);
+            for (Block target : new Block[] {button, attached}) {
+                apply.invoke(world, pos.newInstance(target.getX(), target.getY(), target.getZ()), block, false);
+            }
+        } catch (ReflectiveOperationException | RuntimeException exception) {
+            getLogger().warning("Could not send redstone update for pass button: " + exception);
+        }
     }
 
     private List<Player> resolveTargets(CommandSender sender, String targetName) {

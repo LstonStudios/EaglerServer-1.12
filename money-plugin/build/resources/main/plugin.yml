@@ -28,7 +28,7 @@ commands:
     description: Admins sign in (or set a password the first time).
     usage: /login <password> [new-password]
   admin:
-    description: Make a player an admin (can only ban, kick, mute, timeout and change gamemodes).
+    description: Make a player an admin (can only ban, kick, mute, timeout, teleport and change gamemodes).
     usage: /admin <player>
     permission: money.admin
   op:

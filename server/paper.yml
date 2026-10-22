@@ -183,9 +183,9 @@ world-settings:
     squid-spawn-height:
       maximum: 63.0
       minimum: 45.0
+    disable-teleportation-suffocation-check: false
     enable-treasure-maps: true
     treasure-maps-return-already-discovered: false
-    disable-teleportation-suffocation-check: false
     enable-old-tnt-cannon-behaviors: false
     verbose: true
     allow-block-location-tab-completion: true

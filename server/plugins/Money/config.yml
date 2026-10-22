@@ -601,9 +601,8 @@ shops:
       '9':
         material: GOLD_SWORD
         amount: 1
-        price: 300
+        price: 500
         name: '&e&l✦ Lightning &f&lSword &e&l✦'
-        command: customsword %player% lightning 1
       '10':
         material: IRON_SWORD
         amount: 1

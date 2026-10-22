@@ -9,6 +9,14 @@ commands:
     usage: /customsword <player|@a|@s|@p> <lightning|explosion|pearl|fall|bad|tp|all> [amount]
     aliases: [csword]
     permission: customitems.admin
+  pass:
+    description: Give one-time redstone passes to players.
+    usage: /pass <player|@a|@s|@p> [amount]
+    permission: customitems.admin
+  passbutton:
+    description: Give special buttons that require one-time redstone passes.
+    usage: /passbutton <player|@a|@s|@p> [amount]
+    permission: customitems.admin
 permissions:
   customitems.admin:
     description: Allows giving custom items.

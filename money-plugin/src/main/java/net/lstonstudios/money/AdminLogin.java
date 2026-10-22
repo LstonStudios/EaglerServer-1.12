@@ -52,12 +52,14 @@ final class AdminLogin implements Listener {
             "minecraft.command.banlist", "minecraft.command.kick", "minecraft.command.gamemode",
             "bukkit.command.ban.player", "bukkit.command.ban.ip", "bukkit.command.unban.player",
             "bukkit.command.unban.ip", "bukkit.command.banlist", "bukkit.command.kick",
-            "minecraft.command.kill", "minecraft.command.give", "minecraft.command.xp", "bukkit.command.give",
+            "minecraft.command.kill", "minecraft.command.tp", "minecraft.command.teleport", "bukkit.command.teleport",
+            "minecraft.command.selector",
+            "minecraft.command.give", "minecraft.command.xp", "bukkit.command.give",
             "bukkit.command.xp", "money.admin", "customtnt.admin", "customability.admin",
             "customitems.admin", "customgun.admin", "spawnmobs.use", "usernameeffects.admin"};
     private final Map<UUID, PermissionAttachment> attachments = new HashMap<>();
 
-    // Admins can only moderate (ban, kick, mute, timeout, gamemode). Ops can do everything.
+    // Admins can only moderate (ban, kick, mute, timeout, gamemode, tp). Ops can do everything.
     boolean isAdmin(UUID id) {
         return data.getStringList("admins").contains(id.toString());
     }
@@ -76,7 +78,7 @@ final class AdminLogin implements Listener {
         sender.sendMessage(ChatColor.YELLOW + "Moderation: " + ChatColor.WHITE
                 + "/ban /ban-ip /unban /pardon /pardon-ip /banlist /kick /gamemode");
         sender.sendMessage(ChatColor.WHITE + "  /mute|/unmute <player>, /timeout <player> <minutes|off>");
-        sender.sendMessage(ChatColor.YELLOW + "Vanilla: " + ChatColor.WHITE + "/kill /give /xp /summon");
+        sender.sendMessage(ChatColor.YELLOW + "Vanilla: " + ChatColor.WHITE + "/kill /tp /give /xp /summon (selectors like @a @s @p @r @e allowed)");
         sender.sendMessage(ChatColor.YELLOW + "Money: " + ChatColor.WHITE
                 + "/mgive (unlimited), /mclear <player>, /mreload");
         sender.sendMessage(ChatColor.WHITE + "  /mshop <1-5> opens the shop editor; /mshop <n> view|rename|section|setblock|delblock");

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+if [[ $# -gt 1 ]]; then
+  echo "Usage: restorebackup [pre-restore-folder]" >&2
+  exit 2
+fi
+
+exec python3 "$ROOT/restorebackup.py" "$@"

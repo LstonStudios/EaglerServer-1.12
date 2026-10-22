@@ -3,6 +3,6 @@ passwords:
     salt: c34dbe8de6e7d3045bbcae32
     hash: ec1555a844980ea9955c26f2c68710da4e77cc6b2192981b54beae06f4f37316
   3d7730a7-1bf4-3e62-89ef-b0e2be4b840c:
-    salt: 53b632b09a7cb1e6c4127b5a
-    hash: 04fa87884dd422cadcebff7e9e5bd32fc8ea391f1be6d3351a10f0efdd612400
+    salt: cb472d5da193dae89d892954
+    hash: d637b31a3d7ad24cd26b9082bb3e1f425063e79c19a55573b35ffa0cf93f4efb
 admins: []

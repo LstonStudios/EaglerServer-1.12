@@ -70,8 +70,8 @@ not being changed while copied.
    Automatic names use the `world-YYYY-MM-DD-HHMMSS.tar.gz` format. Backups
    contain the configured Overworld, Nether, and End. Explicit names can
    contain letters, numbers, dots, underscores, and hyphens. Existing names
-   are not overwritten. The `backup`, `backups`, `delbackup`, and
-   `loadbackup` commands are added to the workspace terminal PATH. Rebuild
+   are not overwritten. The `backup`, `backups`, `delbackup`,
+   `loadbackup`, and `restorebackup` commands are added to the workspace terminal PATH. Rebuild
    or reopen the dev container after changing its configuration, then open a
    new terminal. The backup command validates the Overworld `region/` folder
    and the Nether/End folders' `DIM-1/region/` and `DIM1/region/` paths.
@@ -80,6 +80,9 @@ not being changed while copied.
    ```sh
    backups
    ```
+
+   `backups` hides the automatic `pre-restore-*` folders; see
+   [Recover a pre-restore folder](#recover-a-pre-restore-folder).
 
 4. To remove backup archives, run `delbackup`. Choose one or more menu codes
    (`1`-`9`, then `A`-`M`) separated by commas, then type `Y` to confirm or
@@ -111,8 +114,23 @@ not being changed while copied.
 
 4. Confirm the success message. The loader moves the current world folders
    into a timestamped `backups/pre-restore-*` folder before replacing them.
-   Server configuration and plugins are not replaced.
+   Server configuration and plugins are not replaced. These folders are
+   not shown by `backups` or `loadbackup`.
 5. Start the server again as usual and check that the restored world loads.
+
+### Recover a pre-restore folder
+
+To make a saved `pre-restore-*` folder loadable, run:
+
+```sh
+restorebackup
+```
+
+Choose a folder from the list (or pass one, e.g.
+`restorebackup backups/pre-restore-YYYYMMDD-HHMMSS-ffffff`). This creates
+`backups/restored-YYYYMMDD-HHMMSS-ffffff.tar.gz` and leaves the original folder
+untouched. The archive then shows up in `backups` and can be loaded with
+`loadbackup`.
 
 The loader prefers the world matching `level-name` in
 `server/server.properties`. If an archive contains multiple worlds and none
@@ -208,7 +226,18 @@ Build with `gradle -p custom-items-plugin build`, copy
 `custom-items-plugin/build/libs/CustomItems-1.0.0.jar` to `server/plugins/`, then
 restart the server.
 
-## Custom guns
+Admins and ops can give enchanted paper redstone passes with
+`/pass <player|@a|@p> [amount]` (`@s` is also supported; amount is 1-64).
+Admins and ops give special enchanted stone buttons with
+`/passbutton <player|@a|@p> [amount]` (`@s` is also supported; amount is 1-64).
+Place a special button to make it require a pass; ordinary buttons keep their
+normal behavior. Right-clicking a special button without a pass is blocked and
+shows an error message. Holding a pass and right-clicking consumes one and
+powers the special button for 3 seconds. Passes do nothing on ordinary buttons
+(the click is blocked with a message). Special button locations are saved
+across restarts and cleared when the button is broken.
+
+#### Custom guns
 
 Build with `gradle -p custom-gun-plugin build`, copy
 `custom-gun-plugin/build/libs/CustomGun-1.0.0.jar` to `server/plugins/`, then restart.
