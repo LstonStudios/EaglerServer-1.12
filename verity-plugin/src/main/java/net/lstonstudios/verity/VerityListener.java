@@ -19,8 +19,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.command.CommandSender;
-import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -45,7 +43,6 @@ final class VerityListener implements Listener {
             "^/?(?:minecraft:)?kill\\s.*type=(?:minecraft:)?verity(?![\\w:])", java.util.regex.Pattern.CASE_INSENSITIVE);
     private static final java.util.regex.Pattern TYPE = java.util.regex.Pattern.compile(
             "type=(?:minecraft:)?verity(?![\\w:])", java.util.regex.Pattern.CASE_INSENSITIVE);
-    private long killUntil;
 
     VerityListener(VerityPlugin plugin, VerityManager manager) {
         this.plugin = plugin;
@@ -161,10 +158,6 @@ final class VerityListener implements Listener {
         if (!manager.isVerityEntity(victim) || victim.getScoreboardTags().contains(VerityManager.TAG_DEMON)) {
             return;
         }
-        if (System.currentTimeMillis() < killUntil && manager.ownerOfStand(victim) != null
-                && !(e instanceof EntityDamageByEntityEvent)) {
-            return;
-        }
         e.setCancelled(true);
         if (e instanceof EntityDamageByEntityEvent) {
             Entity damager = ((EntityDamageByEntityEvent) e).getDamager();
@@ -183,18 +176,45 @@ final class VerityListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onDemonHit(EntityDamageByEntityEvent e) {
+        VerityState s = manager.ownerOfDemon(e.getEntity());
+        if (s != null && e.getDamager().getUniqueId().equals(s.owner)) {
+            s.calmUntil = 0;
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onDemonHurtsOther(EntityDamageByEntityEvent e) {
         VerityState s = manager.ownerOfDemon(e.getDamager());
-        if (s != null && !e.getEntity().getUniqueId().equals(s.owner)) {
+        if (s == null) {
+            return;
+        }
+        Entity v = e.getEntity();
+        boolean mob = plugin.getConfig().getBoolean("demon.attack-mobs", true)
+                && v instanceof org.bukkit.entity.LivingEntity && !(v instanceof Player) && !manager.isVerityEntity(v);
+        if (!v.getUniqueId().equals(s.owner) && !mob) {
             e.setCancelled(true);
+            return;
+        }
+        if (v instanceof org.bukkit.entity.LivingEntity) {
+            final org.bukkit.entity.LivingEntity le = (org.bukkit.entity.LivingEntity) v;
+            // The Wither Skeleton carrier's hit adds the Wither effect; the real Demon doesn't.
+            Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    le.removePotionEffect(org.bukkit.potion.PotionEffectType.WITHER);
+                }
+            });
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onDemonTarget(EntityTargetEvent e) {
         VerityState s = manager.ownerOfDemon(e.getEntity());
-        if (s != null && e.getTarget() != null && !e.getTarget().getUniqueId().equals(s.owner)) {
+        if (s != null && e.getTarget() != null && !e.getTarget().getUniqueId().equals(s.owner)
+                && !(e.getTarget() instanceof org.bukkit.entity.Villager
+                        && plugin.getConfig().getBoolean("demon.attack-mobs", true))) {
             e.setCancelled(true);
         }
     }
@@ -204,8 +224,63 @@ final class VerityListener implements Listener {
         if (e.getEntity().getScoreboardTags().contains(VerityManager.TAG_DEMON)) {
             e.getDrops().clear();
             e.setDroppedExp(0);
+            return;
+        }
+        // The Demon eats what it kills and leaves cobwebs where it fed.
+        org.bukkit.event.entity.EntityDamageEvent cause = e.getEntity().getLastDamageCause();
+        if (e.getEntity() instanceof Player || !(cause instanceof EntityDamageByEntityEvent)
+                || manager.ownerOfDemon(((EntityDamageByEntityEvent) cause).getDamager()) == null
+                || !plugin.getConfig().getBoolean("demon.eat-kills", true)) {
+            return;
+        }
+        e.getDrops().clear();
+        e.setDroppedExp(0);
+        org.bukkit.block.Block b = e.getEntity().getLocation().getBlock();
+        if (b.getType() == org.bukkit.Material.AIR) {
+            b.setType(org.bukkit.Material.WEB);
         }
     }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onOwnerKilledByDemon(org.bukkit.event.entity.PlayerDeathEvent e) {
+        final Player p = e.getEntity();
+        VerityState s = manager.states.get(p.getUniqueId());
+        org.bukkit.event.entity.EntityDamageEvent cause = p.getLastDamageCause();
+        if (s == null || !(cause instanceof EntityDamageByEntityEvent)
+                || ((EntityDamageByEntityEvent) cause).getDamager() != s.demon
+                || !plugin.getConfig().getBoolean("demon.farewell-kick", true)) {
+            return;
+        }
+        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (p.isOnline()) {
+                    p.kickPlayer("Farewell");
+                }
+            }
+        }, 40L);
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onBed(org.bukkit.event.player.PlayerBedEnterEvent e) {
+        if (plugin.getConfig().getBoolean("demon.prevent-sleep", true) && manager.demonNear(e.getPlayer(), 100)) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage("§4You can't sleep. He's close.");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onWorldDecay(org.bukkit.event.entity.CreatureSpawnEvent e) {
+        org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason r = e.getSpawnReason();
+        if ((r == org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.NATURAL
+                || r == org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.BREEDING
+                || r == org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.EGG
+                || r == org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason.DEFAULT)
+                && manager.decaysSpawn(e.getEntity())) {
+            e.setCancelled(true);
+        }
+    }
+
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onStandManipulate(PlayerArmorStandManipulateEvent e) {
@@ -225,11 +300,20 @@ final class VerityListener implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (!e.getMessage().toLowerCase(Locale.ROOT).contains("verity")) {
-            return;
-        }
         final Player p = e.getPlayer();
         final String msg = e.getMessage();
+        Bukkit.getScheduler().runTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                VerityState s = manager.states.get(p.getUniqueId());
+                if (s != null && p.isOnline()) {
+                    manager.tryCalm(p, s, msg);
+                }
+            }
+        });
+        if (!msg.toLowerCase(Locale.ROOT).contains("verity")) {
+            return;
+        }
         Bukkit.getScheduler().runTask(plugin, new Runnable() {
             @Override
             public void run() {
@@ -239,46 +323,6 @@ final class VerityListener implements Listener {
                 }
             }
         });
-    }
-
-    /** Makes "/kill @e[type=verity]" work for ops by targeting Verity's stand and Demon via tags. */
-    private boolean handleKill(CommandSender sender, String cmd) {
-        if (!KILL.matcher(cmd).find()) {
-            return false;
-        }
-        if (!(sender.isOp() || sender.hasPermission("minecraft.command.kill"))) {
-            return false;
-        }
-        killUntil = System.currentTimeMillis() + 2000;
-        String body = cmd.startsWith("/") ? cmd.substring(1) : cmd;
-        Bukkit.dispatchCommand(sender, TYPE.matcher(body).replaceAll("type=armor_stand,tag=" + VerityManager.TAG_VERITY));
-        Bukkit.dispatchCommand(sender, TYPE.matcher(body).replaceAll("type=spider,tag=" + VerityManager.TAG_DEMON));
-        Bukkit.getScheduler().runTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                for (VerityState st : new java.util.ArrayList<>(manager.states.values())) {
-                    boolean standGone = st.stand == null || !st.stand.isValid();
-                    if (st.released && standGone) {
-                        manager.remove(st.owner);
-                    }
-                }
-            }
-        });
-        return true;
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onServerKill(ServerCommandEvent e) {
-        if (handleKill(e.getSender(), e.getCommand())) {
-            e.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerKill(PlayerCommandPreprocessEvent e) {
-        if (handleKill(e.getPlayer(), e.getMessage())) {
-            e.setCancelled(true);
-        }
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -304,6 +348,7 @@ final class VerityListener implements Listener {
             return;
         }
         s.ownerName = p.getName();
+        manager.setFace(s, "(^o^)", 100);
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
@@ -345,6 +390,7 @@ final class VerityListener implements Listener {
         if (s == null) {
             return;
         }
+        manager.setFace(s, "(T_T)", 100);
         Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
             @Override
             public void run() {
@@ -367,6 +413,29 @@ final class VerityListener implements Listener {
                 }
             }
         }, 40L);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onOwnerHurt(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof Player) || e.getFinalDamage() < 3) {
+            return;
+        }
+        VerityState s = manager.states.get(e.getEntity().getUniqueId());
+        if (s != null && s.stand != null) {
+            manager.setFace(s, "(O_O)", 50);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onOwnerKill(EntityDeathEvent e) {
+        Player killer = e.getEntity().getKiller();
+        if (killer == null || e.getEntity() instanceof Player) {
+            return;
+        }
+        VerityState s = manager.states.get(killer.getUniqueId());
+        if (s != null && s.stand != null && !manager.isVerityEntity(e.getEntity())) {
+            manager.setFace(s, "(^o^)", 40);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

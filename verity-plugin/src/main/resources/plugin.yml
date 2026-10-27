@@ -5,18 +5,20 @@ author: LstonStudios
 description: The viral Verity mod - a helpful AI friend that slowly turns sinister.
 commands:
   verity:
-    description: Give Verity spawn eggs or manage Verity.
+    description: Get a Verity Box, or remove your Verity.
     usage: |
-      /verity <targets> [amount]          - give Verity spawn eggs (@a, @s, @p, @r or names)
-      /verity summon <targets>            - open the Box instantly
-      /verity remove <targets>            - remove Verity
-      /verity phase <targets> <1-4>       - set the phase
-      /verity karma <targets> <0-100>     - set karma
-      /verity info [targets]              - show status
-      /verity reload                      - reload config
-    aliases: [verityegg]
-    permission: verity.admin
+      /verity                       - give yourself a Verity Box
+      /verity kill                  - kill your Verity
+      /verity phase <player> <1-4>  - set a player's Verity phase (admins)
+      /verity <targets> [amount]    - give Verity Boxes to others (admins; @a, @s, @p, @r or names)
+      /verity killall               - kill every Verity (admins)
+  verityhelp:
+    description: List the Verity commands.
+    usage: /verityhelp
+  verityphase:
+    description: Set every Verity to a phase (admins).
+    usage: /verityphase <1-4>
 permissions:
   verity.admin:
-    description: Allows managing Verity.
+    description: Allows /verity <targets>, /verity killall and /verityphase.
     default: op

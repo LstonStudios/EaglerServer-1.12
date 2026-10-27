@@ -267,6 +267,7 @@
     "criteria": {
       "beef": "2026-10-08 21:00:55 +0000",
       "baked_potato": "2026-10-16 19:44:23 +0000",
+      "porkchop": "2026-10-27 21:57:04 +0000",
       "apple": "2026-10-16 19:44:55 +0000",
       "potato": "2026-09-26 00:22:35 +0000",
       "melon": "2026-10-20 20:53:33 +0000",
@@ -1275,6 +1276,12 @@
   "minecraft:recipes/transportation/jungle_boat": {
     "criteria": {
       "entered_water": "2026-10-04 21:46:41 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/shoot_arrow": {
+    "criteria": {
+      "shot_arrow": "2026-10-27 21:59:21 +0000"
     },
     "done": true
   },

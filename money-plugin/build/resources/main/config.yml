@@ -252,13 +252,13 @@ rewards:
     EMERALD_ORE: 10
     EMERALD_BLOCK: 10
 
-# Five shop menus: /mshop 1 ... /mshop 5, or a block set with /mshop <n> setblock.
-# Rename a menu in game with /mshop <n> rename <name>.
+# Five shop menus: /cshop 1 ... /cshop 5, or a block set with /cshop <n> setblock.
+# Rename a menu in game with /cshop <n> rename <name>.
 # Each category gets its own header row, then its items below it,
 # sorted from weakest/cheapest to strongest/most expensive.
 # An item with a "command" runs it as console when bought (%player% = buyer);
 # otherwise the item itself is given. "name", "description" and "glow: true" are optional.
-# Admins edit shops in game (open /mshop <n>); layouts are saved here as slots after the first load.
+# Admins edit shops in game (open /cshop <n>); layouts are saved here as slots after the first load.
 shops:
   "1":
     title: "Shop"

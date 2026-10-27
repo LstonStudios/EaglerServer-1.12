@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "uuid": "ee041129-a7a7-4728-bf5f-f8770dcc4152",
+    "name": "drawaa",
+    "created": "2026-10-26 21:52:43 +0000",
+    "source": "O_oxer",
+    "expires": "forever",
+    "reason": "chat spammer"
+  },
+  {
+    "uuid": "10d7ffed-0a06-3d8c-b017-077efaf67c15",
+    "name": "DRAWs",
+    "created": "2026-10-26 21:51:13 +0000",
+    "source": "O_oxer",
+    "expires": "forever",
+    "reason": "chat spammer"
+  },
+  {
+    "uuid": "3779e0e6-f727-363b-8efc-caf1fe21776f",
+    "name": "DRAWSs",
+    "created": "2026-10-26 21:53:05 +0000",
+    "source": "O_oxer",
+    "expires": "forever",
+    "reason": "chat spammer"
+  },
+  {
+    "uuid": "6e925f11-fcac-38ac-a2a8-04b421723c3a",
+    "name": "DRAWss",
+    "created": "2026-10-26 21:52:09 +0000",
+    "source": "O_oxer",
+    "expires": "forever",
+    "reason": "chat spammer"
+  },
+  {
+    "uuid": "818d5e04-61af-3946-8f64-97bcec95d849",
+    "name": "DRAWS",
+    "created": "2026-10-26 21:52:43 +0000",
+    "source": "O_oxer",
+    "expires": "forever",
+    "reason": "chat spammer"
+  }
+]

@@ -197,9 +197,29 @@ reused vanilla items, which may also change their normal appearance. For browser
 clients hosted on another origin, run
 `python3 custom-tnt-resource-pack/serve_pack.py` and publicly forward port 8082.
 
-Textures restyle every vanilla item of that type for all players, so never texture a
-shared item (for example spawn eggs). Give custom items their own unused material, then
-register the texture in `custom-tnt-resource-pack/check_pack.py` and run it after changes.
+Item textures replace that vanilla item's icon for all players. Give custom items their own
+unused material where possible, then register each texture in
+`custom-tnt-resource-pack/check_pack.py` and run it after changes.
+
+Verity's 3D body is a voxel smiley sphere worn on her armor stand. Each facial expression
+(happy, joy, sad, angry, surprised, neutral, evil) is its own model on an item players cannot
+obtain: Barrier and the six silverfish-block variants. `python3
+custom-tnt-resource-pack/build_verity.py` regenerates those models and textures; then run
+`build_pack.py`. Keep `EXPRESSIONS` there in the same order as the item list in `VerityManager`.
+Her face changes with what happens: questions, requests, compliments, insults, pats, gifts,
+her owner getting hurt, dying, killing mobs, or rejoining, and her phase twists the faces
+(phase 3 turns smiles flat, phase 4 turns them evil). Owners can also tell Verity "turn around",
+"face me", "spin", "nod", "shake your head", "tilt your head", "look up" or "look down".
+A blank face (Mob Spawner item) is shown while Verity can still be calmed.
+
+Phase 4's Demon is a gaunt, T-posed skeleton model (`build_demon.py`, Command Block item) worn
+by a marker armor stand that follows an invisible Wither Skeleton hitbox. Behaviours (toggles in
+`server/plugins/Verity/config.yml`, `demon:` and `world-decay:`): a calm window where "I came
+back for you" (or "I'm sorry" x3, looking at Verity within 10 blocks) ends it; otherwise it
+hunts, targets villagers first, ignores water, climbs walls, smashes glass/doors/iron bars,
+grabs and hurls the owner, eats kills (cobwebs), blocks sleeping within 100 blocks and kicks the
+owner with "Farewell" on death. Killing it restores Verity (karma 100, phase 1). In phase 3 new
+animals/villagers die and halfway through, nearby creatures vanish and time freezes.
 After rebuilding the pack, update `resource-pack-sha1` and `?v=` in
 `server/server.properties`.
 Explosion settings are in `server/plugins/CustomTNT/config.yml`; apply changes

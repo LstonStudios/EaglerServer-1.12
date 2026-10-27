@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.text.SimpleDateFormat;
@@ -43,6 +44,7 @@ final class VerityManager {
     static final String TAG_VERITY = "verity";
     static final String TAG_BOX = "verity_box";
     static final String TAG_DEMON = "verity_demon";
+    static final String TAG_DEMON_BODY = "verity_demon_body";
 
     private static final String[] P3_LINES = {
             "Why did you open the box?", "You never listen.", "The lights are so bright. Let me fix that.",
@@ -304,6 +306,10 @@ final class VerityManager {
             }
             ensureStand(s, p);
             follow(s, p);
+            if (s.phase >= 4) {
+                demonTick(s, p);
+                followBody(s, p);
+            }
             if (tick % 20 == 0) {
                 slowTick(s, p);
             }
@@ -327,6 +333,14 @@ final class VerityManager {
         }
         if (s.phase >= 4) {
             applyEnvironment(p);
+        } else if (s.phase == 3 && plugin.getConfig().getBoolean("world-decay.enabled", true)) {
+            double days = s.ageTicks / dayTicks() * pace(s);
+            if (!s.wiped && days >= (phaseDays(3) + phaseDays(4)) / 2) {
+                worldWipe(s, p);
+            }
+            if (s.wiped) {
+                p.setPlayerTime(s.frozenTime, false);
+            }
         }
         if (tick >= s.nextEvent) {
             runEvent(s, p);
@@ -383,6 +397,7 @@ final class VerityManager {
                 setFace(s, "(-_-)", 200);
                 say(p, s, "You know, " + p.getName() + ", I'm not sure I like being your helper anymore.");
                 say(p, s, "Something is watching us. Do you feel it?");
+                say(p, s, "Something is coming. Two days, maybe less.");
                 break;
             default:
                 setFace(s, "(>:D)", 400);
@@ -392,6 +407,11 @@ final class VerityManager {
                 say(p, s, "THE BOX IS OPEN. THE DEMON IS FREE.");
                 say(p, s, "I TOLD YOU I'D ALWAYS BE HERE, " + p.getName().toUpperCase(Locale.ROOT) + ".");
                 s.demonRespawnAt = tick + 60;
+                s.apologies = 0;
+                s.calmUntil = tick + 20L * plugin.getConfig().getInt("demon.calm-seconds", 60);
+                if (s.calmUntil > tick) {
+                    p.sendMessage("§8Verity's face has gone completely blank. Stay close, look at it and say \"I came back for you\" - or say sorry three times.");
+                }
                 applyEnvironment(p);
                 break;
         }
@@ -567,25 +587,248 @@ final class VerityManager {
                 || p.getGameMode() == org.bukkit.GameMode.SPECTATOR) {
             return;
         }
-        Spider d = s.demon;
+        LivingEntity d = s.demon;
         if (d == null || !d.isValid()) {
             if (d != null) {
-                // The Demon can be killed, but it always comes back.
                 s.demon = null;
-                s.demonRespawnAt = tick + 20 * plugin.getConfig().getInt("demon.respawn-seconds", 60);
+                if (d.isDead() && d.getHealth() <= 0) {
+                    demonSlain(s, p);
+                    return;
+                }
+                removeBody(s);
+                s.demonRespawnAt = tick + 20;
             }
-            if (tick >= s.demonRespawnAt) {
+            if (tick >= s.demonRespawnAt && p.getWorld().getDifficulty() != org.bukkit.Difficulty.PEACEFUL) {
                 spawnDemon(s, p);
             }
             return;
         }
-        if (d.getWorld() != p.getWorld() || d.getLocation().distanceSquared(p.getLocation()) > 64 * 64) {
+        if (d.getWorld() != p.getWorld() || d.getLocation().distanceSquared(p.getLocation()) > 96 * 96) {
             Location spot = findSpawn(p, 24, 32);
             if (spot != null) {
                 d.teleport(spot);
             }
         }
-        d.setTarget(p);
+        boolean calm = tick < s.calmUntil;
+        d.setAI(!calm);
+        if (calm) {
+            return;
+        }
+        if (d instanceof org.bukkit.entity.Creature) {
+            ((org.bukkit.entity.Creature) d).setTarget(demonTarget(d, p));
+        }
+    }
+
+    /** The Demon goes for villagers before the player. */
+    private LivingEntity demonTarget(LivingEntity d, Player p) {
+        if (plugin.getConfig().getBoolean("demon.attack-mobs", true)) {
+            LivingEntity best = null;
+            double bestD = 24 * 24;
+            for (Entity e : d.getNearbyEntities(24, 12, 24)) {
+                if (e instanceof org.bukkit.entity.Villager && e.isValid()) {
+                    double dd = e.getLocation().distanceSquared(d.getLocation());
+                    if (dd < bestD) {
+                        bestD = dd;
+                        best = (LivingEntity) e;
+                    }
+                }
+            }
+            if (best != null) {
+                return best;
+            }
+        }
+        return p;
+    }
+
+    /** Per-tick Demon traits: ignores water, climbs walls, smashes glass and doors, grabs and hurls. */
+    private void demonTick(VerityState s, Player p) {
+        LivingEntity d = s.demon;
+        if (d == null || !d.isValid() || tick < s.calmUntil || !(d instanceof org.bukkit.entity.Creature)) {
+            return;
+        }
+        LivingEntity t = ((org.bukkit.entity.Creature) d).getTarget();
+        if (t == null || t.getWorld() != d.getWorld()) {
+            return;
+        }
+        Location dl = d.getLocation();
+        Vector to = t.getLocation().toVector().subtract(dl.toVector());
+        Vector flat = new Vector(to.getX(), 0, to.getZ());
+        if (flat.lengthSquared() < 0.25) {
+            return;
+        }
+        flat.normalize();
+        Block front = dl.clone().add(flat.clone().multiply(0.9)).getBlock();
+        if (tick % 4 == 0 && plugin.getConfig().getBoolean("demon.break-blocks", true)) {
+            for (int y = 0; y <= 2; y++) {
+                smash(front.getRelative(0, y, 0));
+            }
+        }
+        Vector v = d.getVelocity();
+        if (tick % 10 == 0) {
+            // Pathfinding can stall (corners, trees); if he hasn't moved, shove him toward the target.
+            if (s.stuckLoc != null && s.stuckLoc.getWorld() == dl.getWorld() && to.lengthSquared() > 3.5 * 3.5
+                    && s.stuckLoc.distanceSquared(dl) < 0.15 * 0.15 && d.isOnGround()) {
+                d.setVelocity(new Vector(flat.getX() * 0.5, 0.42, flat.getZ() * 0.5));
+            }
+            s.stuckLoc = dl.clone();
+        }
+        if (dl.getBlock().isLiquid() || dl.clone().add(0, 1, 0).getBlock().isLiquid()) {
+            d.setVelocity(new Vector(flat.getX() * 0.3, Math.max(v.getY(), to.getY() > 0 ? 0.28 : 0.08), flat.getZ() * 0.3));
+        } else if (front.getType().isSolid() && to.getY() > -3) {
+            d.setVelocity(new Vector(flat.getX() * 0.08, 0.34, flat.getZ() * 0.08));
+        }
+        if (t == p && to.lengthSquared() < 2.8 * 2.8 && tick - s.lastGrab > 20 * 10
+                && plugin.getConfig().getBoolean("demon.grab", true)) {
+            s.lastGrab = tick;
+            grab(d, p);
+        }
+    }
+
+    private void smash(Block b) {
+        Material m = b.getType();
+        String n = m.name();
+        if (n.contains("GLASS") || n.contains("DOOR") || m == Material.IRON_FENCE) {
+            b.getWorld().playSound(b.getLocation(), Sound.BLOCK_GLASS_BREAK, 1f, 0.6f);
+            b.setType(Material.AIR);
+        }
+    }
+
+    private void grab(final LivingEntity d, final Player p) {
+        p.setVelocity(new Vector(0, 1.1, 0));
+        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_WITHER_SHOOT, 1f, 0.5f);
+        final double dmg = plugin.getConfig().getDouble("demon.grab-damage", 4.0);
+        Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+            @Override
+            public void run() {
+                if (!p.isOnline() || p.isDead() || !d.isValid()) {
+                    return;
+                }
+                Vector away = p.getLocation().toVector().subtract(d.getLocation().toVector()).setY(0);
+                if (away.lengthSquared() < 0.01) {
+                    away = new Vector(1, 0, 0);
+                }
+                p.setVelocity(away.normalize().multiply(1.7).setY(0.5));
+                p.damage(dmg, d);
+            }
+        }, 14L);
+    }
+
+    // Demon body: five marker armor stands wear the jointed models (see build_demon.py). Every part is
+    // authored with its joint at the model centre, so the stand's head pose swings it about that joint.
+    // DEMON_PX = blocks per reference pixel = (1/16) * 0.625 (head layer) * display scale 2 * (30/113).
+    private static final double DEMON_PX = 0.0625 * 0.625 * 2.0 * 30.0 / 113.0;
+    // Height of the helmet model's centre above a normal stand's feet (measured estimate).
+    private static final double HEAD_ORIGIN = 1.69;
+    private static final double DEMON_HEIGHT_PX = 120;
+    // part: body, left arm, right arm, left leg, right leg -> {sideways px, joint px from top}
+    private static final double[][] DEMON_JOINTS = {{0, 70}, {10.5, 37}, {-10.5, 37}, {3.75, 92}, {-3.75, 92}};
+
+    private ItemStack demonPartItem(int part) {
+        return new ItemStack(part == 0 ? Material.COMMAND : part <= 2 ? Material.BURNING_FURNACE : Material.ENDER_PORTAL_FRAME);
+    }
+
+    boolean isDemonPart(VerityState s, Entity e) {
+        if (s.demonParts != null) {
+            for (ArmorStand a : s.demonParts) {
+                if (a == e) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private ArmorStand newDemonPart(Location l, int part) {
+        ArmorStand b = l.getWorld().spawn(l, ArmorStand.class);
+        b.setVisible(false);
+        b.setGravity(false);
+        b.setMarker(true);
+        b.setBasePlate(false);
+        b.setSilent(true);
+        b.addScoreboardTag(TAG_DEMON_BODY);
+        b.setHelmet(demonPartItem(part));
+        return b;
+    }
+
+    /** Poses and moves the Demon's body: walk cycle, hunch, and arms raised when he is about to grab. */
+    private void followBody(VerityState s, Player owner) {
+        LivingEntity d = s.demon;
+        if (d == null || !d.isValid()) {
+            removeBody(s);
+            return;
+        }
+        Location l = d.getLocation();
+        boolean fresh = s.demonParts == null;
+        if (!fresh) {
+            for (ArmorStand a : s.demonParts) {
+                if (!a.isValid()) {
+                    fresh = true;
+                }
+            }
+        }
+        if (fresh) {
+            removeBody(s);
+            s.demonParts = new ArmorStand[5];
+            for (int i = 0; i < 5; i++) {
+                s.demonParts[i] = newDemonPart(l, i);
+            }
+        }
+        double speed = 0;
+        if (s.lastDemonLoc != null && s.lastDemonLoc.getWorld() == l.getWorld()) {
+            double dx = l.getX() - s.lastDemonLoc.getX();
+            double dz = l.getZ() - s.lastDemonLoc.getZ();
+            speed = Math.sqrt(dx * dx + dz * dz);
+        }
+        s.lastDemonLoc = l.clone();
+        s.walkPhase += speed * 2.4;
+        boolean calm = tick < s.calmUntil;
+        float yaw = l.getYaw();
+        if (calm && owner.getWorld() == l.getWorld()) {
+            Vector to = owner.getLocation().toVector().subtract(l.toVector());
+            yaw = (float) Math.toDegrees(Math.atan2(-to.getX(), to.getZ()));
+        }
+        double dist = owner.getWorld() == l.getWorld() ? owner.getLocation().distance(l) : 99;
+        boolean reaching = !calm && dist < 4.5;
+        double amp = Math.min(1.0, speed / 0.18);
+        double swing = Math.sin(s.walkPhase) * 0.8 * amp;
+        double breath = Math.sin(tick * 0.09) * 0.03;
+        double hunch = 0.2 + 0.15 * amp + (reaching ? 0.15 : 0);
+        double yawRad = Math.toRadians(yaw);
+        double lx = Math.cos(yawRad);
+        double lz = Math.sin(yawRad);
+        for (int i = 0; i < 5; i++) {
+            ArmorStand a = s.demonParts[i];
+            double side = DEMON_JOINTS[i][0] * DEMON_PX;
+            double y = (DEMON_HEIGHT_PX - DEMON_JOINTS[i][1]) * DEMON_PX - HEAD_ORIGIN;
+            a.teleport(new Location(l.getWorld(), l.getX() + lx * side, l.getY() + y, l.getZ() + lz * side, yaw, 0));
+            EulerAngle pose;
+            switch (i) {
+                case 0:
+                    pose = new EulerAngle(hunch + breath, 0, 0);
+                    break;
+                case 1:
+                case 2: {
+                    double sgn = i == 1 ? 1 : -1;
+                    double x = reaching ? -1.45 + Math.sin(tick * 0.45) * 0.12 : -sgn * swing * 0.9 + breath * 2;
+                    pose = new EulerAngle(x, 0, reaching ? 0 : sgn * 0.07);
+                    break;
+                }
+                default:
+                    pose = new EulerAngle((i == 3 ? 1 : -1) * swing, 0, 0);
+                    break;
+            }
+            a.setHeadPose(pose);
+        }
+    }
+
+    private void removeBody(VerityState s) {
+        if (s.demonParts != null) {
+            for (ArmorStand a : s.demonParts) {
+                a.remove();
+            }
+            s.demonParts = null;
+        }
+        s.lastDemonLoc = null;
     }
 
     private void spawnDemon(VerityState s, Player p) {
@@ -593,24 +836,125 @@ final class VerityManager {
         if (spot == null) {
             return;
         }
-        Spider d = spot.getWorld().spawn(spot, Spider.class);
+        org.bukkit.entity.WitherSkeleton d = spot.getWorld().spawn(spot, org.bukkit.entity.WitherSkeleton.class);
         d.setCustomName("§4The Demon");
         d.setCustomNameVisible(false);
         d.setRemoveWhenFarAway(false);
         d.setCanPickupItems(false);
+        d.getEquipment().clear();
         d.addScoreboardTag(TAG_DEMON);
         double hp = plugin.getConfig().getDouble("demon.health", 120.0);
         setAttr(d, Attribute.GENERIC_MAX_HEALTH, hp);
         d.setHealth(Math.min(hp, d.getMaxHealth()));
         setAttr(d, Attribute.GENERIC_ATTACK_DAMAGE, plugin.getConfig().getDouble("demon.damage", 6.0));
         setAttr(d, Attribute.GENERIC_MOVEMENT_SPEED, plugin.getConfig().getDouble("demon.speed", 0.42));
-        setAttr(d, Attribute.GENERIC_FOLLOW_RANGE, 80);
+        setAttr(d, Attribute.GENERIC_FOLLOW_RANGE, 128);
         d.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
-        d.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 0, false, false));
-        d.setTarget(p);
+        d.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, false, false));
         s.demon = d;
+        d.setAI(tick >= s.calmUntil);
         p.playSound(p.getLocation(), Sound.ENTITY_WITHER_SPAWN, 0.8f, 0.5f);
         say(p, s, "HE'S HERE.");
+    }
+
+    /** Killing the Demon ends the ordeal: karma snaps to full and Verity is herself again. */
+    void demonSlain(VerityState s, Player p) {
+        resetAfterDemon(s, p, 100);
+        setFace(s, "(^_^)", 200);
+        say(p, s, "The darkness... it's gone. Thank you.");
+    }
+
+    private void resetAfterDemon(VerityState s, Player p, int karma) {
+        s.karma = karma;
+        s.ageTicks = 0;
+        s.phase = 1;
+        s.wiped = false;
+        s.calmUntil = 0;
+        s.apologies = 0;
+        onPhaseChange(p, s, 4);
+    }
+
+    /** Called with the owner's chat while Verity's face is blank. */
+    void tryCalm(Player p, VerityState s, String msg) {
+        if (s.phase < 4 || tick >= s.calmUntil) {
+            return;
+        }
+        String m = msg.toLowerCase(Locale.ROOT).replace("'", "").replace("\u2019", "");
+        boolean back = m.contains("i came back for you");
+        boolean sorry = m.contains("im sorry") || m.contains("i am sorry") || m.contains("forgive me");
+        if (!back && !sorry) {
+            return;
+        }
+        if (s.stand == null || !s.stand.isValid() || s.stand.getWorld() != p.getWorld()
+                || s.stand.getLocation().distance(p.getLocation()) > 10) {
+            p.sendMessage("§7Verity is too far away to hear you.");
+            return;
+        }
+        Vector look = p.getEyeLocation().getDirection();
+        Vector at = s.stand.getLocation().add(0, 0.6, 0).toVector().subtract(p.getEyeLocation().toVector()).normalize();
+        if (look.dot(at) < 0.5) {
+            p.sendMessage("§7Look at Verity so it knows you mean it.");
+            return;
+        }
+        if (back || ++s.apologies >= 3) {
+            resetAfterDemon(s, p, Math.max(s.karma, 60));
+            setFace(s, "(^_^)", 200);
+            say(p, s, "...you came back. I'm okay now. Please don't leave me.");
+        } else {
+            p.sendMessage("§7Verity's face flickers... (" + s.apologies + "/3)");
+        }
+    }
+
+    /** The world dies before the Demon: halfway through phase 3 every nearby creature vanishes. */
+    private void worldWipe(VerityState s, Player p) {
+        s.wiped = true;
+        s.frozenTime = p.getWorld().getTime();
+        for (Entity e : p.getNearbyEntities(128, 128, 128)) {
+            if (!(e instanceof LivingEntity) || e instanceof Player || isVerityEntity(e)) {
+                continue;
+            }
+            if (e instanceof org.bukkit.entity.Tameable && ((org.bukkit.entity.Tameable) e).isTamed()) {
+                continue;
+            }
+            if (e.getCustomName() != null) {
+                continue;
+            }
+            e.remove();
+        }
+        say(p, s, "Everything is so quiet now. Do you hear that?");
+    }
+
+    /** Newly spawned animals and villagers die while the world is dying (phase 3). */
+    boolean decaysSpawn(Entity e) {
+        if (!plugin.getConfig().getBoolean("world-decay.enabled", true)) {
+            return false;
+        }
+        boolean anyone = false;
+        for (VerityState st : states.values()) {
+            Player o = Bukkit.getPlayer(st.owner);
+            if (st.phase == 3 && o != null && o.getWorld() == e.getWorld()) {
+                anyone = true;
+            }
+        }
+        if (!anyone) {
+            return false;
+        }
+        if (e.getType() == EntityType.COW || e.getType() == EntityType.MUSHROOM_COW) {
+            return true;
+        }
+        return (e.getType() == EntityType.SHEEP || e.getType() == EntityType.PIG
+                || e.getType() == EntityType.CHICKEN || e.getType() == EntityType.VILLAGER) && rnd.nextBoolean();
+    }
+
+    boolean demonNear(Player p, double radius) {
+        for (VerityState st : states.values()) {
+            LivingEntity d = st.demon;
+            if (d != null && d.isValid() && d.getWorld() == p.getWorld()
+                    && d.getLocation().distanceSquared(p.getLocation()) < radius * radius) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void setAttr(LivingEntity e, Attribute a, double v) {
@@ -644,6 +988,7 @@ final class VerityManager {
     }
 
     private void removeDemon(VerityState s) {
+        removeBody(s);
         if (s.demon != null) {
             s.demon.remove();
             s.demon = null;
@@ -666,7 +1011,9 @@ final class VerityManager {
         st.setArms(false);
         st.setInvulnerable(true);
         st.setCollidable(false);
-        st.setHelmet(new ItemStack(Material.GLOWSTONE));
+        s.shownExpression = -1;
+        st.setHelmet(expressionItem(expressionIndex(s)));
+        s.shownExpression = expressionIndex(s);
         st.setCustomNameVisible(true);
         st.addScoreboardTag(TAG_VERITY);
         s.stand = st;
@@ -701,9 +1048,11 @@ final class VerityManager {
             next = cur.clone().add(target.clone().subtract(cur).toVector().multiply(0.3));
         }
         Vector look = eye.toVector().subtract(next.toVector().add(new Vector(0, 0.75, 0)));
-        next.setYaw((float) Math.toDegrees(Math.atan2(-look.getX(), look.getZ())));
+        updateFacing(s);
+        next.setYaw((float) Math.toDegrees(Math.atan2(-look.getX(), look.getZ())) + s.facing);
         next.setPitch(0);
         st.teleport(next);
+        st.setHeadPose(headPose(s));
         if (tick % 12 == 0) {
             Location pl = next.clone().add(0, 0.8, 0);
             if (s.phase == 1) {
@@ -717,6 +1066,96 @@ final class VerityManager {
                 pl.getWorld().spawnParticle(Particle.SMOKE_LARGE, pl, 1, 0.2, 0.2, 0.2, 0.01);
             }
         }
+    }
+
+    /** Turns the body toward the wanted angle, or spins it while a spin is running. */
+    private void updateFacing(VerityState s) {
+        if (tick < s.spinUntil) {
+            s.facing += 28f;
+            return;
+        }
+        float diff = ((s.facingTarget - s.facing) % 360f + 540f) % 360f - 180f;
+        s.facing += Math.max(-30f, Math.min(30f, diff));
+        if (Math.abs(diff) < 0.5f) {
+            s.facing = s.facingTarget;
+        }
+    }
+
+    private EulerAngle headPose(VerityState s) {
+        if (s.gesture == null) {
+            return EulerAngle.ZERO;
+        }
+        long left = s.gestureUntil - tick;
+        if (left <= 0) {
+            s.gesture = null;
+            return EulerAngle.ZERO;
+        }
+        double wave = Math.sin(left * 0.5);
+        switch (s.gesture) {
+            case "nod":
+                return new EulerAngle(wave * 0.45, 0, 0);
+            case "shake":
+                return new EulerAngle(0, wave * 0.9, 0);
+            case "tilt":
+                return new EulerAngle(0, 0, 0.4);
+            case "up":
+                return new EulerAngle(-0.5, 0, 0);
+            case "down":
+                return new EulerAngle(0.5, 0, 0);
+            default:
+                return EulerAngle.ZERO;
+        }
+    }
+
+    /** Body and head requests ("turn around", "spin", "nod"...). Returns the reply or null. */
+    private String requestGesture(VerityState s, String msg) {
+        if (msg.contains("turn around") || msg.contains("turn away") || msg.contains("face away")
+                || msg.contains("look away") || msg.contains("face the other way")) {
+            boolean toBack = s.facingTarget % 360f == 0f;
+            s.facingTarget = toBack ? 180f : 0f;
+            s.spinUntil = 0;
+            setFace(s, "(^_~)", 60);
+            return toBack ? "Okay, turning around!" : "Okay, facing you again!";
+        }
+        if (msg.contains("face me") || msg.contains("look at me") || msg.contains("turn back")
+                || msg.contains("face forward") || msg.contains("turn to me") || msg.contains("face front")) {
+            s.facingTarget = 0f;
+            s.spinUntil = 0;
+            setFace(s, "(^o^)", 60);
+            return "I'm looking right at you!";
+        }
+        if (msg.contains("spin") || msg.contains("twirl") || msg.contains("rotate") || msg.contains("do a flip")
+                || msg.contains("turn in circles")) {
+            s.spinUntil = tick + 26;
+            setFace(s, "(^o^)", 40);
+            return "Wheee! Watch me spin!";
+        }
+        String gesture = null;
+        String reply = null;
+        if (msg.contains("nod") || msg.matches(".*\\bsay yes\\b.*")) {
+            gesture = "nod";
+            reply = "Yes! *nods*";
+        } else if (msg.contains("shake your head") || msg.matches(".*\\bsay no\\b.*")) {
+            gesture = "shake";
+            reply = "No no no! *shakes head*";
+        } else if (msg.contains("tilt") || msg.contains("curious")) {
+            gesture = "tilt";
+            reply = "Hmm? *tilts head*";
+        } else if (msg.contains("look up")) {
+            gesture = "up";
+            reply = "Looking up!";
+        } else if (msg.contains("look down")) {
+            gesture = "down";
+            reply = "Looking down.";
+        }
+        if (gesture == null) {
+            return null;
+        }
+        setFace(s, "nod".equals(gesture) ? "(^o^)" : "shake".equals(gesture) ? "(T_T)"
+                : "tilt".equals(gesture) ? "(O_O)" : "(-_-)", 60);
+        s.gesture = gesture;
+        s.gestureUntil = tick + ("up".equals(gesture) || "down".equals(gesture) || "tilt".equals(gesture) ? 60 : 40);
+        return reply;
     }
 
     /** Where Verity hovers relative to the owner's eyes; requests (mode) override the phase default. */
@@ -752,8 +1191,11 @@ final class VerityManager {
     /** Applies a movement request from chat. Returns the reply or null if nothing matched. */
     String requestMove(VerityState s, String msg) {
         String m = null;
-        String reply = null;
-        if (msg.contains("circle") || msg.contains("orbit") || msg.contains("spin")) {
+        String reply = requestGesture(s, msg);
+        if (reply != null) {
+            return reply;
+        }
+        if (msg.contains("circle") || msg.contains("orbit")) {
             m = "circle";
             reply = "Wheee! Around and around!";
         } else if (msg.contains("behind") || msg.contains("back of me")) {
@@ -778,6 +1220,7 @@ final class VerityManager {
         }
         s.mode = m;
         s.modeUntil = Long.MAX_VALUE;
+        setFace(s, "(^o^)", 50);
         return reply;
     }
 
@@ -824,6 +1267,50 @@ final class VerityManager {
             s.shownName = name;
             s.stand.setCustomName(name);
         }
+        int expression = expressionIndex(s);
+        if (expression != s.shownExpression) {
+            s.shownExpression = expression;
+            s.stand.setHelmet(expressionItem(expression));
+        }
+    }
+
+    // Each expression is a different 3D face. The resource pack retextures these unobtainable
+    // items (build_verity.py keeps the order in sync): happy, joy, sad, angry, surprised, neutral, evil.
+    private static final int HAPPY = 0, JOY = 1, SAD = 2, ANGRY = 3, SURPRISED = 4, NEUTRAL = 5, EVIL = 6, BLANK = 7;
+
+    private ItemStack expressionItem(int expression) {
+        return expression == HAPPY ? new ItemStack(Material.BARRIER)
+                : expression == BLANK ? new ItemStack(Material.MOB_SPAWNER)
+                : new ItemStack(Material.MONSTER_EGGS, 1, (short) (expression - 1));
+    }
+
+    /** Picks the 3D face from the active expression request, bent by how far Verity has fallen. */
+    private int expressionIndex(VerityState s) {
+        if (s.phase >= 4 && tick < s.calmUntil) {
+            return BLANK;
+        }
+        String f = s.faceOverride != null && tick < s.faceUntil ? s.faceOverride : "";
+        int e;
+        if (f.contains(">:D")) {
+            e = EVIL;
+        } else if (f.contains("O_O") || f.contains("*o*")) {
+            e = SURPRISED;
+        } else if (f.contains("T_T") || f.contains(">_<")) {
+            e = SAD;
+        } else if (f.contains("-_-") || f.contains(">_>")) {
+            e = NEUTRAL;
+        } else if (f.contains("^o^") || f.contains("^_~")) {
+            e = JOY;
+        } else {
+            e = HAPPY;
+        }
+        if (s.phase >= 4) {
+            return e == SURPRISED ? SURPRISED : e == SAD ? ANGRY : EVIL;
+        }
+        if (s.phase == 3) {
+            return e == HAPPY || e == JOY ? NEUTRAL : e == SAD ? ANGRY : e;
+        }
+        return e;
     }
 
     // ----------------------------------------------------------- speaking
@@ -913,7 +1400,7 @@ final class VerityManager {
 
     boolean isVerityEntity(Entity e) {
         return e.getScoreboardTags().contains(TAG_VERITY) || e.getScoreboardTags().contains(TAG_BOX)
-                || e.getScoreboardTags().contains(TAG_DEMON);
+                || e.getScoreboardTags().contains(TAG_DEMON) || e.getScoreboardTags().contains(TAG_DEMON_BODY);
     }
 
     /** Removes tagged leftovers (e.g. from a crash) that no state is tracking. */
@@ -922,7 +1409,7 @@ final class VerityManager {
             return;
         }
         for (VerityState s : states.values()) {
-            if (s.stand == e || s.demon == e) {
+            if (s.stand == e || s.demon == e || isDemonPart(s, e)) {
                 return;
             }
         }

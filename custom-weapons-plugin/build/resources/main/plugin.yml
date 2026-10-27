@@ -5,9 +5,8 @@ author: LstonStudios
 description: Adds the Mace and the Spear.
 commands:
   weapon:
-    description: Give the Mace or the Spear.
-    usage: /weapon <player|@a|@s|@p> <mace|spear|all> [amount]
-    aliases: [cweapon]
+    description: Give the Mace, Spear or Wind Bursts.
+    usage: /weapon <player|@a|@s|@p> <mace|spear|wind|all> [amount]
     permission: customweapons.admin
 permissions:
   customweapons.admin:

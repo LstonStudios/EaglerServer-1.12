@@ -20,8 +20,18 @@ final class VerityState {
 
     // Runtime-only fields.
     ArmorStand stand;
-    Spider demon;
+    org.bukkit.entity.LivingEntity demon;
+    ArmorStand[] demonParts;
+    double walkPhase;
+    org.bukkit.Location lastDemonLoc;
+    org.bukkit.Location stuckLoc;
+    long calmUntil;
+    int apologies;
+    long lastGrab;
+    boolean wiped;
+    long frozenTime;
     String shownName = "";
+    int shownExpression = -1;
     String faceOverride;
     long faceUntil;
     long nextEvent;
@@ -30,6 +40,12 @@ final class VerityState {
     long lastHit;
     long lastGift;
     long lastWarn;
+    // Body orientation relative to "facing the owner", in degrees, and head gestures.
+    float facing;
+    float facingTarget;
+    long spinUntil;
+    String gesture;
+    long gestureUntil;
 
     VerityState(UUID owner, String ownerName, int karma) {
         this.owner = owner;

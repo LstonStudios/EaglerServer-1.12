@@ -1,0 +1,23 @@
+{
+  "minecraft:story/shiny_gear": {
+    "criteria": {
+      "diamond_leggings": "2026-10-26 19:05:25 +0000",
+      "diamond_helmet": "2026-10-26 19:05:25 +0000",
+      "diamond_chestplate": "2026-10-26 19:05:25 +0000",
+      "diamond_boots": "2026-10-26 19:05:25 +0000"
+    },
+    "done": true
+  },
+  "minecraft:recipes/misc/beacon": {
+    "criteria": {
+      "has_nether_star": "2026-10-26 19:02:18 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "plains": "2026-10-26 19:00:31 +0000"
+    },
+    "done": false
+  }
+}

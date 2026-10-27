@@ -251,11 +251,10 @@ shops:
     title: Shop
     slots:
       '0':
-        material: STAINED_GLASS_PANE
-        data: 14
-        amount: 1
+        material: NETHER_STAR
+        amount: 64
         price: -1
-        name: ' '
+        name: '&e&lVerity Box'
       '1':
         material: STAINED_GLASS_PANE
         data: 14

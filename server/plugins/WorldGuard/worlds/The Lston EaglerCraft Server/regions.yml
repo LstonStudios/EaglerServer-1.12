@@ -27,6 +27,15 @@ regions:
             unique-ids: [3d7730a7-1bf4-3e62-89ef-b0e2be4b840c]
         type: cuboid
         priority: 0
+    o_oxer:
+        min: {x: -203.0, y: 60.0, z: 171.0}
+        max: {x: -198.0, y: 71.0, z: 178.0}
+        members: {}
+        flags: {build: deny, block-break: deny, chest-access: deny, pvp: deny}
+        owners:
+            unique-ids: [60b419bf-4b57-3cde-b743-a5f8afe75b99]
+        type: cuboid
+        priority: 0
     __global__:
         members: {}
         flags: {use: allow, interact: allow}

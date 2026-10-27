@@ -24,6 +24,19 @@ demon:
   health: 120.0
   damage: 6.0
   speed: 0.42
+  calm-seconds: 60      # window to calm the blank-faced Verity before the Demon hunts
+  attack-mobs: true      # villagers first; other creatures it kills are eaten (cobwebs)
+  eat-kills: true
+  break-blocks: true     # glass, panes, iron bars, doors
+  grab: true             # lift and hurl the player
+  grab-damage: 4.0
+  prevent-sleep: true    # no beds within 100 blocks of the Demon
+  farewell-kick: true    # kick the owner with "Farewell" when the Demon kills them
+
+# Phase 3: new cows die, other animals/villagers 50%; halfway to phase 4 nearby creatures vanish
+# (named and tamed ones are spared) and the owner's time freezes.
+world-decay:
+  enabled: true
 
 # Maximum eggs given by one /verity command.
 max-eggs: 64

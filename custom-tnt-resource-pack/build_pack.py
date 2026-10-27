@@ -375,7 +375,8 @@ def build():
             (ROOT / "pack.mcmeta", "pack.mcmeta"),
             *[
                 (path, path.relative_to(ROOT).as_posix())
-                for path in sorted((ROOT / "assets").rglob("*.png"))
+                for path in sorted((ROOT / "assets").rglob("*"))
+                if path.suffix in {".json", ".png"}
             ],
         ]:
             info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))

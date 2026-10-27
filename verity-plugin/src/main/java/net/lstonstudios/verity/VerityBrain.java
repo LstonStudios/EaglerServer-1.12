@@ -120,6 +120,13 @@ final class VerityBrain {
             manager.setFace(s, "(^o^)", 100);
         } else if (msg.contains("please")) {
             s.changeKarma(1);
+            manager.setFace(s, "(^o^)", 80);
+        } else if (isQuestion(msg)) {
+            manager.setFace(s, "(O_O)", 70);
+        } else if (isTask(msg)) {
+            manager.setFace(s, "(^o^)", 70);
+        } else if (containsAny(msg, "hello", "hi ", "hey", "sup", "good morning", "good night")) {
+            manager.setFace(s, "(^o^)", 70);
         }
 
         if (s.phase >= 4) {
@@ -164,6 +171,10 @@ final class VerityBrain {
             ans = pick("...", "Hm.", "Well.") + " " + ans + (rnd.nextBoolean() ? " For now." : "");
         }
         manager.say(p, s, ans);
+    }
+
+    private boolean isQuestion(String msg) {
+        return msg.contains("?") || msg.matches("^(who|what|when|where|why|how|can|could|do|does|is|are|will)\\b.*");
     }
 
     private boolean isTask(String msg) {

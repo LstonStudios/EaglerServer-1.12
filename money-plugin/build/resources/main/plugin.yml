@@ -20,10 +20,14 @@ commands:
     aliases: [serverinfo]
     description: Get a server guide paper.
     usage: /sinfo
-  mshop:
-    aliases: [moneyshop]
+  cshop:
+    aliases: [moneyshop, customshop]
     description: Open a shop (1-5). Admins edit it; members buy from it.
-    usage: /mshop <1-5> [view|section <color> <name>|rename <name>|setblock|delblock]
+    usage: /cshop <1-5> [view|section <color> <name>|rename <name>|setblock|delblock]
+  shop:
+    aliases: [kitshop, kits]
+    description: Buy shulker box kits full of gear, weapons and food (1-5).
+    usage: /shop <1-5>
   login:
     description: Admins sign in (or set a password the first time).
     usage: /login <password> [new-password]

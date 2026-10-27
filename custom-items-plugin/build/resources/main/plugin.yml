@@ -6,8 +6,8 @@ description: Adds custom items such as the lightning sword.
 commands:
   customsword:
     description: Give custom swords to players.
-    usage: /customsword <player|@a|@s|@p> <lightning|explosion|pearl|fall|bad|tp|all> [amount]
-    aliases: [csword]
+    usage: /customsword <player|@a|@s|@p> <lightning|explosion|pearl|fall|bad|tp|mace|spear|wind|all> [amount]
+    aliases: [cweapon]
     permission: customitems.admin
   pass:
     description: Give one-time redstone passes to players.
