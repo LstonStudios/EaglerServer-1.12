@@ -366,10 +366,14 @@ public final class CustomItemsPlugin extends JavaPlugin implements Listener {
             sendUsage(sender, label);
             return true;
         }
+        if (args[1].equalsIgnoreCase("mace") || args[1].equalsIgnoreCase("spear")
+                || args[1].equalsIgnoreCase("wind")) {
+            return giveWeapons(sender, args);
+        }
         boolean all = args[1].equalsIgnoreCase("all");
         SwordType type = all ? null : SwordType.fromKey(args[1]);
         if (!all && type == null) {
-            sender.sendMessage(ChatColor.RED + "Unknown item. Choose lightning, explosion, pearl, fall, bad, tp, or all.");
+            sender.sendMessage(ChatColor.RED + "Unknown item. Choose lightning, explosion, pearl, fall, bad, tp, mace, spear, wind, or all.");
             return true;
         }
         List<Player> targets;
@@ -414,6 +418,20 @@ public final class CustomItemsPlugin extends JavaPlugin implements Listener {
         String what = all ? "every custom sword" : type.displayName();
         sender.sendMessage(ChatColor.GREEN + "Gave " + amount + " " + what + ChatColor.GREEN + (all || amount == 1 ? "" : "s")
                 + " to " + targets.size() + (targets.size() == 1 ? " player." : " players."));
+        if (all) {
+            giveWeapons(sender, args);
+        }
+        return true;
+    }
+
+    // Mace and Spear live in the CustomWeapons plugin, so hand them over to its /weapon command.
+    private boolean giveWeapons(CommandSender sender, String[] args) {
+        if (getServer().getPluginCommand("weapon") == null) {
+            sender.sendMessage(ChatColor.RED + "The CustomWeapons plugin is not installed.");
+            return true;
+        }
+        String amount = args.length == 3 ? " " + args[2] : "";
+        getServer().dispatchCommand(sender, "weapon " + args[0] + " " + args[1] + amount);
         return true;
     }
 
@@ -713,6 +731,6 @@ public final class CustomItemsPlugin extends JavaPlugin implements Listener {
     }
 
     private void sendUsage(CommandSender sender, String label) {
-        sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " <player|@a|@s|@p> <lightning|explosion|pearl|fall|bad|tp|all> [amount]");
+        sender.sendMessage(ChatColor.YELLOW + "Usage: /" + label + " <player|@a|@s|@p> <lightning|explosion|pearl|fall|bad|tp|mace|spear|wind|all> [amount]");
     }
 }

@@ -1,0 +1,22 @@
+name: Verity
+version: 1.0.0
+main: net.lstonstudios.verity.VerityPlugin
+author: LstonStudios
+description: The viral Verity mod - a helpful AI friend that slowly turns sinister.
+commands:
+  verity:
+    description: Give Verity spawn eggs or manage Verity.
+    usage: |
+      /verity <targets> [amount]          - give Verity spawn eggs (@a, @s, @p, @r or names)
+      /verity summon <targets>            - open the Box instantly
+      /verity remove <targets>            - remove Verity
+      /verity phase <targets> <1-4>       - set the phase
+      /verity karma <targets> <0-100>     - set karma
+      /verity info [targets]              - show status
+      /verity reload                      - reload config
+    aliases: [verityegg]
+    permission: verity.admin
+permissions:
+  verity.admin:
+    description: Allows managing Verity.
+    default: op

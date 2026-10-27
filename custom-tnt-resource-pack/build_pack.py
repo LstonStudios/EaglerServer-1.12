@@ -246,9 +246,7 @@ ITEM_THEME = {
     "mining_tnt": "mining", "fire_tnt": "fire", "slime_tnt": "slime",
     "xray_tnt": "xray", "rdm_tnt": "rdm", "mob_tnt": "mob", "poop_tnt": "poop",
     "firework_tnt": "firework", "sun_tnt": "sun", "black_hole_tnt": "black_hole",
-    "barrier": "mining", "record_13": "slime",
-    "record_cat": "xray", "record_blocks": "firework", "record_chirp": "poop",
-    "spawn_egg": "egg", "potato_poisonous": "slime", "record_far": "rdm", "record_stal": "boss", "boss_tnt": "boss", "record_mall": "sun", "record_mellohi": "black_hole", "netherbrick": "anti",
+    "boss_tnt": "boss",
 }
 
 
@@ -293,7 +291,6 @@ def build_detailed():
         body, band, ink, spark = THEMES[theme]
         png_rgba(ASSETS / "items" / f"{item}.png", cube_icon(body, band, ink, spark, index + 1))
     png_rgba(ASSETS / "items" / "gold_hoe.png", gun_icon())
-    png_rgba(ASSETS / "items" / "spawn_egg_overlay.png", [[(0, 0, 0, 0)] * 32 for _ in range(32)])
     png_rgba(ASSETS / "items" / "minecart_command_block.png", rainbow(cube_icon(*THEMES["fire"], 3)))
 
 

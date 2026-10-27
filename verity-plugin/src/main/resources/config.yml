@@ -1,0 +1,29 @@
+# Verity configuration
+# Length of an in-game day, in ticks (Verity only ages while her owner is online).
+day-length-ticks: 24000
+
+# Days (of Verity's age) at which each phase begins. Karma shifts the pace:
+# high karma slows the transformation by up to 50%, low karma speeds it up by up to 50%.
+phase-days:
+  phase2: 2.0
+  phase3: 3.5
+  phase4: 5.0
+
+karma:
+  start: 50
+
+# Phase 4 sabotage. Damage never takes a player below min-health.
+harm:
+  enabled: true
+  damage: 2.0
+  min-health: 6.0
+
+demon:
+  enabled: true
+  respawn-seconds: 60
+  health: 120.0
+  damage: 6.0
+  speed: 0.42
+
+# Maximum eggs given by one /verity command.
+max-eggs: 64

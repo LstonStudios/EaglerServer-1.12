@@ -1,0 +1,15 @@
+name: CustomWeapons
+version: 1.0.0
+main: net.lstonstudios.customweapons.CustomWeaponsPlugin
+author: LstonStudios
+description: Adds the Mace and the Spear.
+commands:
+  weapon:
+    description: Give the Mace or the Spear.
+    usage: /weapon <player|@a|@s|@p> <mace|spear|all> [amount]
+    aliases: [cweapon]
+    permission: customweapons.admin
+permissions:
+  customweapons.admin:
+    description: Allows giving custom weapons.
+    default: op

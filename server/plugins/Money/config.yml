@@ -1,11 +1,11 @@
 # 
-# Five shop menus: /mshop 1 ... /mshop 5, or a block set with /mshop <n> setblock.
-# Rename a menu in game with /mshop <n> rename <name>.
+# Five shop menus: /cshop 1 ... /cshop 5, or a block set with /cshop <n> setblock.
+# Rename a menu in game with /cshop <n> rename <name>.
 # Each category gets its own header row, then its items below it,
 # sorted from weakest/cheapest to strongest/most expensive.
 # An item with a "command" runs it as console when bought (%player% = buyer);
 # otherwise the item itself is given. "name", "description" and "glow: true" are optional.
-# Admins edit shops in game (open /mshop <n>); layouts are saved here as slots after the first load.
+# Admins edit shops in game (open /cshop <n>); layouts are saved here as slots after the first load.
 currency-symbol: $
 rewards:
   player: 20
@@ -323,7 +323,7 @@ shops:
       '11':
         material: MONSTER_EGG
         amount: 1
-        price: 600
+        price: -1
         name: '&aTailwind'
         description: Speed II for you and nearby teammates.
         command: customability %player% tailwind 1
@@ -335,14 +335,6 @@ shops:
         name: '&6Overclock'
         description: Speed III and Haste II for 10s.
         command: customability %player% overclock 1
-        glow: true
-      '13':
-        material: MONSTER_EGG
-        amount: 1
-        price: 800
-        name: '&bSonic Boom'
-        description: Knocks back everything within 4 blocks.
-        command: customability %player% sonic 1
         glow: true
       '14':
         material: MONSTER_EGG

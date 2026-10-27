@@ -196,6 +196,10 @@ The 1.8-compatible resource pack is `web/custom-tnt-pack.zip`. It retextures
 reused vanilla items, which may also change their normal appearance. For browser
 clients hosted on another origin, run
 `python3 custom-tnt-resource-pack/serve_pack.py` and publicly forward port 8082.
+
+Textures restyle every vanilla item of that type for all players, so never texture a
+shared item (for example spawn eggs). Give custom items their own unused material, then
+register the texture in `custom-tnt-resource-pack/check_pack.py` and run it after changes.
 After rebuilding the pack, update `resource-pack-sha1` and `?v=` in
 `server/server.properties`.
 Explosion settings are in `server/plugins/CustomTNT/config.yml`; apply changes
@@ -207,8 +211,8 @@ restart the server.
 
 #### Custom Items
 
-Adds custom items. Give them with `/customsword <player|@a|@s|@p> <item|all>
-[amount]` (`/csword` alias, requires `customitems.admin`, default op).
+Adds custom items. Give them with `/customsword <player|@a|@s|@p> <item|mace|spear|wind|all>
+[amount]` (`/cweapon` alias, requires `customitems.admin`, default op).
 
 - `lightning`: Lightning Sword (gold sword, yellow and white). Hitting a living
   entity strikes lightning on it.

@@ -61,6 +61,7 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
     private final Map<String, Integer> shopBlocks = new HashMap<>();
     private AdminLogin adminLogin;
     private Moderation moderation;
+    private KitShop kitShop;
     private final Set<UUID> guideReceived = new HashSet<>();
     private final Set<String> placedBlocks = new HashSet<>();
     private final Shop[] shops = new Shop[SHOP_COUNT];
@@ -197,7 +198,9 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
         moderation = new Moderation(this, adminLogin);
         getServer().getPluginManager().registerEvents(moderation, this);
         getServer().getPluginManager().registerEvents(this, this);
-        for (String name : new String[] {"mgive", "minfo", "mhelp", "sinfo", "mshop", "login", "admin", "deadmin", "op", "deop", "mute", "unmute", "timeout", "unban", "permhelp", "mreload", "mclear"}) {
+        kitShop = new KitShop(this);
+        getServer().getPluginManager().registerEvents(kitShop, this);
+        for (String name : new String[] {"mgive", "minfo", "mhelp", "sinfo", "cshop", "shop", "login", "admin", "deadmin", "op", "deop", "mute", "unmute", "timeout", "unban", "permhelp", "mreload", "mclear"}) {
             getCommand(name).setExecutor(this);
         }
         new BukkitRunnable() {
@@ -465,7 +468,7 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    private long getBalance(UUID id) {
+    long getBalance(UUID id) {
         Long value = balances.get(id);
         return value == null ? 0L : value;
     }
@@ -480,7 +483,18 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
         dirty = true;
     }
 
-    private String money(long amount) {
+    /** Takes money if the player can afford it. */
+    boolean charge(UUID id, long amount) {
+        long balance = getBalance(id);
+        if (balance < amount) {
+            return false;
+        }
+        balances.put(id, balance - amount);
+        dirty = true;
+        return true;
+    }
+
+    String money(long amount) {
         return symbol + amount;
     }
 
@@ -634,7 +648,8 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
         lines.add(ChatColor.YELLOW + "Money commands:");
         lines.add(ChatColor.WHITE + " /minfo [player] - see a balance");
         lines.add(ChatColor.WHITE + " /mgive <player> <amount> - send some of your money to a player");
-        lines.add(ChatColor.WHITE + " /mshop <1-5> - open a shop (or right-click a shop block)");
+        lines.add(ChatColor.WHITE + " /cshop <1-5> - open a shop (or right-click a shop block)");
+        lines.add(ChatColor.WHITE + " /shop <1-5> - buy shulker box kits (gear, weapons, food); pricier = better");
         lines.add(ChatColor.WHITE + " /mhelp - list the money commands");
         lines.add(ChatColor.YELLOW + "Name styling (/nameeffect):");
         lines.add(ChatColor.WHITE + " /nameeffect set <before>|<after> adds text before and after your name in"
@@ -855,7 +870,7 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
                 Player editor = Bukkit.getPlayer(other.getKey());
                 if (editor != null && editor.isOnline()) {
                     player.sendMessage(ChatColor.RED + "Shop " + n + " is already being edited by "
-                            + editor.getName() + ". Try again once they close it, or use /mshop " + n + " view.");
+                            + editor.getName() + ". Try again once they close it, or use /cshop " + n + " view.");
                     return;
                 }
             }
@@ -873,8 +888,8 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
         player.sendMessage(ChatColor.GRAY + "Left-click an item to pick it up, click a slot to place it (swaps if taken).");
         player.sendMessage(ChatColor.GRAY + "Click an item in your own inventory to copy it in. Click your inventory or outside"
                 + " while holding one to delete it. Right-click an item to change its price.");
-        player.sendMessage(ChatColor.GRAY + "Make section headers with /mshop " + n + " section <color> <name>."
-                + " Members see a buy-only view; use /mshop " + n + " view to preview it.");
+        player.sendMessage(ChatColor.GRAY + "Make section headers with /cshop " + n + " section <color> <name>."
+                + " Members see a buy-only view; use /cshop " + n + " view to preview it.");
     }
 
     private void refreshEditor(Inventory top, EditSession session) {
@@ -1151,8 +1166,10 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
             case "mhelp":
                 help(sender);
                 return true;
-            case "mshop":
+            case "cshop":
                 return manageShopBlock(sender, args);
+            case "shop":
+                return kitShop.command(sender, args);
             case "mreload":
                 loadSettings();
                 sender.sendMessage(ChatColor.GREEN + "Money configuration reloaded.");
@@ -1263,8 +1280,10 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
                 + "), kill mobs (" + money(mobReward) + "), kill players (" + money(playerReward) + "), earn achievements (" + money(achievementReward) + ").");
         sender.sendMessage(ChatColor.GRAY + "Blocks you place yourself and creative mode pay nothing.");
         sender.sendMessage(ChatColor.YELLOW + "/minfo [player]" + ChatColor.WHITE + " - see a balance");
-        sender.sendMessage(ChatColor.YELLOW + "/mshop <1-5>" + ChatColor.WHITE
+        sender.sendMessage(ChatColor.YELLOW + "/cshop <1-5>" + ChatColor.WHITE
                 + " - buy items (or right-click a shop block)");
+        sender.sendMessage(ChatColor.YELLOW + "/shop <1-5>" + ChatColor.WHITE
+                + " - buy shulker box kits; the pricier the kit, the better the gear");
         sender.sendMessage(ChatColor.YELLOW + "/mgive <player> <amount>" + ChatColor.WHITE
                 + (sender.hasPermission("money.admin") ? " - give money (unlimited for admins)"
                         : " - send some of your money to a player"));
@@ -1272,15 +1291,15 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
         sender.sendMessage(ChatColor.GRAY + "Every /m<name> command also works as /money<name>, e.g. /moneyinfo.");
         if (sender.hasPermission("money.admin")) {
 
-            sender.sendMessage(ChatColor.YELLOW + "/mshop <1-5>" + ChatColor.WHITE
+            sender.sendMessage(ChatColor.YELLOW + "/cshop <1-5>" + ChatColor.WHITE
                     + " - (admin) opens the shop in edit mode: move, copy and delete items, set prices");
-            sender.sendMessage(ChatColor.YELLOW + "/mshop <1-5> view" + ChatColor.WHITE
+            sender.sendMessage(ChatColor.YELLOW + "/cshop <1-5> view" + ChatColor.WHITE
                     + " - preview the member (buy-only) view");
-            sender.sendMessage(ChatColor.YELLOW + "/mshop <1-5> section <color> <name>" + ChatColor.WHITE
+            sender.sendMessage(ChatColor.YELLOW + "/cshop <1-5> section <color> <name>" + ChatColor.WHITE
                     + " - get a colored header pane to place in the shop");
-            sender.sendMessage(ChatColor.YELLOW + "/mshop <1-5> rename <name>" + ChatColor.WHITE
+            sender.sendMessage(ChatColor.YELLOW + "/cshop <1-5> rename <name>" + ChatColor.WHITE
                     + " - rename a shop menu (& color codes work)");
-            sender.sendMessage(ChatColor.YELLOW + "/mshop <1-5> setblock|delblock" + ChatColor.WHITE
+            sender.sendMessage(ChatColor.YELLOW + "/cshop <1-5> setblock|delblock" + ChatColor.WHITE
                     + " - make or unmake the block you look at a shop block");
             sender.sendMessage(ChatColor.YELLOW + "/customtnt <player> <type|all> [amount]" + ChatColor.WHITE
                     + " - give custom TNT (/rldcustomtnt reloads)");
@@ -1331,7 +1350,7 @@ public final class MoneyPlugin extends JavaPlugin implements Listener {
             return true;
         }
         if (!sender.hasPermission("money.admin")) {
-            sender.sendMessage(ChatColor.RED + "Only admins can change shops. Use /mshop " + shop + " to open it.");
+            sender.sendMessage(ChatColor.RED + "Only admins can change shops. Use /cshop " + shop + " to open it.");
             return true;
         }
         String sub = args[1].toLowerCase();

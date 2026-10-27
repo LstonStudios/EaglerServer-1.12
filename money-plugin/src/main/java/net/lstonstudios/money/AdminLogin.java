@@ -81,7 +81,7 @@ final class AdminLogin implements Listener {
         sender.sendMessage(ChatColor.YELLOW + "Vanilla: " + ChatColor.WHITE + "/kill /tp /give /xp /summon (selectors like @a @s @p @r @e allowed)");
         sender.sendMessage(ChatColor.YELLOW + "Money: " + ChatColor.WHITE
                 + "/mgive (unlimited), /mclear <player>, /mreload");
-        sender.sendMessage(ChatColor.WHITE + "  /mshop <1-5> opens the shop editor; /mshop <n> view|rename|section|setblock|delblock");
+        sender.sendMessage(ChatColor.WHITE + "  /cshop <1-5> opens the shop editor; /cshop <n> view|rename|section|setblock|delblock");
         sender.sendMessage(ChatColor.YELLOW + "Custom items: " + ChatColor.WHITE
                 + "/customtnt, /customability, /customsword, /cgun (guns), /rldcustomtnt");
         sender.sendMessage(ChatColor.YELLOW + "Other: " + ChatColor.WHITE
